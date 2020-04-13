@@ -30,14 +30,6 @@ const config = require('../config');
 		response.end('Hello, world!');
 	});
 
-	// Testing mongo stuff
-	const collection = db.collection('things');
-	await collection.insertMany([
-		{a: 1},
-		{a: 2},
-		{a: 3},
-	]).then(log.info).catch(log.error);
-
 	// Start the server
 	app.listen(config.web.port, error => {
 		if (error) {
