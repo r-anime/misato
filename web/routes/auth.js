@@ -2,3 +2,4 @@
 
 module.exports = require('polka')()
 	.use('/reddit', require('./redditAuth'))
+	.use('/discord', require('./discordAuth'));
