@@ -9,7 +9,9 @@
   "dependencies": {
     "another-logger": "^2.0.1",
     "eris": "^0.11.2",
+    "mongodb": "^3.5.5",
     "node-ipc": "^9.1.1",
+    "polka": "^0.5.2",
     "yuuko": "^2.0.0"
   },
   "devDependencies": {
