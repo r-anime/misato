@@ -7,7 +7,7 @@ const MongoStore = require('connect-mongo')(session);
 
 const config = require('../config');
 const responseHelpers = require('./middleware/responseHelpers');
-const redditAuth = require('./routes/redditAuth');
+const auth = require('./routes/auth');
 
 (async () => {
 	// Set up MongoDB
@@ -34,7 +34,7 @@ const redditAuth = require('./routes/redditAuth');
 	app.use(responseHelpers);
 
 	// Register sub-apps for different routes
-	app.use('/auth', redditAuth);
+	app.use('/auth', auth);
 
 	// Start the server
 	app.listen(config.web.port, error => {

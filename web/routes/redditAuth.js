@@ -9,7 +9,7 @@ const redditAuth = polka({
 	},
 });
 
-redditAuth.get('/reddit', (request, response) => {
+redditAuth.get('/', (request, response) => {
 	const state = `${Math.random()}`; // TODO: this should be secure
 	request.session.state = state;
 	const scope = 'identity';
@@ -17,7 +17,7 @@ redditAuth.get('/reddit', (request, response) => {
 	response.redirect(`https://old.reddit.com/api/v1/authorize?client_id=${config.reddit.clientId}&response_type=code&state=${state}&redirect_uri=${config.reddit.redirectHost}/auth/reddit/callback&scope=${scope}&duration=${duration}`);
 });
 
-redditAuth.get('/reddit/callback', (request, response) => {
+redditAuth.get('/callback', (request, response) => {
 	const {error, state, code} = request.query;
 
 	// Check for errors or state mismatches
