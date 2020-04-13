@@ -1,6 +1,9 @@
 const polka = require('polka');
+
 const log = require('another-logger');
 const {MongoClient} = require('mongodb');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 
 const config = require('../config');
 
@@ -13,11 +16,21 @@ const config = require('../config');
 	// Set up our app
 	const app = polka();
 
-	// Testing mongo stuff
+	// Set up per-session storage in MongoDB
+	const sessionStore = new MongoStore({
+		client: mongoClient,
+		dbName: config.mongodb.databaseName,
+	});
+	app.use(session({
+		store: sessionStore,
+		secret: config.web.sessionSecret,
+	}));
+
 	app.get('/', (request, response) => {
 		response.end('Hello, world!');
 	});
 
+	// Testing mongo stuff
 	const collection = db.collection('things');
 	await collection.insertMany([
 		{a: 1},
