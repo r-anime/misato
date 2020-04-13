@@ -31,6 +31,22 @@ const config = require('../config');
 	// Add MongoDB stuff to the bot's context for easy access from commands
 	bot.extendContext({mongoClient, db});
 
+	// Filtering stuff
+	// TODO: Split into own file
+	bot.on('messageCreate', async msg => {
+		try {
+			if (msg.content.includes('fuck')) {
+				await msg.delete();
+				await msg.channel.createMessage('hey u cant say that here u butt');
+			} else if (msg.attachments.some(attachment => attachment.filename.endsWith('.png'))) {
+				await msg.delete();
+				await msg.channel.createMessage('images are banned btfo');
+			}
+		} catch (error) {
+			log.error(error);
+		}
+	});
+
 	// Connect the bot to Discord
 	bot.connect();
 })();
