@@ -1,0 +1,10 @@
+# Generic node stuff
+node_modules
+yarn-error.log
+
+# Uses yarn as package manager, not npm
+package-lock.json
+
+# Secrets
+config.*
+!config.sample.*

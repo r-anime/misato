@@ -1,0 +1,3 @@
+extends: "@geo1088"
+rules:
+  strict: off
