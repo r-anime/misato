@@ -8,7 +8,7 @@ const config = require('../config');
 
 (async () => {
 	// Set up MongoDB connection
-	const mongoClient = new MongoClient(config.mongodb.url);
+	const mongoClient = new MongoClient(config.mongodb.url, {useUnifiedTopology: true});
 	await mongoClient.connect();
 	const db = mongoClient.db(config.mongodb.databaseName);
 
