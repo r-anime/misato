@@ -36,6 +36,25 @@ const auth = require('./routes/auth');
 	// Register sub-apps for different routes
 	app.use('/auth', auth);
 
+	// very temporary testing route
+	app.get('/', (request, response) => {
+		response.end(`
+			<!DOCTYPE html><html><body>
+				${request.session.redditCode ? `
+					<p>reddit code: <code>${request.session.redditCode}</code></p>
+				` : `
+					<p>no reddit code, <a href="/auth/reddit">go sign in</a></p>
+				`}
+				${request.session.discordCode ? `
+					<p>discord code: <code>${request.session.discordCode}</code></p>
+				` : `
+					<p>no discord code, <a href="/auth/discord">go sign in</a></p>
+				`}
+				<p>oauth providers pls dont xss my website kthx</p>
+			</body></html>
+		`);
+	});
+
 	// Start the server
 	app.listen(config.web.port, error => {
 		if (error) {

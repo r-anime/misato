@@ -46,7 +46,8 @@ redditAuth.get('/callback', (request, response) => {
 	// Get the access token from Reddit
 	// TODO
 	log.info(code);
-	response.end('dab');
+	request.session.redditCode = code; // very temporary
+	response.redirect('/');
 });
 
 module.exports = redditAuth;

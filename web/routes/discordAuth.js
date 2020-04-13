@@ -46,7 +46,8 @@ discordAuth.get('/callback', (request, response) => {
 	// Get the access token from Discord
 	// TODO
 	log.info(code);
-	response.end('dab');
+	request.session.discordCode = code; // very temporary
+	response.redirect('/');
 });
 
 module.exports = discordAuth;
