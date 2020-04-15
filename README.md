@@ -26,7 +26,7 @@ filter DB format:
             {
                 type: 'contentMatchesRegexp',
                 pattern: 'i like (trains|cars)',
-                flags: []
+                flags: ''
             },
             {
                 type: 'multiple',
@@ -39,7 +39,7 @@ filter DB format:
                     {
                         type: 'attachmentFilenameMatchesRegexp',
                         pattern: '\\.(png|jpe?g|gif)$',
-                        flags: ['i']
+                        flags: 'i'
                     }
                 ]
             }
@@ -57,3 +57,23 @@ would merge word filters and extension filters
 kinda like reddit automod but better
 
 also restrictions based on channel, channel category, username, etc
+
+sorta implemented but needs testing bc it's not hooked up to anything at all lol
+
+## Reminders
+
+make bernas happy
+
+have the reminder get sent in whatever channel it was requested in e.g. support DMs
+
+reminders collection: 
+
+```js
+{
+    userID: 'whatever',
+    channelID: 'whatever',
+    requested: 12400923784,
+    due: 1269834950,
+    text: 'dab on the haters',
+}
+```
