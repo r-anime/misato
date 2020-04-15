@@ -20,7 +20,7 @@ filter DB format:
         op: 'or',
         children: [
             {
-                type: 'containsWord',
+                type: 'containsText',
                 field: 'content',
                 word: 'fuck',
             },

@@ -13,30 +13,40 @@ async function messageMatchesRule (message, rule) {
 			if (rule.op === 'and') {
 				return rule.children.every(child => messageMatchesRule(message, child));
 			} else if (rule.op === 'or') {
-				return rule.children.som(child => messageMatchesRule(message, child));
+				return rule.children.some(child => messageMatchesRule(message, child));
 			}
 			throw new Error('unknown multiple-rule op', rule.op);
 		}
 
-		// Matches messages whose content contains given text (doesn't care about word boundaries)
-		case 'contentContainsText': {
-			return message.content.includes(rule.text);
+		// Matches messages where a given field contains given text (doesn't care about word boundaries)
+		case 'containsText': {
+			switch (rule.field) {
+				case 'content': return message.content.includes(rule.text);
+				case 'filename': return message.attachments.some(attachment => attachment.filename.includes(rule.text));
+				default: throw new Error('unknown search field', rule.field);
+			}
 		}
 
-		// Matches messages whose content matches a given regular expression
-		case 'contentMatchesRegexp': {
-			return new RegExp(rule.pattern, rule.flags.join('')).test(message.content);
-		}
-
-		// Matches messages with an attachment whose filename matches a given regular expression
-		case 'attachmentFilenameMatchesRegexp': {
-			return message.attachments.some(attachment => new RegExp(rule.pattern, rule.flags).test(attachment.filename));
+		// Matches messages where a given field matches a given regular expression
+		case 'matchesRegexp': {
+			const regexp = new RegExp(rule.pattern, rule.flags.join(''));
+			switch (rule.field) {
+				case 'content': return regexp.test(message.content);
+				case 'filename': return message.attachments.some(attachment => regexp.test(attachment.filename));
+				default: throw new Error('unknown search field', rule.field);
+			}
 		}
 
 		// This should never happen if we're doing proper DB validation
 		default: throw new Error('unknown rule type', rule.type);
 	}
 }
+
+/** An array of all valid field names for text-based match rules. */
+const textFields = [
+	'content',
+	'filename',
+];
 
 /**
  * Determines if an object is a valid rule definition for database validation.
@@ -63,23 +73,26 @@ function isValidRule (rule) {
 		}
 
 		// Rules that compare things against text
-		case 'contentContainsText': {
+		case 'containsText': {
 			// text must be a key and its value must be a string
 			if (typeof rule.text !== 'string') return false;
+			// field must be a key and its value must be one of the known field names
+			if (!textFields.includes(rule.field)) return false;
 			// no keys other than type and text can be present
-			if (Object.keys(rule).length !== 2) return false;
+			if (Object.keys(rule).length !== 3) return false;
 			return true;
 		}
 
 		// Rules that compare things against regexps
-		case 'contentMatchesRegexp':
-		case 'attachmentFilenameMatchesRegexp': {
+		case 'matchesRegexp': {
 			// pattern must be a key and its value must be a string
 			if (typeof rule.pattern !== 'string') return false;
 			// flags must be a key and its value must be a string
 			if (typeof rule.flags !== 'string') return false;
+			// field must be a key and its value must be one of the known field names
+			if (!textFields.includes(rule.field)) return false;
 			// no keys other than type, pattern, flags can be present
-			if (Object.keys(rule).length !== 3) return false;
+			if (Object.keys(rule).length !== 4) return false;
 			return true;
 		}
 
