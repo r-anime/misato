@@ -20,29 +20,33 @@ filter DB format:
         op: 'or',
         children: [
             {
-                type: 'contentMatchesWord',
+                type: 'containsWord',
+                field: 'content',
                 word: 'fuck',
             },
             {
-                type: 'contentMatchesRegexp',
+                type: 'matchesRegexp',
+                field: 'content',
                 pattern: 'i like (trains|cars)',
-                flags: ''
+                flags: '',
             },
             {
                 type: 'multiple',
                 op: 'and',
                 children: [
                     {
-                        type: 'attachmentFilenameContains',
+                        type: 'containsText',
+                        field: 'filename',
                         text: 'SPOILER',
                     },
                     {
-                        type: 'attachmentFilenameMatchesRegexp',
+                        type: 'matchesRegexp',
+                        field: 'filename',
                         pattern: '\\.(png|jpe?g|gif)$',
-                        flags: 'i'
-                    }
-                ]
-            }
+                        flags: 'i',
+                    },
+                ],
+            },
         ],
     },
 }
