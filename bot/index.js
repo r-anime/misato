@@ -23,15 +23,19 @@ const config = require('../config');
 	// Register listeners
 	bot.on('ready', () => {
 		log.success(`Connected to Discord as ${bot.user.username}#${bot.user.discriminator}`);
+
+		// HACK: Yuuko doesn't have a good way of executing arbitrary code, so we do it this way
+		// eslint-disable-next-line global-require
+		require('./reminder')({client: bot, mongoClient, db});
 	});
 	bot.on('error', log.erisError);
 	bot.on('warn', log.erisWarn);
 
-	// Register commands
-	bot.addCommandDir(path.join(__dirname, 'commands'));
-
 	// Add MongoDB stuff to the bot's context for easy access from commands
 	bot.extendContext({mongoClient, db});
+
+	// Register commands
+	bot.addCommandDir(path.join(__dirname, 'commands'));
 
 	// Filtering stuff
 	// TODO: Split into own file
