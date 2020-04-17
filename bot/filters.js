@@ -1,5 +1,7 @@
+// Provides message filtering capabilities.
+
 /**
- * Returns whether or not a message satisfies a given rule
+ * Returns whether or not a message satisfies a given rule.
  * @param {Eris.Message} message The message object to check
  * @param {object} rule The rule to check against
  * @returns {Promise<boolean>}

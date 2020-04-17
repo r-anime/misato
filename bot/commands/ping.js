@@ -1,3 +1,5 @@
+// Tests the bot's response time.
+
 const {Command} = require('yuuko');
 
 module.exports = new Command('ping', async msg => {
