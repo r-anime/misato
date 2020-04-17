@@ -1,3 +1,5 @@
+// Sample configuration file. Rename this to `config.js` and fill in your values.
+
 module.exports = {
 	// Mongo database information
 	mongodb: {
