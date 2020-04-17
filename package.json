@@ -18,6 +18,7 @@
   },
   "devDependencies": {
     "@geo1088/eslint-config": "^3.0.10",
-    "eslint": "^6.8.0"
+    "eslint": "^6.8.0",
+    "migrate": "^1.6.2"
   }
 }

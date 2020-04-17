@@ -7,4 +7,6 @@ package-lock.json
 
 # Secrets
 config.*
-!config.sample.*
+
+# Migration tracking
+.migrate
