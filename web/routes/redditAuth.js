@@ -154,7 +154,7 @@ module.exports = polka()
 
 		// Fetch Reddit user info and store in the user's session
 		try {
-			request.session.redditUserInfo = fetchRedditUserInfo(tokens.accessToken);
+			request.session.redditUserInfo = await fetchRedditUserInfo(tokens.accessToken);
 		} catch (userInfoError) {
 			log.error('Error fetching Reddit user info:', userInfoError);
 			response.end('Error fetching your account details. Please try again. Contact a developer if the error persists.');
