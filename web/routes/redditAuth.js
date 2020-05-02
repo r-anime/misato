@@ -78,7 +78,8 @@ async function fetchRedditTokens (code) {
 		refreshToken: data.refresh_token,
 		tokenType: data.token_type,
 		scope: data.scope,
-		expiresIn: data.expires_in,
+		// Make expires_in into an absolute date, converting seconds to milliseconds along the way
+		expiresAt: new Date(Date.now() + data.expires_in * 1000),
 	};
 }
 
@@ -149,8 +150,7 @@ module.exports = polka()
 		// Store tokens and expiry in the user's session
 		request.session.redditAccessToken = tokens.accessToken;
 		request.session.redditRefreshToken = tokens.refreshToken;
-		// Make expiresIn into an absolute date, converting seconds to milliseconds along the way
-		request.session.redditTokenExpiresAt = new Date(Date.now() + tokens.expiresIn * 1000);
+		request.session.redditTokenExpiresAt = tokens.expiresAt;
 
 		// Fetch Reddit user info and store in the user's session
 		try {
