@@ -86,7 +86,7 @@ async function fetchRedditTokens (code) {
  * Fetches information about the user given their access token.
  * @param {string} accessToken
  * @returns {Promise<object>} Object has keys `name`, `avatarURL`, and
- * `accountAge`.
+ * `created`.
  */
 async function fetchRedditUserInfo (accessToken) {
 	log.info(accessToken);
@@ -104,7 +104,7 @@ async function fetchRedditUserInfo (accessToken) {
 	return {
 		name: data.name,
 		avatarURL: data.subreddit && data.subreddit.icon_img,
-		accountAge: new Date(data.created_utc * 1000),
+		created: new Date(data.created_utc * 1000),
 	};
 }
 
