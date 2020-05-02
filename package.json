@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint ./**/*.js"
+    "lint": "eslint ./**/*.js",
+    "start-web": "node web",
+    "start-bot": "node bot"
   },
   "license": "MIT",
   "dependencies": {
