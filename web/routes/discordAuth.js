@@ -182,7 +182,7 @@ module.exports = polka()
 		response.redirect(next);
 	})
 
-	// Logs out of Reddit
+	// Logs out of Discord
 	.get('/logout', (request, response) => {
 		delete request.session.discordAccessToken;
 		delete request.session.discordRefreshToken;

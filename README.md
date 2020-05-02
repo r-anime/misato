@@ -10,7 +10,7 @@ ez money, config page that just lets you map an RSS feed URL to a Discord channe
 
 ## filters
 
-filter DB format:
+- yuuko has bad support for this so it needs to be improved before we can really work on this bit soz
 
 ```js
 {
@@ -81,3 +81,5 @@ reminders collection:
     text: 'dab on the haters',
 }
 ```
+
+already kinda done but relative time parsing is a pain
