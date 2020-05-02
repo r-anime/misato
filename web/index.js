@@ -40,8 +40,8 @@ const auth = require('./routes/auth');
 	app.get('/', (request, response) => {
 		response.end(`
 			<!DOCTYPE html><html><body>
-				${request.session.redditCode ? `
-					<p>reddit code: <code>${request.session.redditCode}</code></p>
+				${request.session.redditUserInfo ? `
+					<p>logged into reddit as ${request.session.redditUserInfo.name}</p>
 				` : `
 					<p>no reddit code, <a href="/auth/reddit">go sign in</a></p>
 				`}
