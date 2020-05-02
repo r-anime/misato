@@ -113,8 +113,10 @@ module.exports = polka()
 
 	// OAuth entry point, generate a state and redirect to Reddit
 	.get('/', (request, response) => {
-		// TODO: Take a "next" parameter that specifies a location for the user to be sent to after the flow
-		const state = `${Math.random()}`; // TODO: this should be secure
+		const state = JSON.stringify({
+			next: request.query.next || '/',
+			unique: `${Math.random()}`, // TODO: this should be secure
+		});
 		request.session.redditState = state;
 		response.redirect(authURI(state));
 	})
@@ -134,6 +136,10 @@ module.exports = polka()
 			response.end('uh-oh');
 			return;
 		}
+
+		// This should be safe, because the block above ensures we only ever try to parse things that we put in the
+		// session ourselves, and we only put valid JSON there. We want to get the next URL so we can use it later.
+		const {next} = JSON.parse(state);
 
 		// Exchange the code for access/refresh tokens
 		let tokens;
@@ -159,7 +165,8 @@ module.exports = polka()
 			return;
 		}
 
-		response.redirect('/');
+		// Redirect back to wherever we came from
+		response.redirect(next);
 	})
 
 	// Logs out of Reddit
@@ -169,5 +176,5 @@ module.exports = polka()
 		delete request.session.redditTokenExpiresAt;
 		delete request.session.redditUserInfo;
 
-		response.redirect('/');
+		response.redirect(request.query.next || '/');
 	});
