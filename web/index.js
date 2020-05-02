@@ -39,16 +39,22 @@ const auth = require('./routes/auth');
 	// very temporary testing route
 	app.get('/', (request, response) => {
 		response.end(`
-			<!DOCTYPE html><html><body>
+			<!DOCTYPE html>
+			<html>
+			<head>
+				<title>dab on em</title>
+				<meta charset="utf-8">
+			</head>
+			<body>
 				${request.session.redditUserInfo ? `
 					<p>logged into reddit as ${request.session.redditUserInfo.name}</p>
 				` : `
-					<p>no reddit code, <a href="/auth/reddit">go sign in</a></p>
+					<p>not logged in with reddit, <a href="/auth/reddit">go log in</a></p>
 				`}
-				${request.session.discordCode ? `
-					<p>discord code: <code>${request.session.discordCode}</code></p>
+				${request.session.discordUserInfo ? `
+					<p>logged into discord as @${request.session.discordUserInfo.username}#${request.session.discordUserInfo.discriminator}</p>
 				` : `
-					<p>no discord code, <a href="/auth/discord">go sign in</a></p>
+					<p>not logged in with discord, <a href="/auth/discord">go log in</a></p>
 				`}
 				<p>oauth providers pls dont xss my website kthx</p>
 			</body></html>
