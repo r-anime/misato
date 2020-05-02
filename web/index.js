@@ -47,12 +47,12 @@ const auth = require('./routes/auth');
 			</head>
 			<body>
 				${request.session.redditUserInfo ? `
-					<p>logged into reddit as ${request.session.redditUserInfo.name}</p>
+					<p>logged into reddit as ${request.session.redditUserInfo.name} (<a href="/auth/reddit/logout">log out</a>)</p>
 				` : `
 					<p>not logged in with reddit, <a href="/auth/reddit">go log in</a></p>
 				`}
 				${request.session.discordUserInfo ? `
-					<p>logged into discord as @${request.session.discordUserInfo.username}#${request.session.discordUserInfo.discriminator}</p>
+					<p>logged into discord as @${request.session.discordUserInfo.username}#${request.session.discordUserInfo.discriminator} (<a href="/auth/discord/logout">log out</a>)</p>
 				` : `
 					<p>not logged in with discord, <a href="/auth/discord">go log in</a></p>
 				`}

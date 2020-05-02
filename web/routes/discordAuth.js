@@ -174,4 +174,14 @@ module.exports = polka()
 		}
 
 		response.redirect('/');
+	})
+
+	// Logs out of Reddit
+	.get('/logout', (request, response) => {
+		delete request.session.discordAccessToken;
+		delete request.session.discordRefreshToken;
+		delete request.session.discordTokenExpiresAt;
+		delete request.session.discordUserInfo;
+
+		response.redirect('/');
 	});

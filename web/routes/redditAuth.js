@@ -160,4 +160,14 @@ module.exports = polka()
 		}
 
 		response.redirect('/');
+	})
+
+	// Logs out of Reddit
+	.get('/logout', (request, response) => {
+		delete request.session.redditAccessToken;
+		delete request.session.redditRefreshToken;
+		delete request.session.redditTokenExpiresAt;
+		delete request.session.redditUserInfo;
+
+		response.redirect('/');
 	});
