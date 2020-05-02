@@ -13,6 +13,7 @@ module.exports = {
 		prefix: '.',
 		clientID: 'discord app client ID goes here',
 		clientSecret: 'discord app client secret goes here',
+		redirectURI: 'discord redirect URI goes here',
 	},
 
 	// Reddit API authorization info
@@ -20,6 +21,7 @@ module.exports = {
 		clientID: 'reddit app client ID goes here',
 		clientSecret: 'reddit app client secret goes here',
 		userAgent: 'put in a user agent that includes your /u/',
+		redirectURI: 'reddit redirect URI goes here',
 	},
 
 	// Web server config
