@@ -19,3 +19,7 @@ module.exports = new Command(['remindlist', 'reminderlist', 'listreminders'], as
 		log.error(error);
 	}
 });
+module.exports.help = {
+	desc: 'Lists all your reminders.',
+	args: '',
+};

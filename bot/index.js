@@ -1,4 +1,5 @@
-// Entry point for the bot. Manages the bot's database connection, command loading, and Discord connection.
+// Entry point for the bot. Manages the bot's database connection, command
+// loading, and Discord connection.
 
 const path = require('path');
 

@@ -1,7 +1,11 @@
-// Provides message filtering capabilities.
+// Provides message filtering capabilities. Defines the spec for storing filter
+// rules in the database. Still work in progress.
 
 /**
- * Returns whether or not a message satisfies a given rule.
+ * Determines whether or not a message matches a given rule. Throws an error if
+ * a rule with unknown option values is provided, but doesn't do full validation
+ * on the rule - we're assuming that if it's been written to the database, it's
+ * already made it past `isValidRule()`.
  * @param {Eris.Message} message The message object to check
  * @param {object} rule The rule to check against
  * @returns {Promise<boolean>}
@@ -51,7 +55,9 @@ const textFields = [
 ];
 
 /**
- * Determines if an object is a valid rule definition for database validation.
+ * Determines if an object is a valid rule definition. Used for database
+ * validation, so this function is designed to be very picky and includes
+ * lots of explicit, verbose checks.
  * @param {any} rule
  * @returns {boolean}
  */
