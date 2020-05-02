@@ -90,7 +90,6 @@ async function fetchRedditTokens (code) {
  * `created`.
  */
 async function fetchRedditUserInfo (accessToken) {
-	log.info(accessToken);
 	const response = await fetch('https://oauth.reddit.com/api/v1/me', {
 		headers: {
 			Authorization: `bearer ${accessToken}`,
@@ -135,7 +134,6 @@ module.exports = polka()
 			response.end('uh-oh');
 			return;
 		}
-		log.info(code);
 
 		// Exchange the code for access/refresh tokens
 		let tokens;

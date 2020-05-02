@@ -80,7 +80,6 @@ async function fetchDiscordTokens (code) {
 	});
 
 	if (response.status !== 200) {
-		log.error(await response.text());
 		throw new Error(`Discord gave non-200 response status when requesting tokens: ${response.status}`);
 	}
 
