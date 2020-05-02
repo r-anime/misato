@@ -27,7 +27,7 @@ yarn run-bot
 
 ## Architecture & Contributing
 
-This bot has two main parts: the bot process and the web process. These two processes communicate with each other via a [`node-ipc`]() connection, and they share a MongoDB database for persistent storage.
+This bot has two main parts: the bot process and the web process. These two processes communicate with each other via inter-process communication connection, and they share a MongoDB database for persistent storage.
 
 The web process is responsible for hosting the bot's web-based control panel and account verification interfaces. It acts as the "server" for the IPC connection, which means that it must be running for the bot process to function. Additionally, certain routine actions such as checking the database for reminders are the responsibility of the web process rather than the bot process.
 
@@ -39,7 +39,7 @@ The project is written in [Node.js](https://nodejs.org) and relies heavily on a 
 - [Yuuko](https://www.npmjs.com/package/yuuko), a Discord command framework based on the [Eris](https://www.npmjs.com/package/eris) API wrapper
 - [Polka](https://www.npmjs.com/package/polka), an HTTP/HTTPS server framework similar to [Express](https://www.npmjs.com/package/express) but faster and lighter
 - [node-ipc](https://www.npmjs.com/package/node-ipc), a package for easily establishing and working with IPC connections
-- [node-fetch](https://www.npmjs.com/package/node-fetch), used for all HTTP requests
+- [node-fetch](https://www.npmjs.com/package/node-fetch), a [`fetch()`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) polyfill for Node used for all HTTP requests
 
 ---
 
