@@ -328,10 +328,10 @@ emoji-regex@^8.0.0:
   resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-8.0.0.tgz#e818fd69ce5ccfcb404594f842963bf53164cc37"
   integrity sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==
 
-eris@^0.11.2:
-  version "0.11.2"
-  resolved "https://registry.yarnpkg.com/eris/-/eris-0.11.2.tgz#a4adad72d795d64d71a74833ccf5adc4db0ad8c0"
-  integrity sha512-OhccRcxrPiNUylTamrjIbZM6itKMLjNrwLIXGvNwQZj4CRVOOz9eUVIqOJULB713x1ezw7HoC8AEsnsMNUneDA==
+eris@^0.13.1:
+  version "0.13.1"
+  resolved "https://registry.yarnpkg.com/eris/-/eris-0.13.1.tgz#cdf6af407faafefee6242b7785297db9e14d484c"
+  integrity sha512-c/059ie4W/NfPufFCsEFdgbvEVjEpcttAZijQ33P+3EemCMUfuehp1qFq1WcrAHYU+y0lCOqQDw2YdkGjgYdUQ==
   dependencies:
     ws "^7.2.1"
   optionalDependencies:
@@ -1244,7 +1244,6 @@ ws@^7.2.1:
   resolved "https://registry.yarnpkg.com/ws/-/ws-7.2.3.tgz#a5411e1fb04d5ed0efee76d26d5c46d830c39b46"
   integrity sha512-HTDl9G9hbkNDk98naoR/cHDws7+EyYMOdL1BmjsZXRUjf7d+MficC4B7HLUPlSiho0vg+CWKrGIt/VJBd1xunQ==
 
-yuuko@^2.0.0:
+"yuuko@github:Geo1088/yuuko#builds/dev":
   version "2.0.0"
-  resolved "https://registry.yarnpkg.com/yuuko/-/yuuko-2.0.0.tgz#c4267b89491f536b2af2a75ab4bdaa02ca54ae45"
-  integrity sha512-K9ZCwZkoLABHFEkGA7WKYnulMCdeEgk0rJYUcs/V5QtMfuKWYGWAizewlbnPfk6QkZCOBZ86Vu4L/NAm708QHQ==
+  resolved "https://codeload.github.com/Geo1088/yuuko/tar.gz/63def3654112a32b29d66f250f672d5410b0a245"
