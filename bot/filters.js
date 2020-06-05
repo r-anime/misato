@@ -35,7 +35,7 @@ async function messageMatchesRule (message, rule) {
 
 		// Matches messages where a given field matches a given regular expression
 		case 'matchesRegexp': {
-			const regexp = new RegExp(rule.pattern, rule.flags.join(''));
+			const regexp = new RegExp(rule.pattern, rule.flags);
 			switch (rule.field) {
 				case 'content': return regexp.test(message.content);
 				case 'filename': return message.attachments.some(attachment => regexp.test(attachment.filename));
