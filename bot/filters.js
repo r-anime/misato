@@ -17,9 +17,12 @@ async function messageMatchesRule (message, rule) {
 		// Matches a logical combination of other rules
 		case 'multiple': {
 			if (rule.op === 'and') {
-				return rule.children.every(child => messageMatchesRule(message, child));
+				// Wow doing async array iteration is a pain in the ass
+				return Promise.all(rule.children.map(child => messageMatchesRule(message, child)))
+					.then(results => results.every(result => result));
 			} else if (rule.op === 'or') {
-				return rule.children.some(child => messageMatchesRule(message, child));
+				return Promise.all(rule.children.map(child => messageMatchesRule(message, child)))
+					.then(results => results.some(result => result));
 			}
 			throw new Error('unknown multiple-rule op', rule.op);
 		}
@@ -107,3 +110,10 @@ function isValidRule (rule) {
 		default: return false;
 	}
 }
+
+
+module.exports = {
+	isValidRule,
+	messageMatchesRule,
+	textFields,
+};
