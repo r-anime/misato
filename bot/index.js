@@ -19,6 +19,7 @@ const config = require('../config');
 	const bot = new Client({
 		token: config.discord.token,
 		prefix: config.discord.prefix,
+		disableDefaultMessageListener: true,
 	});
 
 	// Register listeners
@@ -35,8 +36,9 @@ const config = require('../config');
 	// Add MongoDB stuff to the bot's context for easy access from commands
 	bot.extendContext({mongoClient, db});
 
-	// Register commands
-	bot.addCommandDir(path.join(__dirname, 'commands'));
+	// Register commands and event listeners
+	bot.addDir(path.join(__dirname, 'commands'));
+	bot.addDir(path.join(__dirname, 'events'));
 
 	// Filtering stuff
 	// TODO: Split into own file
