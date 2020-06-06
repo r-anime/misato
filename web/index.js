@@ -3,7 +3,7 @@ const polka = require('polka');
 const log = require('another-logger')({label: 'web'});
 const {MongoClient} = require('mongodb');
 const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
+const IPCStore = require('./IPCStore')(session);
 
 const config = require('../config');
 const responseHelpers = require('./middleware/responseHelpers');
@@ -19,10 +19,7 @@ const auth = require('./routes/auth');
 	const app = polka();
 
 	// Set up per-session storage in MongoDB
-	const sessionStore = new MongoStore({
-		client: mongoClient,
-		dbName: config.mongodb.databaseName,
-	});
+	const sessionStore = new IPCStore();
 	app.use(session({
 		store: sessionStore,
 		secret: config.web.sessionSecret,
