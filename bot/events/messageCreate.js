@@ -1,8 +1,6 @@
 const {EventListener} = require('yuuko');
 const {messageMatchesRule} = require('../filters');
 
-console.log('caleld');
-
 module.exports = new EventListener('messageCreate', async (message, context) => {
 	// TODO: filter rules have to be cached/fetched from the db somewhere
 	if (await messageMatchesRule(message, {
@@ -24,7 +22,6 @@ module.exports = new EventListener('messageCreate', async (message, context) => 
 	})) {
 		return;
 	}
-	console.log('dab on em');
 
 	context.client.processCommand(message);
 });
