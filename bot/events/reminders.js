@@ -2,7 +2,9 @@
 // while cleaning them from the DB.
 
 const log = require('another-logger');
-const {blockquote} = require('./util/formatting');
+const {EventListener} = require('yuuko');
+
+const {blockquote} = require('../util/formatting');
 
 /**
  * Formats a reminder into a string for sending as a message.
@@ -10,7 +12,7 @@ const {blockquote} = require('./util/formatting');
  * @returns {string}
  */
 function formatReminder (reminder) {
-	return `${blockquote(reminder.text)}\n<@!${reminder.userID}>, here's your reminder from ${reminder.requested.toLocaleString()}.`;
+	return `${reminder.text ? `${blockquote(reminder.text)}\n` : ''}<@!${reminder.userID}>, here's your reminder from ${reminder.requested.toLocaleString()}.`;
 }
 
 /**
@@ -36,7 +38,7 @@ async function sendReminder (client, reminder) {
 	}
 }
 
-module.exports = ({client, db}) => {
+module.exports = new EventListener('ready', ({client, db}) => {
 	const collection = db.collection('reminders');
 
 	// This function calls itself every 30 seconds as long as the bot is running.
@@ -60,4 +62,4 @@ module.exports = ({client, db}) => {
 		// Queue this check to run again in 30 seconds
 		setTimeout(checkReminders, 30 * 1000);
 	})();
-};
+});
