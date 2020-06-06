@@ -13,6 +13,7 @@ const config = require('../config');
 	// Set up MongoDB connection
 	const mongoClient = new MongoClient(config.mongodb.url, {useUnifiedTopology: true});
 	await mongoClient.connect();
+	log.success('Connected to MongoDB on', config.mongodb.url);
 	const db = mongoClient.db(config.mongodb.databaseName);
 
 	// Create the bot
