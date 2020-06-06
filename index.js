@@ -9,7 +9,7 @@ const {MongoClient} = require('mongodb');
 const sessionBase = require('express-session');
 const MongoStore = require('connect-mongo')(sessionBase);
 
-const {linkIPCStore} = require('./web/IPCStore');
+const {linkIPCStore} = require('./util/IPCStore');
 const config = require('./config');
 
 (async () => {

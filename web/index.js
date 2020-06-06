@@ -1,27 +1,20 @@
 const polka = require('polka');
 
 const log = require('another-logger')({label: 'web'});
-const {MongoClient} = require('mongodb');
 const session = require('express-session');
-const IPCStore = require('./IPCStore')(session);
+const IPCStore = require('../util/IPCStore')(session);
 
 const config = require('../config');
 const responseHelpers = require('./middleware/responseHelpers');
 const auth = require('./routes/auth');
 
 (async () => {
-	// Set up MongoDB
-	const mongoClient = new MongoClient(config.mongodb.url, {useUnifiedTopology: true});
-	await mongoClient.connect();
-	const db = mongoClient.db(config.mongodb.databaseName);
-
 	// Set up our app
 	const app = polka();
 
-	// Set up per-session storage in MongoDB
-	const sessionStore = new IPCStore();
+	// Set up session storage, delegated to parent process via IPC
 	app.use(session({
-		store: sessionStore,
+		store: new IPCStore(),
 		secret: config.web.sessionSecret,
 		saveUninitialized: false,
 		resave: false,
