@@ -1,6 +1,6 @@
 const polka = require('polka');
 
-const log = require('another-logger');
+const log = require('another-logger')({label: 'web'});
 const {MongoClient} = require('mongodb');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);

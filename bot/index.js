@@ -5,7 +5,7 @@ const path = require('path');
 
 const {Client} = require('yuuko');
 const {MongoClient} = require('mongodb');
-const log = require('another-logger');
+const log = require('another-logger')({label: 'discord'});
 
 const config = require('../config');
 
