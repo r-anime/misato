@@ -23,7 +23,6 @@ function wrapProcess (targetProcess) {
 	targetProcess.on('message', message => {
 		const {messageID, type, data} = message;
 		if (type === 'response') {
-			console.log(!!targetProcess.argv, 'received response', messageID, data);
 			// Handle responses by resolving/rejecting the corresponding promise
 			const {resolve, reject} = pendingRequests[messageID];
 			delete pendingRequests[messageID];
@@ -33,7 +32,6 @@ function wrapProcess (targetProcess) {
 			}
 			return resolve(success);
 		} else if (type === 'request') {
-			console.log(!!targetProcess.argv, 'received request', messageID, data);
 			// Handle new requests by emitting an event, passing the request
 			// data, a resolve callback, and a reject callback
 			ipc.emit('request', data, success => targetProcess.send({
@@ -60,7 +58,6 @@ function wrapProcess (targetProcess) {
 		// those functions with the messageID so we can retrieve and call them
 		// once the target process actually responds
 		pendingRequests[messageID] = {resolve, reject};
-		console.log(!!targetProcess.argv, 'sending request', messageID, pendingRequests);
 		targetProcess.send({
 			type: 'request',
 			messageID,
