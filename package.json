@@ -4,8 +4,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint ./**/*.js",
-    "start-web": "node web",
-    "start-bot": "node bot"
+    "start": "node ."
   },
   "license": "MIT",
   "dependencies": {
