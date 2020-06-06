@@ -27,18 +27,17 @@ yarn run-bot
 
 ## Architecture & Contributing
 
-This bot has two main parts: the bot process and the web process. These two processes communicate with each other via inter-process communication connection, and they share a MongoDB database for persistent storage.
+This project has three main processes: the bot, the web server, and the core. These three processes communicate with each other via inter-process communication (IPC).
 
-The web process is responsible for hosting the bot's web-based control panel and account verification interfaces. It acts as the "server" for the IPC connection, which means that it must be running for the bot process to function. Additionally, certain routine actions such as checking the database for reminders are the responsibility of the web process rather than the bot process.
+The core process is the entry point. It is responsible for spawning the bot and web processes and coordinating IPC messages between them. For example, if the bot process needs to send real-time information to the web process to display to a user, the bot process sends an IPC message to the core, which then relays the message to the web process. The core also maintains a single connection to the MongoDB database, and both other processes make queries against the database by sending IPC messages to the core. Periodic tasks, such as checking for due reminders or fetching RSS feeds, are also the responsibility of the core.
 
-The bot process is responsible for listening to Discord events, interpreting and responding to commands, and carrying out any other Discord actions that the web process tells it to do. The web process will use IPC broadcast to tell the bot process to carry out Discord actions when necessary.
+The web process is responsible for hosting the bot's web-based control panel and account verification interfaces, and the bot process is responsible for listening to Discord events to process commands, filter messages, monitor guild joins, etc. Neither process has direct access to the database or to each other; they make heavy use of IPC to persist data, send each other updates, and ask each other to take actions.
 
-This architecture is designed to facilitate sharding the bot process if needed in the future, without having to coordinate multiple web processes with a load balancer or something similar. (Sharding is the practice of running multiple instances of a Discord client, each of which listens for events in a portion of the bot's total guilds.) Additionally, having the bot process isolated from the web process allows for actions such as account verifications to be queued and executed later in the event of a Discord outage or an error in the bot process.
+This architecture is designed to facilitate sharding and load-balancing for the bot and web processes if needed in the future. Additionally, having the bot process isolated from the web process allows for actions such as account verifications to be queued and executed later in the event of a Discord outage or an error in the bot process.
 
 The project is written in [Node.js](https://nodejs.org) and relies heavily on a few other projects whose documentation will be helpful to contributors:
 - [Yuuko](https://www.npmjs.com/package/yuuko), a Discord command framework based on the [Eris](https://www.npmjs.com/package/eris) API wrapper
 - [Polka](https://www.npmjs.com/package/polka), an HTTP/HTTPS server framework similar to [Express](https://www.npmjs.com/package/express) but faster and lighter
-- [node-ipc](https://www.npmjs.com/package/node-ipc), a package for easily establishing and working with IPC connections
 - [node-fetch](https://www.npmjs.com/package/node-fetch), a [`fetch()`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) polyfill for Node used for all HTTP requests
 
 ---
