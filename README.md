@@ -41,6 +41,10 @@ The provided sample configuration specifies a development-mode flag unless the `
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
 
+## License
+
+[MIT &copy; 2020 the /r/anime mod team.](LICENSE)
+
 ---
 
 # TODOs
