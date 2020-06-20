@@ -4,7 +4,14 @@ It's not much, but it's ours.
 
 ## Usage
 
-Use [Yarn](https://yarnpkg.com) instead of npm. Tested under Node 12.16.1.
+### Requirements
+
+- [Node](https://nodejs.org/en/download/) (tested against current LTS release)
+- [Yarn 1.x](https://classic.yarnpkg.com/en/docs/install) (project not yet configured for yarn 2.x; using npm is not recommended)
+- [MongoDB](https://www.mongodb.com/) 3.6+ ~~with a configured [replica set](https://docs.mongodb.com/manual/administration/replica-set-deployment/)~~
+  - For development purposes, you can [install MongoDB on your computer](https://docs.mongodb.com/manual/installation/) ~~and then [convert your installed instance to a replica set without actually replicating data](https://docs.mongodb.com/manual/tutorial/convert-standalone-to-replica-set/)~~.
+  - In production, you probably want to configure your replica set to do actual replication; check the [MongoDB replication docs](https://docs.mongodb.com/manual/administration/replica-set-deployment/) for more information. You can also use [Atlas](https://www.mongodb.com/cloud/atlas), Mongo's cloud hosting offering.
+  - **Note:** Future features will require a connection to a replica set in order to take advantage of [change streams](https://docs.mongodb.com/v3.6/changeStreams/), but there are none that require it yet.
 
 ### First-time setup
 
@@ -19,7 +26,7 @@ yarn migrate up
 
 ### Running the bot
 
-```
+```bash
 # Build the web frontend
 yarn build
 # Run the project (discord bot, web server and all)
@@ -30,22 +37,9 @@ yarn start
 
 The provided sample configuration specifies a development-mode flag unless the `NODE_ENV` environment variable is set to `production`. This flag sets the Webpack build mode to `development` and disables caching filesystem calls on the web server. Therefore, in production environments, you should run the project with `NODE_ENV=production`, or manually set `dev: false` in the configuration file.
 
-## Architecture & Contributing
+## Contributing
 
-This project has three main processes: the bot, the web server, and the core. These three processes communicate with each other via inter-process communication (IPC).
-
-The core process is the entry point. It is responsible for spawning the bot and web processes and coordinating IPC messages between them. For example, if the bot process needs to send real-time information to the web process to display to a user, the bot process sends an IPC message to the core, which then relays the message to the web process. The core also maintains a connection to the MongoDB database so it can run periodic tasks, such as fetching RSS feeds.
-
-The web process is responsible for hosting the bot's web-based control panel and account verification interfaces, and the bot process is responsible for listening to Discord events to process commands, filter messages, monitor guild joins, etc. They both maintain their own database connections to persist data. Neither process has direct access to the other; they make use of IPC through the core process to send each other updates and ask each other to take actions.
-
-This architecture is designed to facilitate sharding and load-balancing for the bot and web processes if needed in the future. Additionally, having the bot process isolated from the web process allows for actions such as account verifications to be queued and executed later in the event of a Discord outage or an error in the bot process.
-
-The backend is written in [Node.js](https://nodejs.org) and relies heavily on a few other projects whose documentation will be helpful to contributors:
-- [Yuuko](https://www.npmjs.com/package/yuuko), a Discord command framework based on the [Eris](https://www.npmjs.com/package/eris) API wrapper
-- [Polka](https://www.npmjs.com/package/polka), an HTTP/HTTPS server framework similar to [Express](https://www.npmjs.com/package/express) but faster and lighter
-- [node-fetch](https://www.npmjs.com/package/node-fetch), a [`fetch()`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) polyfill for Node used for all HTTP requests
-
-The frontend is written in [Vue](https://vuejs.org/) with the [Buefy](https://buefy.org/) component library.
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
