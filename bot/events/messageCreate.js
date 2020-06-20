@@ -16,7 +16,7 @@ const {messageMatchesRule, isValidRule} = require('../filters');
 function promiseRaceWithCondition (promises, condition) {
 	return new Promise(resolve => {
 		let resolved = false;
-		Promise.all(promises.map(p => p.then(val => {
+		Promise.all(promises.map(p => Promise.resolve(p).then(val => {
 			// When an individual promise fulfills, check if the result matches
 			if (condition(val) && !resolved) {
 				resolved = true;
