@@ -10,3 +10,6 @@ config.*
 
 # Migration tracking
 .migrate
+
+# Built frontend bundles
+web/frontend/dist

@@ -1,6 +1,9 @@
 // Sample configuration file. Rename this to `config.js` and fill in your values.
 
 module.exports = {
+	// Dev mode (disables sirv cache, runs webpack in development mode, etc.)
+	dev: process.env.NODE_ENV !== 'production',
+
 	// Mongo database information
 	mongodb: {
 		url: 'mongodb://localhost',

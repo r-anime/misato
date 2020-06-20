@@ -18,12 +18,17 @@ yarn migrate up
 ```
 
 ### Running the bot
+
 ```
-# Start the web server
-yarn run-web
-# Start the bot
-yarn run-bot
+# Build the web frontend
+yarn build
+# Run the project (discord bot, web server and all)
+yarn start
 ```
+
+### Production notes
+
+The provided sample configuration specifies a development-mode flag unless the `NODE_ENV` environment variable is set to `production`. This flag sets the Webpack build mode to `development` and disables caching filesystem calls on the web server. Therefore, in production environments, you should run the project with `NODE_ENV=production`, or manually set `dev: false` in the configuration file.
 
 ## Architecture & Contributing
 

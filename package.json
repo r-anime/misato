@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint ./**/*.js",
+    "build": "webpack",
     "start": "node core"
   },
   "license": "MIT",
@@ -15,11 +16,25 @@
     "mongodb": "^3.5.5",
     "node-fetch": "^2.6.0",
     "polka": "^0.5.2",
+    "sirv": "^1.0.1",
+    "vue": "^2.6.11",
     "yuuko": "Geo1088/yuuko#builds/event-listener-class"
   },
   "devDependencies": {
+    "@babel/core": "^7.10.3",
+    "@babel/preset-env": "^7.10.3",
     "@geo1088/eslint-config": "^3.0.10",
-    "eslint": "^6.8.0",
-    "migrate": "^1.6.2"
+    "babel-loader": "^8.1.0",
+    "css-loader": "^3.6.0",
+    "eslint": "^7.3.0",
+    "eslint-plugin-vue": "^6.2.2",
+    "html-webpack-plugin": "^4.3.0",
+    "migrate": "^1.6.2",
+    "sass": "^1.26.8",
+    "sass-loader": "^8.0.2",
+    "vue-loader": "^15.9.2",
+    "vue-template-compiler": "^2.6.11",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12"
   }
 }
