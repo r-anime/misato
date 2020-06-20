@@ -111,7 +111,6 @@ function isValidRule (rule) {
 	}
 }
 
-
 module.exports = {
 	isValidRule,
 	messageMatchesRule,

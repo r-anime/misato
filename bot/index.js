@@ -23,7 +23,7 @@ const config = require('../config');
 		disableDefaultMessageListener: true,
 	});
 
-	// Register listeners
+	// Log on notable events
 	bot.on('ready', () => {
 		log.success(`Connected to Discord as ${bot.user.username}#${bot.user.discriminator}`);
 	});
@@ -36,22 +36,6 @@ const config = require('../config');
 	// Register commands and event listeners
 	bot.addDir(path.join(__dirname, 'commands'));
 	bot.addDir(path.join(__dirname, 'events'));
-
-	// Filtering stuff
-	// TODO: Split into own file
-	bot.on('messageCreate', async msg => {
-		try {
-			if (msg.content.includes('fuck')) {
-				await msg.delete();
-				await msg.channel.createMessage('hey u cant say that here u butt');
-			} else if (msg.attachments.some(attachment => attachment.filename.endsWith('.png'))) {
-				await msg.delete();
-				await msg.channel.createMessage('images are banned btfo');
-			}
-		} catch (error) {
-			log.error(error);
-		}
-	});
 
 	// Connect the bot to Discord
 	bot.connect();
