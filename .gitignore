@@ -2,6 +2,9 @@
 node_modules
 yarn-error.log
 
+# Database
+/database
+
 # Uses yarn as package manager, not npm
 package-lock.json
 
