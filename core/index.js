@@ -7,7 +7,7 @@ const childProcess = require('child_process');
 const log = require('another-logger')({label: 'core'});
 const {MongoClient} = require('mongodb');
 
-const config = require('./config');
+const config = require('../config');
 
 (async () => {
 	// Set up MongoDB
@@ -17,13 +17,13 @@ const config = require('./config');
 	// const db = mongoClient.db(config.mongodb.databaseName);
 
 	// Spawn the web server process
-	log.info('Spawning web server process');
+	log.debug('Spawning web server process');
 	const webProcess = childProcess.fork('./web/index.js', [], {
 		serialization: 'advanced',
 	});
 
 	// Start the Discord bot
-	log.info('Spawning discord bot process');
+	log.debug('Spawning discord bot process');
 	const discordProcess = childProcess.fork('./bot', [], {
 		serialization: 'advanced',
 	});
