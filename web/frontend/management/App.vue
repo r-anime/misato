@@ -1,5 +1,8 @@
 <template>
-	<div>{{ dab }}</div>
+	<div>
+		{{ dab }}
+		<router-view />
+	</div>
 </template>
 
 <script>

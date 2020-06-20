@@ -8,7 +8,7 @@ const MongoStore = require('connect-mongo')(session);
 const config = require('../config');
 const responseHelpers = require('./middleware/responseHelpers');
 const auth = require('./routes/auth');
-const {default: sirv} = require('sirv');
+const sirv = require('sirv');
 
 (async () => {
 	// Set up our app
@@ -31,7 +31,7 @@ const {default: sirv} = require('sirv');
 	}));
 
 	// Set up static serving of built frontend bundles
-	app.use(sirv('./frontend/dist', {
+	app.use(sirv(config.web.frontendBuildDir, {
 		dev: config.dev,
 	}));
 

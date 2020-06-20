@@ -1,3 +1,5 @@
+const path = require('path');
+
 // Sample configuration file. Rename this to `config.js` and fill in your values.
 
 module.exports = {
@@ -31,6 +33,8 @@ module.exports = {
 	web: {
 		host: 'http://localhost:4567',
 		port: 4567,
+		// Where the frontend files are built to and stored from
+		frontendBuildDir: path.resolve(__dirname, 'web/frontend/dist'),
 		sessionSecret: 'lkasjdf;',
 		// Options for hosting an HTTPS server (leave unset for HTTP only in development)
 		// https: {

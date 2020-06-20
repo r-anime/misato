@@ -11,7 +11,7 @@ module.exports = {
 		management: './web/frontend/management/index.js',
 	},
 	output: {
-		path: path.resolve(__dirname, './web/frontend/dist'),
+		path: config.web.frontendBuildDir,
 		filename: '[name]/bundle.js',
 	},
 	module: {
@@ -30,4 +30,10 @@ module.exports = {
 			title: 'test',
 		}),
 	],
+	resolve: {
+		alias: {
+			vue$: 'vue/dist/vue.esm.js',
+		},
+		extensions: ['*', '.js', '.vue', '.json'],
+	},
 };
