@@ -5,9 +5,16 @@ const {Command} = require('yuuko');
 const fetch = require('node-fetch');
 
 module.exports = new Command('joke', async msg => {
-	const res = await fetch('https://official-joke-api.appspot.com/random_joke');
-	const joke = await res.json();
-	msg.channel.createMessage(`${joke.setup}\n${joke.punchline}`);
+	try {
+		const res = await fetch('https://official-joke-api.appspot.com/random_joke');
+		if (res.status !== 200) {
+			throw Error('Error getting joke.');
+		}
+		const joke = await res.json();
+		msg.channel.createMessage(`${joke.setup}\n${joke.punchline}`);
+	} catch (err) {
+		msg.channel.createMessage(err.message).catch(() => {});
+	}
 });
 
 module.exports.help = {
