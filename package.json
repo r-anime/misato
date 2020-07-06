@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint ./**/*.js",
+    "lint": "eslint './**/*.js'",
     "build": "webpack",
     "start": "node core"
   },
