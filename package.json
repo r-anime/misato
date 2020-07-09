@@ -5,7 +5,9 @@
   "scripts": {
     "lint": "eslint ./**/*.js",
     "build": "webpack",
-    "start": "node core"
+    "build:prod": "NODE_ENV=production webpack",
+    "start": "node core",
+    "start:prod": "NODE_ENV=production node core"
   },
   "license": "MIT",
   "dependencies": {
