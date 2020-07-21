@@ -794,10 +794,12 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@geo1088/eslint-config@^3.0.10":
-  version "3.0.10"
-  resolved "https://registry.yarnpkg.com/@geo1088/eslint-config/-/eslint-config-3.0.10.tgz#98c39c9656b0eb88d1bf47229dce4a5fdda34d04"
-  integrity sha512-2X1kPPliRFmlLNe3nSbS5BzUShVkEYEC6py8kxV6vmdl5HXKnmQLGOI2oR/xXS8afku73mVMVePeUzYzwWIXGQ==
+"@geo1088/eslint-config@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@geo1088/eslint-config/-/eslint-config-3.1.0.tgz#8a18df2dc02862a3172d3b2aa7d44b2af4e89a78"
+  integrity sha512-lc6T518biHy36tJsGnpL45FJtfeCnjwn5YzuSfC+DYcUrRSo/jq+c0+FPuC7xC8uDTTOEH/unz+0PVzzdk0ppg==
+  dependencies:
+    eslint-plugin-new-with-error "^2.0.0"
 
 "@polka/url@^0.5.0":
   version "0.5.0"
@@ -2166,6 +2168,11 @@ escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
+
+eslint-plugin-new-with-error@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-new-with-error/-/eslint-plugin-new-with-error-2.0.0.tgz#ff84db8b25365945a6a2fc694c3e6d93b8f10ad8"
+  integrity sha512-8jty4XD7/snyhyClvXaiy0V7fjFiJD0Vw9U4+ntXjcgqhgJjfN1xFMZDBrOObTfHLGCbyprZP2Sl30gjPXRcLw==
 
 eslint-plugin-vue@^6.2.2:
   version "6.2.2"
