@@ -182,6 +182,15 @@ module.exports = polka()
 		response.redirect(next);
 	})
 
+	// Gets info about the user's Discord account
+	.get('/about', (request, response) => {
+		if (request.session.discordAccessToken) {
+			response.end(JSON.stringify(request.session.discordUserInfo));
+		} else {
+			response.writeHead(404).end();
+		}
+	})
+
 	// Logs out of Discord
 	.get('/logout', (request, response) => {
 		delete request.session.discordAccessToken;

@@ -7,7 +7,9 @@ const MongoStore = require('connect-mongo')(session);
 
 const config = require('../config');
 const responseHelpers = require('./middleware/responseHelpers');
+const logging = require('./middleware/logging');
 const auth = require('./routes/auth');
+const api = require('./routes/api');
 const sirv = require('sirv');
 
 (async () => {
@@ -17,6 +19,7 @@ const sirv = require('sirv');
 	// Set up MongoDB
 	const mongoClient = new MongoClient(config.mongodb.url, {useUnifiedTopology: true});
 	await mongoClient.connect();
+	const db = mongoClient.db(config.mongodb.databaseName);
 	log.success('Connected to MongoDB on', config.mongodb.url);
 
 	// Set up session storage, delegated to parent process via IPC
@@ -36,10 +39,11 @@ const sirv = require('sirv');
 	}));
 
 	// Set up our other middlewares
-	app.use(responseHelpers);
+	app.use(responseHelpers, logging);
 
-	// Register sub-apps for different routes
+	// Register sub-apps for API routes
 	app.use('/auth', auth);
+	app.use('/api', api(db));
 
 	// Start the server
 	app.listen(config.web.port, error => {
