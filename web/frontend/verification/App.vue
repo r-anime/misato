@@ -9,19 +9,28 @@
 					<p>You're logged in as @{{ discordInfo.username }}#{{ discordInfo.discriminator }}. <a href="/auth/discord/logout?next=/verification">Log out</a></p>
 				</template>
 				<p v-else>
-					<a href="/auth/discord?next=/verification" class="button">Log in with Discord</a>
+					<a
+						href="/auth/discord?next=/verification"
+						class="button"
+					>Log in with Discord</a>
 				</p>
 				<template v-if="redditInfo">
 					<p>You're logged in as /u/{{ redditInfo.name }}. <a href="/auth/reddit/logout?next=/verification">Log out</a></p>
 				</template>
 				<p v-else>
-					<a href="/auth/reddit?next=/verification" class="button">Log in with Reddit</a>
+					<a
+						href="/auth/reddit?next=/verification"
+						class="button"
+					>Log in with Reddit</a>
 				</p>
 			</template>
 		</div>
 		<div class="section">
 			<p v-if="discordInfo && redditInfo">
-				<button @click="linkAccounts()" class="button">
+				<button
+					class="button"
+					@click="linkAccounts()"
+				>
 					Link accounts
 				</button>
 			</p>
@@ -69,6 +78,16 @@ export default {
 				}
 			});
 		},
+		// TODO
+		// unlinkAccounts () {
+		// 	fetch('/api/verification', {method: 'DELETE'}).then(async response => {
+		// 		if (response.ok) {
+		// 			alert('Unlinked!');
+		// 		} else {
+		// 			alert('Failed to unlink');
+		// 		}
+		// 	});
+		// },
 	},
 };
 </script>
