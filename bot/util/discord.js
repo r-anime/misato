@@ -36,7 +36,7 @@ module.exports = {
 	 * undefined, and the second item is the rest of the string.
 	 */
 	parseGuildMember (str, guild) {
-		let match = str.match(/^(?:<@!?)(\d+)(?:>)(?:\s+|$)/);
+		let match = str.match(/^(?:<@!?)?(\d+)>?(?:\s+|$)/);
 		if (match) {
 			const member = guild.members.get(match[1]);
 			if (member) return [member, str.substr(match[0].length)];
