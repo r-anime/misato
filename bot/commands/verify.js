@@ -65,7 +65,6 @@ module.exports = new Command('verify', async (msg, args, {db, client}) => {
 	}
 
 	if (needsConfirmation) {
-		// TODO: escaping
 		const discordUser = await client.users.get(discordUserID);
 		const discordTag = `${discordUser.username}#${discordUser.discriminator}`;
 		const redditTag = `/u/${redditUsername}`;
