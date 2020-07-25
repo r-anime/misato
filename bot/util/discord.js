@@ -29,29 +29,6 @@ module.exports = {
 	},
 
 	/**
-	 * Searches for a member of a guild by name.
-	 * @param {Eris.Guild} guild
-	 * @param {string} search The name to search for in the guild
-	 * @returns {Eris.Member | undefined}
-	 */
-	guildMemberSearch (guild, search) {
-		const byID = guild.members.get(search);
-		if (byID) return byID;
-
-		// name will always be present, discrim may or may not be
-		const [name, discrim] = search.match(/^(.+)(?:#(\d{4}))$/);
-
-		const exactMatch = guild.members.find(member => member.name === name && (discrim ? member.discriminator === discrim : true));
-		if (exactMatch) return exactMatch;
-
-		const nickMatch = guild.members.find(member => member.nickname === name && (discrim ? member.discriminator === discrim : true));
-		if (nickMatch) return nickMatch;
-
-		// we tried
-		return guild.members.find(member => member.name.includes(name) || member.nickname.includes(name));
-	},
-
-	/**
 	 * Tries to get a guild member from the beginning of a string.
 	 * @param {string} str
 	 * @param {Eris.Guild} guild
