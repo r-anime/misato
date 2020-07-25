@@ -1,5 +1,3 @@
-const Eris = require('eris');
-
 module.exports = {
 	/**
 	 * Waits for a specific user to add a specific emoji to a specific message.
@@ -51,5 +49,28 @@ module.exports = {
 
 		// we tried
 		return guild.members.find(member => member.name.includes(name) || member.nickname.includes(name));
+	},
+
+	/**
+	 * Tries to get a guild member from the beginning of a string.
+	 * @param {string} str
+	 * @param {Eris.Guild} guild
+	 * @returns {Array} An array where the first item is either a Member or
+	 * undefined, and the second item is the rest of the string.
+	 */
+	parseGuildMember (str, guild) {
+		let match = str.match(/^(?:<@!?)(\d+)(?:>)(?:\s+|$)/);
+		if (match) {
+			const member = guild.members.get(match[1]);
+			if (member) return [member, str.substr(match[0].length)];
+		}
+
+		match = str.match(/^([^#]{2,32})#(\d{4})(?:\s+|$)/);
+		if (match) {
+			const member = guild.members.find(m => m.username === match[1] && m.discriminator === match[2]);
+			if (member) return [member, str.substr(match[0].length)];
+		}
+
+		return [undefined, str];
 	},
 };
