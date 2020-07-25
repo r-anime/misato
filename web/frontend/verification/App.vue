@@ -92,4 +92,4 @@ export default {
 };
 </script>
 
-<style lang="scss" src="./customization.scss"></style>
+<style lang="scss" src="../common/customization.scss"></style>
