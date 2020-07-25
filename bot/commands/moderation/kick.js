@@ -7,6 +7,7 @@ module.exports = new Command('kick', async (message, args) => {
 		message.channel.createMessage('Not sure who you want me to kick. Start your message with a mention, exact tag, or user ID.').catch(() => {});
 		return;
 	}
+	// TODO: store kicks in db, etc
 	try {
 		await member.kick(reason);
 		message.channel.createMessage('Kicked!').catch(() => {});
