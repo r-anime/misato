@@ -1,0 +1,21 @@
+name: Build and deploy
+on:
+  push:
+    branches:
+    - master
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Start SSH agent
+      uses: webfactory/ssh-agent@v0.4.0
+      with:
+        ssh-private-key: ${{ secrets.DISCORD_MOD_BOT_SSH_KEY }}
+    - name: Deploy to shared server
+      run: |
+        ssh -o StrictHostKeyChecking=no discord-mod-bot@134.209.0.181 << EOF
+          cd /home/discord-mod-bot/discord-mod-bot
+          git fetch --all
+          git reset --hard origin/master
+          sudo systemctl restart discord-mod-bot.service
+        EOF

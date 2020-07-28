@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint ./**/*.js",
+    "lint": "eslint './**/*.js'",
     "build": "webpack",
-    "start": "node core"
+    "build:prod": "NODE_ENV=production webpack",
+    "start": "node core",
+    "start:prod": "NODE_ENV=production node core"
   },
   "license": "MIT",
   "dependencies": {
@@ -25,7 +27,7 @@
   "devDependencies": {
     "@babel/core": "^7.10.3",
     "@babel/preset-env": "^7.10.3",
-    "@geo1088/eslint-config": "^3.0.10",
+    "@geo1088/eslint-config": "^3.1.0",
     "babel-loader": "^8.1.0",
     "css-loader": "^3.6.0",
     "eslint": "^7.3.0",
