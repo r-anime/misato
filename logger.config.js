@@ -6,4 +6,5 @@ module.exports = {
 		erisWarn: {style: 'yellow', text: 'warning (eris)'},
 		hit: {style: 'magenta'},
 	},
+	ignoredLevels: [],
 };
