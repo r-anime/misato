@@ -7,7 +7,7 @@ const log = require('another-logger');
 module.exports = db => polka()
 
 	// This route actually creates the relationship in the database
-	.post('/', async (request, response) => {
+	.post('/:guildID', async (request, response) => {
 		// Make sure the user is actually logged in with Reddit and Discord
 		const reddit = request.session.redditUserInfo;
 		if (!reddit) {
@@ -27,6 +27,7 @@ module.exports = db => polka()
 			// TODO: implement this from Mongo via a compound primary key
 			const existingLink = await db.collection('redditAccounts').findOne({
 				userID: discord.id,
+				guildID: request.params.guildID,
 				redditName: reddit.name,
 			});
 			if (existingLink) {
@@ -39,6 +40,7 @@ module.exports = db => polka()
 			// role can be added
 			await db.collection('redditAccounts').insertOne({
 				userID: discord.id,
+				guildID: request.params.guildID,
 				redditName: reddit.name,
 			});
 		} catch (error) {
