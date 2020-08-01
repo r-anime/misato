@@ -7,7 +7,7 @@ module.exports = {
 	mode: config.dev ? 'development' : 'production',
 	entry: {
 		management: './web/frontend/management/index.js',
-		verification: './web/frontend/verification/index.js',
+		verify: './web/frontend/verify/index.js',
 	},
 	output: {
 		path: config.web.frontendBuildDir,
@@ -30,9 +30,9 @@ module.exports = {
 		}),
 		// HTML for verification
 		new HtmlWebpackPlugin({
-			template: './web/frontend/verification/template.html',
-			chunks: ['verification'],
-			filename: 'verification/index.html',
+			template: './web/frontend/verify/template.html',
+			chunks: ['verify'],
+			filename: 'verify/index.html',
 			title: 'test',
 		}),
 	],

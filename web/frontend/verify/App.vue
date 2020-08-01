@@ -6,20 +6,20 @@
 			</template>
 			<template v-else>
 				<template v-if="discordInfo">
-					<p>You're logged in as @{{ discordInfo.username }}#{{ discordInfo.discriminator }}. <a href="/auth/discord/logout?next=/verification">Log out</a></p>
+					<p>You're logged in as @{{ discordInfo.username }}#{{ discordInfo.discriminator }}. <a href="/auth/discord/logout?next=/verify">Log out</a></p>
 				</template>
 				<p v-else>
 					<a
-						href="/auth/discord?next=/verification"
+						href="/auth/discord?next=/verify"
 						class="button"
 					>Log in with Discord</a>
 				</p>
 				<template v-if="redditInfo">
-					<p>You're logged in as /u/{{ redditInfo.name }}. <a href="/auth/reddit/logout?next=/verification">Log out</a></p>
+					<p>You're logged in as /u/{{ redditInfo.name }}. <a href="/auth/reddit/logout?next=/verify">Log out</a></p>
 				</template>
 				<p v-else>
 					<a
-						href="/auth/reddit?next=/verification"
+						href="/auth/reddit?next=/verify"
 						class="button"
 					>Log in with Reddit</a>
 				</p>
@@ -47,6 +47,7 @@ export default {
 		return {
 			redditInfo: undefined,
 			discordInfo: undefined,
+			guildID: window.location.href.match(/[?&]guildID=(\d+)/)[1],
 		};
 	},
 	computed: {
@@ -70,7 +71,7 @@ export default {
 			});
 		},
 		linkAccounts () {
-			fetch('/api/verification/', {method: 'POST'}).then(async response => {
+			fetch(`/api/verification/${this.guildID}`, {method: 'POST'}).then(async response => {
 				if (response.ok) {
 					alert('Linked!');
 				} else {
