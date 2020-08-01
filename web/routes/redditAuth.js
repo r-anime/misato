@@ -169,6 +169,15 @@ module.exports = polka()
 		response.redirect(next);
 	})
 
+	// Returns information about the user's account
+	.get('/about', (request, response) => {
+		if (request.session.redditUserInfo) {
+			response.end(JSON.stringify(request.session.redditUserInfo));
+		} else {
+			response.writeHead(404).end();
+		}
+	})
+
 	// Logs out of Reddit
 	.get('/logout', (request, response) => {
 		delete request.session.redditAccessToken;
