@@ -39,4 +39,23 @@ const config = require('../config');
 
 	// Connect the bot to Discord
 	bot.connect();
+
+	// TODO hardcoded verification crap here
+	db.collection('redditAccounts').watch().on('change', async change => {
+		log.info('change', change);
+		if (change.operationType !== 'insert') {
+			return;
+		}
+		const {userID, redditName, guildID} = change.fullDocument;
+		log.debug(userID, redditName, guildID);
+		if (guildID !== '149327211470520321') {
+			return;
+		}
+		try {
+			await bot.addGuildMemberRole(guildID, userID, '739169480529281106');
+			log.debug(`Verified <@${userID}> (/u/${redditName})`);
+		} catch (error) {
+			log.error(`Failed to verify <@${userID}> (/u/${redditName})\n`, error);
+		}
+	});
 })();
