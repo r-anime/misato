@@ -3,6 +3,7 @@
 // for details of Discord's OAuth implementation, and
 // https://tools.ietf.org/html/rfc6749 for information about OAuth in general.
 
+const crypto = require('crypto');
 const polka = require('polka');
 const fetch = require('node-fetch');
 const log = require('another-logger');
@@ -129,7 +130,7 @@ module.exports = polka()
 	.get('/', (request, response) => {
 		const state = JSON.stringify({
 			next: request.query.next || '/',
-			unique: `${Math.random()}`, // TODO: this should be secure
+			unique: crypto.randomBytes(256).toString('hex'),
 		});
 		request.session.discordState = state;
 		response.redirect(authURI(state));
