@@ -6,20 +6,20 @@
 			</template>
 			<template v-else>
 				<template v-if="discordInfo">
-					<p>You're logged in as @{{ discordInfo.username }}#{{ discordInfo.discriminator }}. <a href="/auth/discord/logout?next=/verify">Log out</a></p>
+					<p>You're logged in as @{{ discordInfo.username }}#{{ discordInfo.discriminator }}. <a :href="`/auth/discord/logout?next=${temp}`">Log out</a></p>
 				</template>
 				<p v-else>
 					<a
-						href="/auth/discord?next=/verify"
+						:href="`/auth/discord?next=${temp}`"
 						class="button"
 					>Log in with Discord</a>
 				</p>
 				<template v-if="redditInfo">
-					<p>You're logged in as /u/{{ redditInfo.name }}. <a href="/auth/reddit/logout?next=/verify">Log out</a></p>
+					<p>You're logged in as /u/{{ redditInfo.name }}. <a :href="`/auth/reddit/logout?next=${temp}`">Log out</a></p>
 				</template>
 				<p v-else>
 					<a
-						href="/auth/reddit?next=/verify"
+						:href="`/auth/reddit?next=${temp}`"
 						class="button"
 					>Log in with Reddit</a>
 				</p>
@@ -48,6 +48,7 @@ export default {
 			redditInfo: undefined,
 			discordInfo: undefined,
 			guildID: window.location.href.match(/[?&]guildID=(\d+)/)[1],
+			temp: encodeURIComponent(window.location.href),
 		};
 	},
 	computed: {
