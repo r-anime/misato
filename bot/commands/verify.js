@@ -83,12 +83,20 @@ module.exports = new Command('verify', async (msg, args, {db, client}) => {
 	}
 
 	// okay now that that's done we can actually verify the users
-	const existing = await db.collection('redditAccounts').findOne({userID: discordUserID, redditName: redditUsername});
+	const existing = await db.collection('redditAccounts').findOne({
+		userID: discordUserID,
+		guildID: msg.channel.guild.id,
+		redditName: redditUsername,
+	});
 	if (existing) {
 		msg.channel.createMessage('These accounts are already linked.').catch(() => {});
 	} else {
 		try {
-			await db.collection('redditAccounts').insertOne({userID: discordUserID, redditName: redditUsername});
+			await db.collection('redditAccounts').insertOne({
+				userID: discordUserID,
+				guildID: msg.channel.guild.id,
+				redditName: redditUsername,
+			});
 			msg.channel.createMessage('Accounts linked!').catch(() => {});
 		} catch (error) {
 			log.error('Failed to link two accounts:', error);

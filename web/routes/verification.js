@@ -36,8 +36,6 @@ module.exports = db => polka()
 				return;
 			}
 			// Record the new connection
-			// TODO: Once we have IPC working, broadcast the new verification info to the Discord process so the user's
-			// role can be added
 			await db.collection('redditAccounts').insertOne({
 				userID: discord.id,
 				guildID: request.params.guildID,
