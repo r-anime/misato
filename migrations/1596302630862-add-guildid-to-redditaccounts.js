@@ -6,9 +6,8 @@ module.exports.up = async () => {
 	await mongoClient.connect();
 	const db = mongoClient.db(config.mongodb.databaseName);
 
-	await db.dropCollection('redditAccounts');
-
-	await db.createCollection('redditAccounts', {
+	await db.runCommand({
+		collMod: 'redditAccounts',
 		validator: {
 			$jsonSchema: {
 				bsonType: 'object',
@@ -34,5 +33,21 @@ module.exports.down = async () => {
 	await mongoClient.connect();
 	const db = mongoClient.db(config.mongodb.databaseName);
 
-	await db.dropCollection('redditAccounts');
+	await db.runCommand({
+		collMod: 'redditAccounts',
+		validator: {
+			$jsonSchema: {
+				bsonType: 'object',
+				required: ['userID', 'redditName'],
+				properties: {
+					userID: {
+						bsonType: 'string',
+					},
+					redditName: {
+						bsonType: 'string',
+					},
+				},
+			},
+		},
+	});
 };
