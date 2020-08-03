@@ -24,7 +24,6 @@ module.exports = db => polka()
 
 		try {
 			// Check if the accounts are already linked and return early if so
-			// TODO: implement this from Mongo via a compound primary key
 			const existingLink = await db.collection('redditAccounts').findOne({
 				userID: discord.id,
 				guildID: request.params.guildID,
