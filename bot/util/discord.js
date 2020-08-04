@@ -10,6 +10,7 @@ module.exports = {
 	 * the timeout is exceeded.
 	 */
 	awaitReaction (message, emote, userID, {timeout = 30000} = {}) {
+		// TODO: use a single listener for this rather than adding and removing, this will not scale well
 		const client = message.channel.guild ? message.channel.guild._client : message.channel._client;
 		return new Promise((resolve, reject) => {
 			function reactionListener (reactedMessage, reactedEmote, reactedUserID) {
@@ -50,4 +51,102 @@ module.exports = {
 
 		return [undefined, str];
 	},
+
+	/**
+	 * Tries to parse a string representing a relative amount of time. Accepts
+	 * stuff in the form "4h", "3 days", "1 hour 2 minutes". May be expanded to
+	 * support more formats in the future.
+	 * @param {string} str The string to parse the info from
+	 * @returns {Array} An array of two values. The first is the number of
+	 * milliseconds represented by the input. The second is a string containing
+	 * any leftover text from the end of the string.
+	 */
+	parseTime (str) {
+		let total = 0;
+		// attempt to process the entire string
+		while (str) {
+			// find things that look like times at the start of the string
+			const match = str.match(/^\s*(\d+)\s*(w|weeks?|d|days?|h|hours?|m|min(?:ute)?s?|s|seconds?)/i);
+			if (!match) {
+				break;
+			}
+			str = str.slice(match[0].length);
+			let val = parseInt(match[1], 10);
+
+			// pretty naive, messy relative time processing
+			// TODO: there's probably a module for this lol
+			/* eslint-disable no-fallthrough */
+			switch (match[2].toLowerCase()) {
+				// 12ish months in a year
+				case 'y':
+				case 'year':
+				case 'years':
+					val *= 20;
+				// 30(ish) days in a month
+				case 'mo':
+				case 'mos':
+				case 'month':
+				case 'months':
+					val *= 30;
+				// 7 days in a week
+				case 'w':
+				case 'week':
+				case 'weeks':
+					val *= 7;
+				// 24 hours in a day
+				case 'd':
+				case 'day':
+				case 'days':
+					val *= 24;
+				// 60 minutes in an hour
+				case 'h':
+				case 'hour':
+				case 'hours':
+					val *= 60;
+				// 60 seconds in a minute
+				case 'm':
+				case 'min':
+				case 'mins':
+				case 'minute':
+				case 'minutes':
+					val *= 60;
+				// 1000 ms in a second
+				case 's':
+				case 'sec':
+				case 'secs':
+				case 'second':
+				case 'seconds':
+					val *= 1000;
+				default: break;
+			}
+			/* eslint-enable no-fallthrough */
+
+			total += val;
+		}
+
+		return [total, str.trim()];
+	},
+
+	// TODO: these require extra locales that don't come with node by default until 14, until that hits LTS these will produce US-looking dates
+
+	/**
+	 * Wraps `toLocaleString` with consistent formatting.
+	 * @param {Date} date
+	 * @returns {string}
+	 */
+	formatDateTime: date => `${date.toLocaleString('en-GB', {timeZone: 'UTC'})} UTC`,
+
+	/**
+	 * Wraps `toLocaleDateString` with consistent formatting.
+	 * @param {Date} date
+	 * @returns {string}
+	 */
+	formatDate: date => `${date.toLocaleDateString('en-GB', {timeZone: 'UTC'})} UTC`,
+
+	/**
+	 * Wraps `toLocaleTimeString` with consistent formatting.
+	 * @param {Date} date
+	 * @returns {string}
+	 */
+	formatTime: date => `${date.toLocaleTimeString('en-GB', {timeZone: 'UTC'})} UTC`,
 };
