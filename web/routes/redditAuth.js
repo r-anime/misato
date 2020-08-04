@@ -116,7 +116,7 @@ module.exports = polka()
 	.get('/', (request, response) => {
 		const state = JSON.stringify({
 			next: request.query.next || '/',
-			unique: crypto.randomBytes(256).toString('hex'),
+			unique: crypto.randomBytes(16).toString('hex'),
 		});
 		request.session.redditState = state;
 		response.redirect(authURI(state));
