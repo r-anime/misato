@@ -60,7 +60,7 @@ module.exports = new Command('ban', async (message, args, {db}) => {
 		return;
 	}
 
-	message.channel.createMessage(`Banned <@${member.id}> ${duration ? `until ${formatDateTime(expirationDate)}.` : 'permanently'}.`).catch(() => {});
+	message.channel.createMessage(`Banned <@${member.id}> ${duration ? `until ${formatDateTime(expirationDate)}` : 'permanently'}.`).catch(() => {});
 }, {
 	permissions: [
 		'banMembers',
