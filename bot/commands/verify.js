@@ -7,7 +7,6 @@ const confirmationEmoji = '✅';
 
 module.exports = new Command('verify', async (msg, args, {db, client}) => {
 	args = args.join(' ').trim();
-	console.log(args);
 
 	// This command takes two arguments, a reddit user and a Discord user. Each
 	// can take several forms. We try to identify obvious ones first, and
@@ -31,7 +30,6 @@ module.exports = new Command('verify', async (msg, args, {db, client}) => {
 	if (redditMatch) {
 		redditUsername = redditMatch[1];
 		args = args.substr(0, redditMatch.index) + args.substr(redditMatch.index + redditMatch[0].length).trim();
-		console.log(args, '--- reddit:', redditUsername);
 	}
 
 	// Do we have a Discord tag at the beginning of the message?
@@ -40,7 +38,6 @@ module.exports = new Command('verify', async (msg, args, {db, client}) => {
 		if (member) {
 			discordUserID = member.id;
 			args = rest.trim();
-			console.log(args, '--- discord:', discordUserID);
 			// If the reddit name was before the Discord tag, there's ambiguity, because Discord tags can start with /u/ and contain spaces. So we flag it as a guess.
 			if (redditMatch && redditMatch.index === 0) {
 				needsConfirmation = true;
@@ -55,7 +52,6 @@ module.exports = new Command('verify', async (msg, args, {db, client}) => {
 		redditUsername = argArray.shift(); // removes first element from array
 		needsConfirmation = true;
 		args = argArray.join(' ').trim();
-		console.log(args, '--- reddit?:', redditUsername);
 	}
 
 	// If we don't even have a best guess by now, just give up
