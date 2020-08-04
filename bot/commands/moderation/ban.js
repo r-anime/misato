@@ -2,7 +2,7 @@ const log = require('another-logger')({label: 'command:ban'});
 const {Command} = require('yuuko');
 const {parseGuildMember, parseTime, formatDateTime, awaitReaction} = require('../../util/discord');
 
-const confirmationEmoji = '✅';
+const confirmationEmoji = '🔨';
 
 module.exports = new Command('ban', async (message, args, {db}) => {
 	const [member, rest] = parseGuildMember(args.join(' '), message.channel.guild);
@@ -16,7 +16,7 @@ module.exports = new Command('ban', async (message, args, {db}) => {
 
 	if (!reason || !duration && reason === rest) {
 		try {
-			const confirmation = await message.channel.createMessage(`Ban <@${member.id}> ${[duration ? '' : 'permanently', reason ? '' : 'without a reason'].filter(s => s).join(', ')}? React with ${confirmationEmoji} to confirm.`);
+			const confirmation = await message.channel.createMessage(`Ban <@${member.id}> ${[duration ? '' : 'permanently', reason ? '' : 'without a reason'].filter(s => s).join(', ')}? React ${confirmationEmoji} to confirm.`);
 			confirmation.addReaction(confirmationEmoji).catch(() => {});
 			await awaitReaction(confirmation, confirmationEmoji, message.author.id);
 		} catch (_) {
