@@ -14,8 +14,11 @@ module.exports = new Command('ban', async (message, args, {db}) => {
 	const expirationDate = new Date(Date.now() + duration);
 	log.debug(member.id, duration, reason);
 
+	// If reason or duration is implicitly blank, confirm intention
 	if (!reason || !duration && reason === rest) {
 		try {
+			// oh inline array filterjoins how i missed you
+			// TODO: split this message into a separate function; optimize
 			const confirmation = await message.channel.createMessage(`Ban <@${member.id}> ${[duration ? '' : 'permanently', reason ? '' : 'without a reason'].filter(s => s).join(', ')}? React ${confirmationEmoji} to confirm.`);
 			confirmation.addReaction(confirmationEmoji).catch(() => {});
 			await awaitReaction(confirmation, confirmationEmoji, message.author.id);
@@ -25,11 +28,10 @@ module.exports = new Command('ban', async (message, args, {db}) => {
 		}
 	}
 
+	// Ban the user
 	try {
 		// TODO: check if member is already banned before banning again
 		// TODO: service to clear bans after they expire
-
-		// Ban the user
 		await member.ban(0, reason);
 	} catch (_) {
 		message.channel.createMessage('Failed to ban. Are permissions set up correctly? I need the "Ban Members" permission, and I can\'t ban users with a higher role than me.').catch(() => {});
@@ -58,7 +60,7 @@ module.exports = new Command('ban', async (message, args, {db}) => {
 		return;
 	}
 
-	message.channel.createMessage(`Banned <@${member.id}> ${duration ? `until ${formatDateTime(expirationDate)}.` : 'permanently'}`).catch(() => {});
+	message.channel.createMessage(`Banned <@${member.id}> ${duration ? `until ${formatDateTime(expirationDate)}.` : 'permanently'}.`).catch(() => {});
 }, {
 	permissions: [
 		'banMembers',
