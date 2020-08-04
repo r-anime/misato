@@ -46,11 +46,9 @@ module.exports = new EventListener('ready', ({client, db}) => {
 	//       IPC broadcasts rather than polling from this process. This change will make the bot process future-proof in
 	//       case sharding is needed in the future.
 	(async function checkReminders () {
-		log.debug('Checking reminders');
-
 		// Fetch reminders from the database that have become due since the last check
 		const reminders = await collection.find({due: {$lt: new Date()}}).toArray();
-		log.debug(reminders);
+		log.debug('Due reminders:', reminders);
 
 		reminders.forEach(reminder => {
 			// Send the reminder, but don't wait to complete, and silently throw away any errors)

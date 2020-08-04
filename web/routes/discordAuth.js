@@ -28,7 +28,7 @@ const discordAuthURIBase = 'https://discordapp.com/api/oauth2/authorize'
  * @param {string} state
  * @returns {String}
  */
-function authURI (state) {
+function authURI(state) {
 	return `${discordAuthURIBase}&state=${encodeURIComponent(state)}`;
 }
 
@@ -37,7 +37,7 @@ function authURI (state) {
  * @param {object} content
  * @returns {Promise<string>}
  */
-function formData (content) {
+function formData(content) {
 	return Object.entries(content)
 		.map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
 		.join('&');
@@ -50,7 +50,7 @@ function formData (content) {
  * @param {object} userInfo
  * @returns {string}
  */
-function discordAvatarURL (userInfo) {
+function discordAvatarURL(userInfo) {
 	if (userInfo.avatar) {
 		return `https://cdn.discordapp.com/avatars/${userInfo.id}/${userInfo.avatar}.png`;
 	}
@@ -64,7 +64,7 @@ function discordAvatarURL (userInfo) {
  * `tokenType`, `scope`, and `expiresAt`. See Discord documentation for more
  * detailed information.
  */
-async function fetchDiscordTokens (code) {
+async function fetchDiscordTokens(code) {
 	const response = await fetch('https://discordapp.com/api/oauth2/token', {
 		method: 'POST',
 		headers: {
@@ -103,7 +103,7 @@ async function fetchDiscordTokens (code) {
  * @returns {Promise<object>} Object has keys `name`, `avatarURL`, and
  * `created`.
  */
-async function fetchDiscordUserInfo (accessToken) {
+async function fetchDiscordUserInfo(accessToken) {
 	const response = await fetch('https://discordapp.com/api/v6/users/@me', {
 		headers: {
 			Authorization: `Bearer ${accessToken}`,
@@ -130,7 +130,7 @@ module.exports = polka()
 	.get('/', (request, response) => {
 		const state = JSON.stringify({
 			next: request.query.next || '/',
-			unique: crypto.randomBytes(256).toString('hex'),
+			unique: crypto.randomBytes(16).toString('hex'),
 		});
 		request.session.discordState = state;
 		response.redirect(authURI(state));
@@ -138,7 +138,7 @@ module.exports = polka()
 
 	// OAuth flow has completed, time to authorize with Discord
 	.get('/callback', async (request, response) => {
-		const {error, state, code} = request.query;
+		const { error, state, code } = request.query;
 
 		// Check for errors or state mismatches
 		if (error) {
@@ -154,7 +154,7 @@ module.exports = polka()
 
 		// This should be safe, because the block above ensures we only ever try to parse things that we put in the
 		// session ourselves, and we only put valid JSON there. We want to get the next URL so we can use it later.
-		const {next} = JSON.parse(state);
+		const { next } = JSON.parse(state);
 
 		// Exchange the code for access/refresh tokens
 		let tokens;
