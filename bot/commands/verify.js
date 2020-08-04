@@ -67,7 +67,7 @@ module.exports = new Command('verify', async (msg, args, {db, client}) => {
 
 		try {
 			// send message and wait for confirmation from the command's author
-			const confirmationMessage = await msg.channel.createMessage(`Did you mean **${escape(discordTag)}** and **${escape(redditTag)}**? React with ${confirmationEmoji} to go with that, or try again and be more specific.`);
+			const confirmationMessage = await msg.channel.createMessage(`Did you mean **${escape(discordTag)}** and **${escape(redditTag)}**? React ${confirmationEmoji} to confirm.`);
 			// it's fine if the bot can't add a reaction, the command caller might still be able to
 			confirmationMessage.addReaction(confirmationEmoji).catch(() => {});
 			await awaitReaction(confirmationMessage, confirmationEmoji, msg.author.id);
