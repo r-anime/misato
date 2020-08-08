@@ -48,11 +48,11 @@ const config = require('../config');
 		}
 		const {userID, redditName, guildID} = change.fullDocument;
 		log.debug(userID, redditName, guildID);
-		if (guildID !== '149327211470520321') {
+		if (guildID !== config.TEMP_guildID) {
 			return;
 		}
 		try {
-			await bot.addGuildMemberRole(guildID, userID, '739169480529281106');
+			await bot.addGuildMemberRole(guildID, userID, config.TEMP_roleID);
 			log.debug(`Verified <@${userID}> (/u/${redditName})`);
 		} catch (error) {
 			log.error(`Failed to verify <@${userID}> (/u/${redditName})\n`, error);
