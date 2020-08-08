@@ -33,13 +33,20 @@ const sirv = require('sirv');
 		resave: false,
 	}));
 
+	app.use(logging);
+
 	// Set up static serving of built frontend bundles
 	app.use(sirv(config.web.frontendBuildDir, {
 		dev: config.dev,
+		single: true,
+		ignores: [
+			'/api',
+			'/auth',
+		],
 	}));
 
 	// Set up our other middlewares
-	app.use(responseHelpers, logging);
+	app.use(responseHelpers);
 
 	// Register sub-apps for API routes
 	app.use('/auth', auth);

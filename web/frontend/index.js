@@ -1,17 +1,17 @@
 import Vue from 'vue';
-import VueRouter from 'vue-router';
 import Buefy from 'buefy';
 
+Vue.use(Buefy);
+
 import router from './router';
+import store from './store';
 
 import App from './App';
-
-Vue.use(VueRouter);
-Vue.use(Buefy);
 
 // eslint-disable-next-line no-new
 new Vue({
 	el: '#app',
 	router,
+	store,
 	render: h => h(App),
 });
