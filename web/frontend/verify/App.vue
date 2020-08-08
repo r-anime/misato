@@ -32,19 +32,23 @@
 		<div class="container">
 			<div class="section">
 				<template v-if="!loaded">
-					<p>Loading...</p>
+					<b-loading :active="true" />
 				</template>
 				<template v-else>
-					<div class="level">
-						<div class="level-item">
-							<template v-if="discordInfo">
+					<div class="columns is-centered is-multiline">
+						<div class="column is-narrow">
+							<div
+								v-if="discordInfo"
+								class="box account-box has-text-centered"
+							>
+								<figure class="image avatar is-128x128">
+									<img :src="discordInfo.avatarURL">
+								</figure>
 								<p>
-									You're logged in as @{{ discordInfo.username }}#{{ discordInfo.discriminator }}.
-									<a
-										:href="`/auth/discord/logout?next=${temp}`"
-									>Log out</a>
+									<strong>{{ discordInfo.username }}#{{ discordInfo.discriminator }}</strong>
 								</p>
-							</template>
+								<p><a :href="`/auth/discord/logout?next=${temp}`">Log out</a></p>
+							</div>
 							<p v-else>
 								<a
 									:href="`/auth/discord?next=${temp}`"
@@ -52,15 +56,17 @@
 								>Log in with Discord</a>
 							</p>
 						</div>
-						<div class="level-item">
-							<template v-if="redditInfo">
-								<p>
-									You're logged in as /u/{{ redditInfo.name }}.
-									<a
-										:href="`/auth/reddit/logout?next=${temp}`"
-									>Log out</a>
-								</p>
-							</template>
+						<div class="column is-narrow">
+							<div
+								v-if="redditInfo"
+								class="box account-box"
+							>
+								<figure class="image avatar is-128x128">
+									<img :src="redditInfo.avatarURL">
+								</figure>
+								<p><strong>/u/{{ redditInfo.name }}</strong></p>
+								<p><a :href="`/auth/reddit/logout?next=${temp}`">Log out</a></p>
+							</div>
 							<p v-else>
 								<a
 									:href="`/auth/reddit?next=${temp}`"
@@ -69,24 +75,22 @@
 							</p>
 						</div>
 					</div>
-				</template>
-			</div>
-			<div class="section">
-				<div class="level">
-					<div class="level-item">
-						<p v-if="discordInfo && redditInfo">
-							<button
-								class="button is-large is-success"
-								@click="linkAccounts()"
-							>
-								Link these accounts
-							</button>
-						</p>
-						<p v-else>
-							Log in with both Reddit and Discord to link your accounts.
-						</p>
+					<div class="level">
+						<div class="level-item">
+							<p v-if="discordInfo && redditInfo">
+								<button
+									class="button is-large is-success"
+									@click="linkAccounts()"
+								>
+									Link these accounts
+								</button>
+							</p>
+							<p v-else>
+								Log in with both Reddit and Discord to link your accounts.
+							</p>
+						</div>
 					</div>
-				</div>
+				</template>
 			</div>
 		</div>
 	</div>
@@ -152,5 +156,15 @@ export default {
     border-radius: 50%;
     max-height: none;
   }
+}
+
+.account-box {
+display: flex;
+flex-direction: column;
+align-items: center;
+
+.image {
+	margin-bottom: 1rem;
+}
 }
 </style>
