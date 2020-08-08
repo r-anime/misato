@@ -1,4 +1,5 @@
 // Describes custom log levels for the `another-logger` package.
+const config = require('./config');
 
 module.exports = {
 	levels: {
@@ -6,5 +7,5 @@ module.exports = {
 		erisWarn: {style: 'yellow', text: 'warning (eris)'},
 		hit: {style: 'magenta'},
 	},
-	ignoredLevels: [],
+	ignoredLevels: config.dev ? [] : ['debug'],
 };
