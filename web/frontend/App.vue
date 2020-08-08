@@ -5,7 +5,10 @@
 			wrapper-class="container"
 		>
 			<template slot="brand">
-				<b-navbar-item tag="span">
+				<b-navbar-item
+					tag="router-link"
+					:to="{name: 'home'}"
+				>
 					/r/anime Discord!
 				</b-navbar-item>
 			</template>
@@ -23,10 +26,21 @@
 					<b-navbar-item tag="span">
 						<span>Hi, <strong>{{ discordInfo.username }}#{{ discordInfo.discriminator }}</strong></span>
 					</b-navbar-item>
-					<b-navbar-item :href="'/auth/discord/logout?next=' + temp">
+					<b-navbar-item :href="'/auth/discord/logout?next=' + encodedCurrentURL">
 						Log out
 					</b-navbar-item>
 				</b-navbar-dropdown>
+				<b-navbar-item
+					v-else
+					tag="div"
+				>
+					<a
+						:href="'/auth/discord?next=' + encodedCurrentURL"
+						class="button is-primary is-inverted is-outlined"
+					>
+						Log in with Discord
+					</a>
+				</b-navbar-item>
 			</template>
 		</b-navbar>
 		<router-view />
@@ -36,6 +50,11 @@
 <script>
 import {mapState, mapActions} from 'vuex';
 export default {
+	data () {
+		return {
+			encodedCurrentURL: encodeURIComponent(window.location.href),
+		};
+	},
 	computed: {
 		...mapState(['discordInfo']),
 	},

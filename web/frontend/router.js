@@ -9,7 +9,7 @@ import Verify from './views/Verify';
 export default new VueRouter({
 	mode: 'history',
 	routes: [
-		{path: '/', component: Home},
-		{path: '/verify', component: Verify},
+		{path: '/', component: Home, name: 'home'},
+		{path: '/verify/:guildID', component: Verify, name: 'verify'},
 	],
 });

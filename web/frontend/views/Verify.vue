@@ -2,7 +2,10 @@
 	<div class="container">
 		<div class="section">
 			<template v-if="!loaded">
-				<b-loading :active="true" />
+				<b-loading
+					:active="true"
+					:is-full-page="false"
+				/>
 			</template>
 			<template v-else>
 				<div class="columns is-centered is-multiline">
@@ -17,12 +20,12 @@
 							<p>
 								<strong>{{ discordInfo.username }}#{{ discordInfo.discriminator }}</strong>
 							</p>
-							<p><a :href="`/auth/discord/logout?next=${temp}`">Log out</a></p>
+							<p><a :href="`/auth/discord/logout?next=${encodedCurrentURL}`">Log out</a></p>
 						</div>
 						<p v-else>
 							<a
-								:href="`/auth/discord?next=${temp}`"
-								class="button"
+								:href="`/auth/discord?next=${encodedCurrentURL}`"
+								class="button is-discord"
 							>Log in with Discord</a>
 						</p>
 					</div>
@@ -35,12 +38,12 @@
 								<img :src="redditInfo.avatarURL">
 							</figure>
 							<p><strong>/u/{{ redditInfo.name }}</strong></p>
-							<p><a :href="`/auth/reddit/logout?next=${temp}`">Log out</a></p>
+							<p><a :href="`/auth/reddit/logout?next=${encodedCurrentURL}`">Log out</a></p>
 						</div>
 						<p v-else>
 							<a
-								:href="`/auth/reddit?next=${temp}`"
-								class="button"
+								:href="`/auth/reddit?next=${encodedCurrentURL}`"
+								class="button is-reddit"
 							>Log in with Reddit</a>
 						</p>
 					</div>
@@ -66,25 +69,32 @@
 </template>
 
 <script>
-import {mapState, mapActions} from 'vuex';
+import {mapState} from 'vuex';
 export default {
 	data () {
 		return {
-			guildID: window.location.href.match(/[?&]guildID=(\d+)/)[1],
-			temp: encodeURIComponent(window.location.href),
+			redditInfo: undefined,
+			encodedCurrentURL: encodeURIComponent(window.location.href),
 		};
 	},
 	computed: {
-		...mapState(['discordInfo', 'redditInfo']),
+		...mapState(['discordInfo']),
 		loaded () {
-			return this.redditInfo != null && this.discordInfo != null;
+			return this.redditInfo !== undefined && this.discordInfo !== undefined;
+		},
+		guildID () {
+			return this.$route.params.guildID;
 		},
 	},
 	mounted () {
 		this.fetchRedditInfo();
 	},
 	methods: {
-		...mapActions(['fetchRedditInfo']),
+		fetchRedditInfo () {
+			fetch('/auth/reddit/about').then(async response => {
+				this.redditInfo = response.ok ? await response.json().catch(() => null) : null;
+			});
+		},
 		linkAccounts () {
 			fetch(`/api/verification/${this.guildID}`, {method: 'POST'}).then(async response => {
 				if (response.ok) {
