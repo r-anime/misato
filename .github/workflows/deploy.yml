@@ -17,6 +17,7 @@ jobs:
           cd /home/discord-mod-bot/discord-mod-bot
           git fetch --all
           git reset --hard origin/master
+          nvm use default
           yarn
           yarn migrate up
           yarn build:prod
