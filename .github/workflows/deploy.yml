@@ -17,5 +17,8 @@ jobs:
           cd /home/discord-mod-bot/discord-mod-bot
           git fetch --all
           git reset --hard origin/master
+          yarn
+          yarn migrate up
+          yarn build:prod
           sudo systemctl restart discord-mod-bot.service
         EOF
