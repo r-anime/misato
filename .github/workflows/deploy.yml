@@ -15,9 +15,9 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no discord-mod-bot@134.209.0.181 << EOF
           cd /home/discord-mod-bot/discord-mod-bot
+          source /home/discord-mod-bot/.bashrc
           git fetch --all
           git reset --hard origin/master
-          nvm use default
           yarn
           yarn migrate up
           yarn build:prod
