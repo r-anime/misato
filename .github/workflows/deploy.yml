@@ -18,6 +18,7 @@ jobs:
           source /home/discord-mod-bot/.bashrc
           git fetch --all
           git reset --hard origin/master
+          nvm use 12
           yarn
           yarn migrate up
           yarn build:prod
