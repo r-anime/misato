@@ -16,6 +16,8 @@ jobs:
         ssh -o StrictHostKeyChecking=no discord-mod-bot@134.209.0.181 << EOF
           cd /home/discord-mod-bot/discord-mod-bot
           source /home/discord-mod-bot/.bashrc
+          echo "bashrc exited with $?"
+          echo "from script $NVM_DIR"
           git fetch --all
           git reset --hard origin/master
           nvm use 12
