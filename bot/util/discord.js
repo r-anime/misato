@@ -33,22 +33,35 @@ module.exports = {
 	 * Tries to get a guild member from the beginning of a string.
 	 * @param {string} str
 	 * @param {Eris.Guild} guild
+	 * @param {Eris.Member} [me] If passed, the word "me" will be interpreted
+	 * as referencing the specified member
 	 * @returns {Array} An array where the first item is either a Member or
-	 * undefined, and the second item is the rest of the string.
+	 * undefined, and the second item is the rest of the string
 	 */
-	parseGuildMember (str, guild) {
-		let match = str.match(/^(?:<@!?)?(\d+)>?(?:\s+|$)/);
+	parseGuildMember (str, guild, me) {
+		let match;
+
+		// The "me" keyword, if we're provided with a context for it
+		if (me) {
+			match = str.match(/^me(\s+|$)/i);
+			if (match) return [me, str.substr(match[0].length)];
+		}
+
+		// Actual user mentions and raw IDs
+		match = str.match(/^(?:<@!?)?(\d+)>?(?:\s+|$)/);
 		if (match) {
 			const member = guild.members.get(match[1]);
 			if (member) return [member, str.substr(match[0].length)];
 		}
 
+		// User tags (name#discrim)
 		match = str.match(/^([^#]{2,32})#(\d{4})(?:\s+|$)/);
 		if (match) {
 			const member = guild.members.find(m => m.username === match[1] && m.discriminator === match[2]);
 			if (member) return [member, str.substr(match[0].length)];
 		}
 
+		// Nothing found
 		return [undefined, str];
 	},
 
