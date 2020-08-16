@@ -1,5 +1,5 @@
 const {Command} = require('yuuko');
-const {parseGuildMember, formatDate} = require('../util/discord');
+const {parseUser, formatDate} = require('../util/discord');
 const {escape} = require('../util/formatting');
 
 // function for generating the reddit info
@@ -41,7 +41,7 @@ async function bansLine (userID, guildID, db) {
 }
 
 module.exports = new Command('whois', async (message, args, {db}) => {
-	const [member] = parseGuildMember(args.join(' '), message.channel.guild);
+	const [member] = await parseUser(args.join(' '), message.channel.guild, message.author);
 	if (!member) {
 		message.channel.createMessage('Must pass a Discord user. Lookup by Reddit username soon:tm:').catch(() => {});
 		return;
@@ -52,4 +52,9 @@ module.exports = new Command('whois', async (message, args, {db}) => {
 		kicksLine(member.id, message.channel.guild.id, db),
 		bansLine(member.id, message.channel.guild.id, db),
 	])).join('\n\n')).catch(() => {});
+}, {
+	permissions: [
+		'kickMembers',
+		'banMembers',
+	],
 });

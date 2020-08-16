@@ -1,8 +1,20 @@
 const log = require('another-logger')({label: 'command:ban'});
 const {Command} = require('yuuko');
 const {parseGuildMember, parseTime, formatDateTime, awaitReaction} = require('../../util/discord');
+const {escape, blockquote} = require('../../util/formatting');
 
 const confirmationEmoji = '🔨';
+
+/**
+ * Generatesa message to be sent to a user who will be banned.
+ * @param {Eris.guild} guild The guild the user is being banned from
+ * @param {string} reason The reason for the ban
+ * @param {expirationDate} expirationDate The date the ban will expire, if any
+ * @returns {string}
+ */
+function banMessage (guild, reason, expirationDate) {
+	return `You've been banned from __${escape(guild.name)}__ ${expirationDate ? `until ${formatDateTime(expirationDate)}` : 'permanently'}.\n${reason ? blockquote(escape(reason)) : ''}`;
+}
 
 module.exports = new Command('ban', async (message, args, {db}) => {
 	const [member, rest] = parseGuildMember(args.join(' '), message.channel.guild);
@@ -11,7 +23,7 @@ module.exports = new Command('ban', async (message, args, {db}) => {
 		return;
 	}
 	const [duration, reason] = parseTime(rest);
-	const expirationDate = new Date(Date.now() + duration);
+	const expirationDate = duration && new Date(Date.now() + duration);
 	log.debug(member.id, duration, reason);
 
 	// If reason or duration is implicitly blank, confirm intention
@@ -26,6 +38,17 @@ module.exports = new Command('ban', async (message, args, {db}) => {
 			// couldn't send confirmation message or user aborted
 			return;
 		}
+	}
+
+	// Send the notification
+	let messageSent;
+	try {
+		const dmChannel = await member.user.getDMChannel();
+		await dmChannel.createMessage(banMessage(message.channel.guild, reason, expirationDate));
+		messageSent = true;
+	} catch (error) {
+		log.debug(error);
+		messageSent = false;
 	}
 
 	// Ban the user
@@ -45,11 +68,8 @@ module.exports = new Command('ban', async (message, args, {db}) => {
 		modID: message.author.id,
 		date: new Date(),
 		note: reason,
+		expirationDate,
 	};
-	// expirationDate is only stored if the duration is not zero
-	if (duration !== 0) {
-		banRecord.expirationDate = expirationDate;
-	}
 	try {
 		// Insert information to database
 		await db.collection('bans').insertOne(banRecord);
@@ -60,7 +80,7 @@ module.exports = new Command('ban', async (message, args, {db}) => {
 		return;
 	}
 
-	message.channel.createMessage(`Banned <@${member.id}> ${duration ? `until ${formatDateTime(expirationDate)}` : 'permanently'}.`).catch(() => {});
+	message.channel.createMessage(`Banned <@${member.id}> ${duration ? `until ${formatDateTime(expirationDate)}` : 'permanently'}.${messageSent ? '' : ' Failed to send notification because of privacy settings.'}`).catch(() => {});
 }, {
 	permissions: [
 		'banMembers',
