@@ -52,4 +52,9 @@ module.exports = new Command('whois', async (message, args, {db}) => {
 		kicksLine(member.id, message.channel.guild.id, db),
 		bansLine(member.id, message.channel.guild.id, db),
 	])).join('\n\n')).catch(() => {});
+}, {
+	permissions: [
+		'kickMembers',
+		'banMembers',
+	],
 });
