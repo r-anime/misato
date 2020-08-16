@@ -21,6 +21,7 @@ const config = require('../config');
 		token: config.discord.token,
 		prefix: config.discord.prefix,
 		disableDefaultMessageListener: true,
+		restMode: true,
 	});
 
 	// Log on notable events

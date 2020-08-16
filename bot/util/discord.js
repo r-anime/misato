@@ -30,7 +30,48 @@ module.exports = {
 	},
 
 	/**
-	 * Tries to get a guild member from the beginning of a string.
+	 * Tries to get a user from the beginning of a string. Will try identifying
+	 * from a direct mention or user ID, and optionally a user#discrim tag (if
+	 * `guild` is provided) or the word "me" (if `me` is provided).
+	 * optionally the word "me".
+	 * @param {string} str
+	 * @param {Eris.Guild} [guild] If passed, enables matching user#discrim tags
+	 * from the given guild (otherwise limited to taking mentions and raw IDs)
+	 * @param {Eris.User} [me] If passed, the word "me" will be interpreted as
+	 * referencing the specified user
+	 * @returns {Array} An array where the first item is either a Member or
+	 * undefined, and the second item is the rest of the string
+	 */
+	async parseUser (str, guild, me) {
+		let match;
+
+		// The "me" keyword, if we're provided with a context for it
+		if (me) {
+			match = str.match(/^me(\s+|$)/i);
+			if (match) return [me, str.substr(match[0].length)];
+		}
+
+		// Members of the given guild, if any
+		if (guild) {
+			const [member, rest] = module.exports.parseGuildMember(str, guild, me);
+			if (member) return [member.user, rest];
+		}
+
+		// Actual user mentions and raw IDs
+		match = str.match(/^(?:<@!?)?(\d+)>?(?:\s+|$)/);
+		if (match) {
+			const member = guild._client.users.get(match[1]) || await guild._client.getRESTUser(match[1]).catch(() => undefined);
+			if (member) return [member, str.substr(match[0].length)];
+		}
+
+		// nothing
+		return [undefined, str];
+	},
+
+	/**
+	 * Tries to get a guild member from the beginning of a string. Will try
+	 * identifying from a direct mention, user ID, tag (user#discrim), or
+	 * optionally the word "me" (if `me` is provided).
 	 * @param {string} str
 	 * @param {Eris.Guild} guild
 	 * @param {Eris.Member} [me] If passed, the word "me" will be interpreted
