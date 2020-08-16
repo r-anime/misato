@@ -1,8 +1,20 @@
 const log = require('another-logger')({label: 'command:kick'});
 const {Command} = require('yuuko');
 const {parseGuildMember, awaitReaction} = require('../../util/discord');
+const {escape, blockquote} = require('../../util/formatting');
 
 const confirmationEmoji = '👢';
+
+/**
+ * Generatesa message to be sent to a user who will be kicked.
+ * @param {Eris.guild} guild The guild the user is being banned from
+ * @param {string} reason The reason for the ban
+ * @param {expirationDate} expirationDate The date the ban will expire, if any
+ * @returns {string}
+ */
+function kickMessage (guild, reason) {
+	return `You've been kicked from __${escape(guild.name)}__.\n${reason ? blockquote(escape(reason)) : ''}`;
+}
 
 module.exports = new Command('kick', async (message, args, {db}) => {
 	const [member, reason] = parseGuildMember(args.join(' '), message.channel.guild);
@@ -19,6 +31,17 @@ module.exports = new Command('kick', async (message, args, {db}) => {
 			// couldn't send confirmation message or user aborted
 			return;
 		}
+	}
+
+	// Send the notification
+	let messageSent;
+	try {
+		const dmChannel = await member.user.getDMChannel();
+		await dmChannel.createMessage(kickMessage(message.channel.guild, reason));
+		messageSent = true;
+	} catch (error) {
+		log.debug(error);
+		messageSent = false;
 	}
 
 	// Kick the member
@@ -46,7 +69,7 @@ module.exports = new Command('kick', async (message, args, {db}) => {
 		return;
 	}
 
-	message.channel.createMessage(`Kicked <@${member.id}>.`).catch(() => {});
+	message.channel.createMessage(`Kicked <@${member.id}>.${messageSent ? '' : ' Failed to send notification because of privacy settings.'}`).catch(() => {});
 }, {
 	permissions: [
 		'kickMembers',
