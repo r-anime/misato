@@ -23,7 +23,7 @@ module.exports = new Command('ban', async (message, args, {db}) => {
 		return;
 	}
 	const [duration, reason] = parseTime(rest);
-	const expirationDate = duration && new Date(Date.now() + duration);
+	const expirationDate = duration ? new Date(Date.now() + duration) : undefined;
 	log.debug(member.id, duration, reason);
 
 	// If reason or duration is implicitly blank, confirm intention
