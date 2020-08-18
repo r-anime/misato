@@ -72,7 +72,7 @@ module.exports = new Command('ban', async (message, args, {db}) => {
 	};
 	try {
 		// Insert information to database
-		await db.collection('bans').insertOne(banRecord);
+		await db.collection('bans').insertOne(banRecord, {ignoreUndefined: true});
 	} catch (error) {
 		message.channel.createMessage(`Banned <@${member.id}>, but there was an error writing the ban to the database. Have a developer check the logs, this should not happen.`).catch(() => {});
 		log.error(error);
