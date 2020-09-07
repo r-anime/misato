@@ -13,9 +13,23 @@ jobs:
         ssh-private-key: ${{ secrets.DISCORD_MOD_BOT_SSH_KEY }}
     - name: Deploy to shared server
       run: |
-        ssh -o StrictHostKeyChecking=no discord-mod-bot@134.209.0.181 << EOF
-          cd /home/discord-mod-bot/discord-mod-bot
+        ssh -o StrictHostKeyChecking=no discord-mod-bot@134.209.0.181 /bin/bash << 'EOF'
+          # report deploy failure if any command fails
+          set -e
+
+          # .bashrc exits early in non-interactive shells, so we have to source nvm manually
+          source "$HOME/.nvm/nvm.sh"
+          
+          # checkout changes
+          cd "$HOME/discord-mod-bot"
           git fetch --all
           git reset --hard origin/master
+          
+          # update dependencies, migrate db, rebuild
+          yarn
+          yarn migrate up
+          yarn build:prod
+          
+          # restart production service
           sudo systemctl restart discord-mod-bot.service
         EOF

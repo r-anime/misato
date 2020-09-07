@@ -5,12 +5,11 @@ const config = require('./config');
 
 module.exports = {
 	mode: config.dev ? 'development' : 'production',
-	entry: {
-		management: './web/frontend/management/index.js',
-	},
+	entry: './web/frontend/index.js',
 	output: {
 		path: config.web.frontendBuildDir,
-		filename: '[name]/bundle.js',
+		filename: 'bundle.js',
+		publicPath: '/',
 	},
 	module: {
 		rules: [
@@ -20,11 +19,10 @@ module.exports = {
 	},
 	plugins: [
 		new VueLoaderPlugin(),
-		// Create HTML base for management interface
+		// Create HTML base
 		new HtmlWebpackPlugin({
-			template: './web/frontend/management/template.html',
-			chunks: ['management'],
-			filename: 'management/index.html',
+			template: './web/frontend/template.html',
+			filename: 'index.html',
 			title: 'test',
 		}),
 	],

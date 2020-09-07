@@ -25,13 +25,19 @@ $colors: (
     "success": ($success, $success-invert),
     "warning": ($warning, $warning-invert),
     "danger": ($danger, $danger-invert),
-    "twitter": ($twitter, $twitter-invert)
+    "twitter": ($twitter, $twitter-invert),
+    "discord": ($discord, $discord-invert),
+    "reddit": ($reddit, $reddit-invert)
 );
 
 // Links
 $link: $primary;
 $link-invert: $primary-invert;
 $link-focus-border: $primary;
+
+// Typography
+$body-family: "Open Sans", sans-serif;
+$code-family: "Fira Mono", monospace;
 
 // Import Bulma and Buefy styles
 @import "~bulma";

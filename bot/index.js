@@ -21,6 +21,7 @@ const config = require('../config');
 		token: config.discord.token,
 		prefix: config.discord.prefix,
 		disableDefaultMessageListener: true,
+		restMode: true,
 	});
 
 	// Log on notable events
@@ -39,4 +40,23 @@ const config = require('../config');
 
 	// Connect the bot to Discord
 	bot.connect();
+
+	// TODO hardcoded verification crap here
+	db.collection('redditAccounts').watch().on('change', async change => {
+		log.info('change', change);
+		if (change.operationType !== 'insert') {
+			return;
+		}
+		const {userID, redditName, guildID} = change.fullDocument;
+		log.debug(userID, redditName, guildID);
+		if (guildID !== config.TEMP_guildID) {
+			return;
+		}
+		try {
+			await bot.addGuildMemberRole(guildID, userID, config.TEMP_roleID);
+			log.debug(`Verified <@${userID}> (/u/${redditName})`);
+		} catch (error) {
+			log.error(`Failed to verify <@${userID}> (/u/${redditName})\n`, error);
+		}
+	});
 })();

@@ -3,6 +3,7 @@
 // OAuth implementation, and https://tools.ietf.org/html/rfc6749 for information
 // about OAuth more generally.
 
+const crypto = require('crypto');
 const polka = require('polka');
 const fetch = require('node-fetch');
 const log = require('another-logger');
@@ -115,7 +116,7 @@ module.exports = polka()
 	.get('/', (request, response) => {
 		const state = JSON.stringify({
 			next: request.query.next || '/',
-			unique: `${Math.random()}`, // TODO: this should be secure
+			unique: crypto.randomBytes(16).toString('hex'),
 		});
 		request.session.redditState = state;
 		response.redirect(authURI(state));
@@ -167,6 +168,15 @@ module.exports = polka()
 
 		// Redirect back to wherever we came from
 		response.redirect(next);
+	})
+
+	// Returns information about the user's account
+	.get('/about', (request, response) => {
+		if (request.session.redditUserInfo) {
+			response.end(JSON.stringify(request.session.redditUserInfo));
+		} else {
+			response.writeHead(404).end();
+		}
 	})
 
 	// Logs out of Reddit

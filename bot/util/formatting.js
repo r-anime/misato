@@ -25,4 +25,12 @@ module.exports = {
 		return `\`\`\`${lang ? `${lang}\n` : ''}${unsafe ? text : text.replace(/```/g, '`​`​`')}\`\`\``;
 	},
 
+	/**
+	 * Escapes a string for display without formatting.
+	 * @param {string}
+	 * @returns {string}
+	 */
+	escape (string) {
+		return string.replace(/[*_`~]|(\n|^)>/g, '\\$&');
+	},
 };
