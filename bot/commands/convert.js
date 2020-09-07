@@ -3,13 +3,14 @@
 const {Command} = require('yuuko');
 const fetch = require('node-fetch');
 const convert = require('convert-units');
-// TODO: make it so it automatically uppercases every currency and lowercases the rest, also a list for codes
 function convertUnits (msg, baseValue, baseType, targetType) {
 	const conversion = convert(baseValue).from(baseType).to(targetType);
 	msg.channel.createMessage(`${baseValue}${baseType} is equal to ${conversion}${targetType}`);
 }
 
 async function convertCurrency (msg, baseValue, baseType, targetType, prefix) {
+	baseType = baseType.toUpperCase();
+	targetType = targetType.toUpperCase();
 	try {
 		const res = await fetch(`https://api.exchangeratesapi.io/latest?base=${baseType}&symbols=${targetType}`);
 		if (res.status !== 200) {
