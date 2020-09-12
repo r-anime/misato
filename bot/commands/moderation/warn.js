@@ -6,10 +6,9 @@ const {escape, blockquote} = require('../../util/formatting');
 const confirmationEmoji = '⚠️';
 
 /**
- * Generatesa message to be sent to a user who will be banned.
- * @param {Eris.guild} guild The guild the user is being banned from
- * @param {string} reason The reason for the ban
- * @param {expirationDate} expirationDate The date the ban will expire, if any
+ * Generatesa message to be sent to a user who will be warned.
+ * @param {Eris.guild} guild The guild the user is being warned from
+ * @param {string} reason The reason for the warning
  * @returns {string}
  */
 function warnMessage (guild, reason) {
@@ -19,7 +18,7 @@ function warnMessage (guild, reason) {
 module.exports = new Command('warn', async (message, args, {db}) => {
 	const [member, reason] = parseGuildMember(args.join(' '), message.channel.guild);
 	if (!member) {
-		message.channel.createMessage('Not sure who you want me to ban. Start your message with a mention, exact tag, or user ID.').catch(() => {});
+		message.channel.createMessage('Not sure who you want me to warn. Start your message with a mention, exact tag, or user ID.').catch(() => {});
 		return;
 	}
 
@@ -49,7 +48,7 @@ module.exports = new Command('warn', async (message, args, {db}) => {
 		return;
 	}
 
-	// Create the ban record in the database
+	// Create the warning record in the database
 	const warnRecord = {
 		userID: member.id,
 		guildID: message.channel.guild.id,
@@ -61,7 +60,7 @@ module.exports = new Command('warn', async (message, args, {db}) => {
 		// Insert information to database
 		await db.collection('warnings').insertOne(warnRecord, {ignoreUndefined: true});
 	} catch (error) {
-		message.channel.createMessage(`Warned <@${member.id}>, but there was an error writing the ban to the database. Have a developer check the logs, this should not happen.`).catch(() => {});
+		message.channel.createMessage(`Warned <@${member.id}>, but there was an error writing the warning to the database. Have a developer check the logs, this should not happen.`).catch(() => {});
 		log.error(error);
 		log.error('Rejected document:', warnRecord);
 		return;
