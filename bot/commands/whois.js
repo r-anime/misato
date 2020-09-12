@@ -10,6 +10,20 @@ async function redditLine (userID, guildID, db) {
 	}`;
 }
 
+async function warningsLine (userID, guildID, db) {
+	const numResults = await db.collection('warnings').countDocuments({userID, guildID});
+	const results = await db.collection('warnings').find({userID, guildID}, {
+		limit: 3,
+		sort: {date: -1},
+	}).toArray();
+
+	return `__Warnings: **${numResults}**__${
+		results.map(kick => `\n- ${escape(formatDate(kick.date))}${kick.note ? `: ${escape(kick.note)}` : ''}`).join('')
+	}${
+		numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
+	}`;
+}
+
 // function for generating the list of kicks
 async function kicksLine (userID, guildID, db) {
 	// display the total count of kicks, but to save space only show the first 3 fully
@@ -49,6 +63,7 @@ module.exports = new Command('whois', async (message, args, {db}) => {
 
 	message.channel.createMessage((await Promise.all([
 		redditLine(member.id, message.channel.guild.id, db),
+		warningsLine(member.id, message.channel.guild.id, db),
 		kicksLine(member.id, message.channel.guild.id, db),
 		bansLine(member.id, message.channel.guild.id, db),
 	])).join('\n\n')).catch(() => {});
