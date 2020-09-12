@@ -54,6 +54,20 @@ async function bansLine (userID, guildID, db) {
 	}`;
 }
 
+async function notesLine (userID, guildID, db) {
+	const numResults = await db.collection('notes').countDocuments({userID, guildID});
+	const results = await db.collection('notes').find({userID, guildID}, {
+		limit: 3,
+		sort: {date: -1},
+	}).toArray();
+
+	return `__Notes: **${numResults}**__${
+		results.map(note => `\n- ${escape(formatDate(note.date))}${note.note ? `: ${escape(note.note)}` : ''}`).join('')
+	}${
+		numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
+	}`;
+}
+
 module.exports = new Command('whois', async (message, args, {db}) => {
 	const [member] = await parseUser(args.join(' '), message.channel.guild, message.author);
 	if (!member) {
@@ -66,6 +80,7 @@ module.exports = new Command('whois', async (message, args, {db}) => {
 		warningsLine(member.id, message.channel.guild.id, db),
 		kicksLine(member.id, message.channel.guild.id, db),
 		bansLine(member.id, message.channel.guild.id, db),
+		notesLine(member.id, message.channel.guild.id, db),
 	])).join('\n\n')).catch(() => {});
 }, {
 	permissions: [
