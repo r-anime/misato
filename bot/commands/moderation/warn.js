@@ -59,7 +59,7 @@ module.exports = new Command('warn', async (message, args, {db}) => {
 	};
 	try {
 		// Insert information to database
-		await db.collection('bans').insertOne(warnRecord, {ignoreUndefined: true});
+		await db.collection('warnings').insertOne(warnRecord, {ignoreUndefined: true});
 	} catch (error) {
 		message.channel.createMessage(`Warned <@${member.id}>, but there was an error writing the ban to the database. Have a developer check the logs, this should not happen.`).catch(() => {});
 		log.error(error);
