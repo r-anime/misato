@@ -11,11 +11,17 @@ function getRandomInt (min, max) {
 module.exports = new Command('roll', (msg, args) => {
 	let min = 0;
 	let max = 6;
-	if (args.length !== 0) {
-		min = args[0];
-		max = args[1];
+
+	if (args.length === 2) {
+		min = parseInt(args[0], 10);
+		max = parseInt(args[1], 10);
 	}
-	msg.channel.createMessage(`You rolled a ${getRandomInt(min, max)}`);
+
+	if (isNaN(min) || isNaN(max)) {
+		msg.channel.createMessage('Please enter a valid number!');
+	} else {
+		msg.channel.createMessage(`You rolled a ${getRandomInt(min, max)}`);
+	}
 });
 
 // TODO: add args
