@@ -8,7 +8,7 @@ module.exports = new Command('joke', async msg => {
 	try {
 		const res = await fetch('https://official-joke-api.appspot.com/random_joke');
 		if (res.status !== 200) {
-			throw Error('Error getting joke.');
+			throw new Error('Error getting joke.');
 		}
 		const joke = await res.json();
 		msg.channel.createMessage(`${joke.setup}\n${joke.punchline}`);
@@ -16,7 +16,7 @@ module.exports = new Command('joke', async msg => {
 		msg.channel.createMessage(err.message).catch(() => {});
 	}
 });
-
+// TODO: add args
 module.exports.help = {
 	args: '',
 	desc: 'Fetches a random joke from <https://github.com/15Dkatz/official_joke_api>',
