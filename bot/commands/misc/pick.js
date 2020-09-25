@@ -20,7 +20,7 @@ module.exports = new Command('pick', (msg, args, context) => {
 	if (choices.length < 2) {
 		msg.channel.createMessage('Not enough things to pick from!').catch(() => {});
 	} else {
-		msg.channel.createMessage(`I pick ${choices[getRandomInt(0, choices.length - 1)]}`).catch(() => {});
+		msg.channel.createMessage(`I pick **${choices[getRandomInt(0, choices.length - 1)]}**`).catch(() => {});
 	}
 });
 
