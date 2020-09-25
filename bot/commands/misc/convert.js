@@ -43,10 +43,10 @@ Command can be used with: \`${context.prefix}convert [amount] [baseUnit] [target
 	const prefix = context.prefix;
 	try {
 		// see if it can convert it normally first
-		msg.channel.createMessage(convertUnits(baseValue, baseType, targetType));
+		msg.channel.createMessage(convertUnits(baseValue, baseType, targetType)).catch(() => {});
 	} catch (err) {
 		// if it can't convert it normally, try to find it as a currency, throws if it can't find a currency either
-		msg.channel.createMessage(await convertCurrency(baseValue, baseType, targetType, prefix)).catch(error => console.log(error));
+		msg.channel.createMessage(await convertCurrency(baseValue, baseType, targetType, prefix)).catch(() => {});
 	}
 });
 // TODO: add args

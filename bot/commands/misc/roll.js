@@ -18,9 +18,9 @@ module.exports = new Command('roll', (msg, args) => {
 	}
 
 	if (isNaN(min) || isNaN(max)) {
-		msg.channel.createMessage('Please enter a valid number!');
+		msg.channel.createMessage('Please enter a valid number!').catch(() => {});
 	} else {
-		msg.channel.createMessage(`You rolled a ${getRandomInt(min, max)}`);
+		msg.channel.createMessage(`You rolled a ${getRandomInt(min, max)}`).catch(() => {});
 	}
 });
 
