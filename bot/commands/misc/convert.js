@@ -6,7 +6,7 @@ const convert = require('convert-units');
 
 function convertUnits (baseValue, baseType, targetType) {
 	const conversion = convert(baseValue).from(baseType).to(targetType);
-	return `${baseValue}${baseType} is equal to ${conversion}${targetType}`;
+	return `${baseValue}${baseType} is equal to ${conversion.toFixed(2)}${targetType}`;
 }
 
 async function convertCurrency (baseValue, baseType, targetType, prefix) {
@@ -26,10 +26,10 @@ async function convertCurrency (baseValue, baseType, targetType, prefix) {
 }
 
 module.exports = new Command('convert', async (msg, args, context) => {
-	if (args.length === 0) {
+	if (args.length < 3) {
 		msg.channel.createMessage(`For currency codes visit: <https://www.xe.com/en/iso4217.php>
 For units visit: <https://www.npmjs.com/package/convert-units>
-Command can be used with: \`${context.prefix}convert [amount] [baseUnit] [targetUnit]\``);
+Command can be used with: \`${context.prefix}convert [amount] [baseUnit] [targetUnit]\``).catch(() => {});
 		return;
 	}
 	const baseValue = parseFloat(args[0].replace(/,/g, '.')); // replace commas with dots since some people use those for decimals
