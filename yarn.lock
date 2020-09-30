@@ -5300,5 +5300,5 @@ yargs@^13.3.2:
     yargs-parser "^13.1.2"
 
 yuuko@Geo1088/yuuko#builds/event-listener-class:
-  version "2.0.0"
-  resolved "https://codeload.github.com/Geo1088/yuuko/tar.gz/caf1226ac2ea314a3ce14154ad917bcd1c80b0ea"
+  version "2.0.1"
+  resolved "https://codeload.github.com/Geo1088/yuuko/tar.gz/931a9a40b29f4f4e02c1dff18c9b488c998536cb"
