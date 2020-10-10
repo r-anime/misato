@@ -2,6 +2,7 @@ const log = require('another-logger')({label: 'cmd:unverify'});
 const {Command} = require('yuuko');
 const {awaitReaction, parseGuildMember} = require('../util/discord');
 const {escape} = require('../util/formatting');
+const config = require('../../config');
 
 const confirmationEmoji = '💔';
 
@@ -76,9 +77,9 @@ module.exports = new Command(['unverify', 'deverify'], async (msg, args, {db}) =
 	if (existing.length === 1) {
 		confirmationText = `Unlink /u/${escape(existing[0].redditName)} from <@${existing[0].userID}>? React ${confirmationEmoji} to confirm.`;
 	} else if (discordUserID) {
-		confirmationText = `Unlink all ${existing.length} Reddit accounts from <@${discordUserID}>? React ${confirmationEmoji} to confirm.`;
+		confirmationText = `Unlink ${existing.length} Reddit accounts from <@${discordUserID}>? React ${confirmationEmoji} to confirm.`;
 	} else {
-		confirmationText = `Unlink /u/${redditUsername} from all ${existing.length} Discord accounts? React ${confirmationEmoji} to confirm.`;
+		confirmationText = `Unlink /u/${redditUsername} from ${existing.length} Discord accounts? React ${confirmationEmoji} to confirm.`;
 	}
 	try {
 		const confirmationMessage = await msg.channel.createMessage(confirmationText);
@@ -90,14 +91,56 @@ module.exports = new Command(['unverify', 'deverify'], async (msg, args, {db}) =
 		return;
 	}
 
+	// Get a list of unique Discord users affected by this change
+	const discordUserIDs = existing.map(doc => doc.userID).filter((id, index, arr) => arr.indexOf(id) === index);
+	log.debug(discordUserIDs);
+
 	// Remove verifications from database
 	try {
 		await db.collection('redditAccounts').deleteMany(searchCriteria);
-		msg.channel.createMessage(`Unlinked ${existing.length === 1 ? '1 account' : `${existing.length} accounts`}.`);
 	} catch (error) {
 		log.error('Failed to unlink accounts:', error);
 		msg.channel.createMessage('Failed to unlink the accounts.').catch(() => {});
 	}
+
+	// Check all impacted users - if they don't have any other Reddit accounts linked, remove the verified role from them
+	// TODO: this is hardcoded
+	const failures = [];
+	await Promise.all(discordUserIDs.map(async id => {
+		log.debug('processing id', id);
+		const linkedAccounts = await db.collection('redditAccounts').find({
+			userID: id,
+			guildID: msg.channel.guild.id,
+		}).toArray();
+			// If the user still has linked accounts, leave them as-is
+		if (linkedAccounts.length) {
+			return;
+		}
+		// If the user isn't in the guild, we can't do anything about them
+		// (to check this, we first look for the member in the guild's member cache, and if they don't show up
+		// there, we try to find them in the REST API, which will fail if they're not in the guild)
+		if (!msg.channel.guild.members.get(id) && !await msg.channel.guild.getRESTMember(id).catch(() => null)) {
+			log.debug('member not in guild', id);
+			return;
+		}
+		// They're in the guild and have no more linked accounts, try to yeet the role
+		// potential error intentionally not handled
+		try {
+			await msg.channel.guild.removeMemberRole(id, config.TEMP_roleID);
+		} catch (error) {
+			log.error('Error removing role', config.TEMP_roleID, 'from user', id, ':', error);
+			failures.push(id);
+		}
+	}));
+
+	// Send final message and wrap up
+	let messageText = `Unlinked ${existing.length} account${existing.length === 1 ? '' : 's'}.`;
+	// If one or more role removals failed, include that in the response
+	if (failures.length) {
+		messageText += ` Couldn't remove the role from ${failures.length} member${failures.length === 1 ? '' : 's'}; do this manually. Are my permissions correct?`;
+		messageText += failures.map(id => `\n- <@${id}>`).join('');
+	}
+	msg.channel.createMessage(messageText).catch(() => {});
 }, {
 	permissions: [
 		'manageRoles',
