@@ -39,4 +39,8 @@ module.exports = new Command('unban', async (message, args, {db}) => {
 
 	// all good
 	message.channel.createMessage(`Unbanned <@${user.id}>.`);
+}, {
+	permissions: [
+		'banMembers',
+	],
 });
