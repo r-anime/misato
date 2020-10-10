@@ -6,7 +6,7 @@ module.exports.up = async () => {
 	await mongoClient.connect();
 	const db = mongoClient.db(config.mongodb.databaseName);
 
-	await db.runCommand({
+	await db.command({
 		collMod: 'redditAccounts',
 		validator: {
 			$jsonSchema: {
@@ -33,7 +33,7 @@ module.exports.down = async () => {
 	await mongoClient.connect();
 	const db = mongoClient.db(config.mongodb.databaseName);
 
-	await db.runCommand({
+	await db.command({
 		collMod: 'redditAccounts',
 		validator: {
 			$jsonSchema: {
