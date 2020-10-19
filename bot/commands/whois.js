@@ -1,4 +1,5 @@
 const {Command} = require('yuuko');
+const log = require('another-logger')({label: 'cmd:whois'});
 const {parseUser, formatDate} = require('../util/discord');
 const {escape} = require('../util/formatting');
 
@@ -69,18 +70,31 @@ async function notesLine (userID, guildID, db) {
 }
 
 module.exports = new Command('whois', async (message, args, {db}) => {
-	const [member] = await parseUser(args.join(' '), message.channel.guild, message.author);
-	if (!member) {
-		message.channel.createMessage('Must pass a Discord user. Lookup by Reddit username soon:tm:').catch(() => {});
+	const [user] = await parseUser(args.join(' '), message.channel.guild, message.author);
+	if (!user) {
+		const match = args.join(' ').match(/(?:\/?u\/)?([a-zA-Z0-9-_]+)/);
+		if (!match) {
+			message.channel.createMessage("Not sure who you're looking for. Must pass a Discord or Reddit user.").catch(() => {});
+			return;
+		}
+		const redditName = match[1];
+		const verifications = await db.collection('redditAccounts').find({
+			redditName,
+			guildID: message.channel.guild.id,
+		}).toArray();
+
+		message.channel.createMessage(`__Verifications for /u/${escape(redditName)}: **${verifications.length}**__${
+			verifications.map(r => `\n- <@${r.userID}>`).join('')
+		}`).catch(() => {});
 		return;
 	}
 
 	message.channel.createMessage((await Promise.all([
-		redditLine(member.id, message.channel.guild.id, db),
-		warningsLine(member.id, message.channel.guild.id, db),
-		kicksLine(member.id, message.channel.guild.id, db),
-		bansLine(member.id, message.channel.guild.id, db),
-		notesLine(member.id, message.channel.guild.id, db),
+		redditLine(user.id, message.channel.guild.id, db),
+		warningsLine(user.id, message.channel.guild.id, db),
+		kicksLine(user.id, message.channel.guild.id, db),
+		bansLine(user.id, message.channel.guild.id, db),
+		notesLine(user.id, message.channel.guild.id, db),
 	])).join('\n\n')).catch(() => {});
 }, {
 	permissions: [
