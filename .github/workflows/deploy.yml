@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Start SSH agent
-      uses: webfactory/ssh-agent@v0.4.0
+      uses: webfactory/ssh-agent@v0.4.1
       with:
         ssh-private-key: ${{ secrets.DISCORD_MOD_BOT_SSH_KEY }}
     - name: Deploy to shared server
