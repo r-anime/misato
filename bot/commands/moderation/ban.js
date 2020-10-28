@@ -1,6 +1,6 @@
 const log = require('another-logger')({label: 'command:ban'});
 const {Command} = require('yuuko');
-const {parseGuildMember, parseTime, formatDateTime, awaitReaction} = require('../../util/discord');
+const {parseUser, parseTime, formatDateTime, awaitReaction} = require('../../util/discord');
 const {escape, blockquote} = require('../../util/formatting');
 
 const confirmationEmoji = '🔨';
@@ -17,7 +17,7 @@ function banMessage (guild, reason, expirationDate) {
 }
 
 module.exports = new Command('ban', async (message, args, {db}) => {
-	const [member, rest] = parseGuildMember(args.join(' '), message.channel.guild);
+	const [member, rest] = parseUser(args.join(' '), message.channel.guild);
 	if (!member) {
 		message.channel.createMessage('Not sure who you want me to ban. Start your message with a mention, exact tag, or user ID.').catch(() => {});
 		return;
