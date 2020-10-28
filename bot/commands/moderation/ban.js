@@ -17,7 +17,7 @@ function banMessage (guild, reason, expirationDate) {
 }
 
 module.exports = new Command('ban', async (message, args, {db}) => {
-	const [user, rest] = parseUser(args.join(' '), message.channel.guild);
+	const [user, rest] = await parseUser(args.join(' '), message.channel.guild);
 	if (!user) {
 		message.channel.createMessage('Not sure who you want me to ban. Start your message with a mention, exact tag, or user ID.').catch(() => {});
 		return;
