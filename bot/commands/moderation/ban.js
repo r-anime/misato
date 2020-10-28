@@ -63,7 +63,7 @@ module.exports = new Command('ban', async (message, args, {db}) => {
 
 	// Create the ban record in the database
 	const banRecord = {
-		userID: member.id,
+		userID: user.id,
 		guildID: message.channel.guild.id,
 		modID: message.author.id,
 		date: new Date(),
@@ -74,13 +74,13 @@ module.exports = new Command('ban', async (message, args, {db}) => {
 		// Insert information to database
 		await db.collection('bans').insertOne(banRecord, {ignoreUndefined: true});
 	} catch (error) {
-		message.channel.createMessage(`Banned <@${member.id}>, but there was an error writing the ban to the database. Have a developer check the logs, this should not happen.`).catch(() => {});
+		message.channel.createMessage(`Banned <@${user.id}>, but there was an error writing the ban to the database. Have a developer check the logs, this should not happen.`).catch(() => {});
 		log.error(error);
 		log.error('Rejected document:', banRecord);
 		return;
 	}
 
-	message.channel.createMessage(`Banned <@${member.id}> ${duration ? `until ${formatDateTime(expirationDate)}` : 'permanently'}.${messageSent ? '' : ' Failed to send notification because of privacy settings.'}`).catch(() => {});
+	message.channel.createMessage(`Banned <@${user.id}> ${duration ? `until ${formatDateTime(expirationDate)}` : 'permanently'}.${messageSent ? '' : ' Failed to send notification because of privacy settings.'}`).catch(() => {});
 }, {
 	permissions: [
 		'banMembers',
