@@ -18,7 +18,7 @@ module.exports = new Command('pick', (msg, args, context) => {
 	choices = choices.map(element => element.trim());
 
 	if (choices.length < 2) {
-		msg.channel.createMessage('Not enough things to pick from!').catch(() => {});
+		msg.channel.createMessage('Not enough things to pick from! Use a comma to separate choices.').catch(() => {});
 	} else {
 		msg.channel.createMessage(`I pick **${choices[getRandomInt(0, choices.length - 1)]}**`).catch(() => {});
 	}
