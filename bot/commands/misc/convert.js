@@ -51,6 +51,6 @@ Command can be used with: \`${context.prefix}convert [amount] [baseUnit] [target
 });
 // TODO: add args
 module.exports.help = {
-	args: '',
+	args: '<amount> <source currency or unit> <destination currency or unit>',
 	desc: 'Converts units and currency, the latter being based on this API: <http://exchangeratesapi.io/>',
 };
