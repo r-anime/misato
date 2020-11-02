@@ -3,7 +3,7 @@ const {Command} = require('yuuko');
 
 module.exports = new Command('edit', async (msg, args, context) => {
 	if (args.length < 2) {
-		msg.channel.createMessage(`Command can be used with: \`${context.prefix}edit [channelId] [messageId] [text...]\`
+		msg.channel.createMessage(`Command can be used with: \`${context.prefix}say [channelId] [messageId] [text...]\`
 Be sure to use the first line and not leave any whitespace/newline immediately after the channel/message IDs.`).catch(() => {});
 		return;
 	}
