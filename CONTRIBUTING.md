@@ -2,13 +2,19 @@
 
 We welcome help from the community! Issues are accepted for questions, bug reports, and feature requests; pull requests are accepted for bugfixes and new features. Please make an issue for any new features before dedicating the time to writing a PR.
 
+## Getting started
+
+Fork the repo, clone it to your computer, and check [the README's "Usage" section](/README.md#usage) for notes on getting the project up and running. From there, you're ready to start making your changes.
+
 ## Scope
 
 something something feature creep bad
 
 ## Code style
 
-The project has an ESLint configuration that works on both JS and Vue files. Lint your PR before submitting; consider configuring your editor to auto-fix ESLint issues when saving files.
+The project has an ESLint configuration that works on both JS and Vue files.
+
+Lint your code with `yarn lint` (or `yarn lint-fix` to use ESLint's auto-fixing behavior) before submitting. You might consider configuring your editor to auto-fix ESLint issues when saving files.
 
 ## Architecture
 
