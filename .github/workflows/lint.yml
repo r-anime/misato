@@ -12,5 +12,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: '12'
+    - name: Install Dependencies
+      run: yarn
     - name: Run lint task
       run: yarn lint
