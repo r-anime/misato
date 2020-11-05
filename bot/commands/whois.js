@@ -1,5 +1,4 @@
 const {Command} = require('yuuko');
-const log = require('another-logger')({label: 'cmd:whois'});
 const {parseUser, formatDate} = require('../util/discord');
 const {escape} = require('../util/formatting');
 

@@ -27,10 +27,10 @@ module.exports = {
 
 	/**
 	 * Escapes a string for display without formatting.
-	 * @param {string}
+	 * @param {string} text
 	 * @returns {string}
 	 */
-	escape (string) {
-		return string.replace(/[*_`~]|(\n|^)>/g, '\\$&');
+	escape (text) {
+		return text.replace(/[*_`~]|(\n|^)>/g, '\\$&');
 	},
 };
