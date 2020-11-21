@@ -58,11 +58,19 @@ function discordAvatarURL (userInfo) {
 }
 
 /**
+ * OAuth tokens returned by Discord.
+ * @typedef {Object} DiscordTokens
+ * @property {string} accessToken The access token used to authorize to Discord
+ * @property {string} refreshToken The refresh token used to get a new access token when the current one expires
+ * @property {string} tokenType The string "Bearer"; other token types aren't relevant here
+ * @property {string} scope space-separated list of authorized scopes
+ * @property {Date} expiresAt Expiration date of the access token
+ */
+
+/**
  * Exchanges a code for an access/refresh token pair.
  * @param {string} code
- * @returns {Promise<object>} Object has keys `accessToken`, `refreshToken`,
- * `tokenType`, `scope`, and `expiresAt`. See Discord documentation for more
- * detailed information.
+ * @returns {Promise<DiscordTokens>}
  */
 async function fetchDiscordTokens (code) {
 	const response = await fetch('https://discordapp.com/api/oauth2/token', {
@@ -129,32 +137,52 @@ module.exports = polka()
 	// OAuth entry point, generate a state and redirect to Discord
 	.get('/', (request, response) => {
 		const state = JSON.stringify({
+			// The page we came from (send here if user cancels verification)
+			prev: request.query.prev || '/',
+			// The page we want to go to (send here if verification succeeds)
 			next: request.query.next || '/',
+			// A random element to ensure others can't tamper with the state
 			unique: crypto.randomBytes(16).toString('hex'),
 		});
 		request.session.discordState = state;
 		response.redirect(authURI(state));
 	})
 
-	// OAuth flow has completed, time to authorize with Discord
+	// User has responded to prompt, check for error/cancellation and get tokens
 	.get('/callback', async (request, response) => {
-		const {error, state, code} = request.query;
+		const {error, error_description: errorDescription, state, code} = request.query;
 
-		// Check for errors or state mismatches
-		if (error) {
-			log.error('Discord gave error after auth page:', error);
-			response.end('uh-oh');
-			return;
-		}
+		// Check for state mismatch
 		if (state !== request.session.discordState) {
-			log.error('Discord gave incorrect state after auth page: ', state, ', expected', request.session.state);
-			response.end('uh-oh');
+			log.debug('Discord gave incorrect state after auth page: ', state, 'Expected:', request.session.state);
+			response.end('Please try again. If issues persist, report this error to the bot administrator.\n\nInvalid state');
 			return;
 		}
 
-		// This should be safe, because the block above ensures we only ever try to parse things that we put in the
-		// session ourselves, and we only put valid JSON there. We want to get the next URL so we can use it later.
-		const {next} = JSON.parse(state);
+		// Parse information from the state
+		let parsedState;
+		try {
+			parsedState = JSON.parse(state);
+		} catch (parsingError) {
+			// This should never happen - we somehow created a state that isn't valid JSON
+			log.error('When parsing state:', parsingError, 'State:', state);
+			response.end('Please try again. If issues persist, report this error to the bot administrator.\n\nError parsing state');
+		}
+		const {prev, next} = parsedState;
+
+		// We're done storing the state now
+		delete request.session.discordState;
+
+		// Check for access denied (cancellation condition) and other errors
+		if (error === 'access_denied') {
+			response.redirect(prev);
+			return;
+		} else if (error) {
+			log.error('Discord gave error after auth page:', error);
+			// TODO: error page
+			response.end(`Please try again. If issues persist, report this error to the bot adminstrator.\n\nError: ${errorDescription} (${error})`);
+			return;
+		}
 
 		// Exchange the code for access/refresh tokens
 		let tokens;
