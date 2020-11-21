@@ -8,6 +8,21 @@
 				/>
 			</template>
 			<template v-else>
+				<div class="level">
+					<div class="level-item">
+						<p v-if="discordInfo && redditInfo">
+							<button
+								class="button is-large is-success"
+								@click="linkAccounts()"
+							>
+								Link these accounts
+							</button>
+						</p>
+						<p v-else>
+							Log in with both Reddit and Discord to link your accounts.
+						</p>
+					</div>
+				</div>
 				<div class="columns is-centered is-multiline">
 					<div class="column is-narrow">
 						<div
@@ -22,7 +37,10 @@
 							</p>
 							<p><a :href="`/auth/discord/logout?next=${encodedCurrentURL}`">Log out</a></p>
 						</div>
-						<p v-else>
+						<p
+							v-else
+							class="has-text-centered"
+						>
 							<a
 								:href="`/auth/discord?next=${encodedCurrentURL}`"
 								class="button is-discord"
@@ -40,26 +58,14 @@
 							<p><strong>/u/{{ redditInfo.name }}</strong></p>
 							<p><a :href="`/auth/reddit/logout?next=${encodedCurrentURL}`">Log out</a></p>
 						</div>
-						<p v-else>
+						<p
+							v-else
+							class="has-text-centered"
+						>
 							<a
 								:href="`/auth/reddit?next=${encodedCurrentURL}`"
 								class="button is-reddit"
 							>Log in with Reddit</a>
-						</p>
-					</div>
-				</div>
-				<div class="level">
-					<div class="level-item">
-						<p v-if="discordInfo && redditInfo">
-							<button
-								class="button is-large is-success"
-								@click="linkAccounts()"
-							>
-								Link these accounts
-							</button>
-						</p>
-						<p v-else>
-							Log in with both Reddit and Discord to link your accounts.
 						</p>
 					</div>
 				</div>
