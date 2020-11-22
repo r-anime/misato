@@ -32,7 +32,7 @@ module.exports = new Command(['unverify', 'deverify'], async (msg, args, {db}) =
 
 	// Do we have a Discord tag at the beginning of the message?
 	if (!discordUserID) {
-		const [member, rest] = parseGuildMember(args, msg.channel.guild);
+		const [member, rest] = await parseGuildMember(args, msg.channel.guild);
 		if (member) {
 			discordUserID = member.id;
 			args = rest.trim();
