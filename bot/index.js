@@ -22,6 +22,10 @@ const config = require('../config');
 		prefix: config.discord.prefix,
 		disableDefaultMessageListener: true,
 		restMode: true,
+		// HACK: required for user lookup by tag, better options available
+		// see https://github.com/discord/discord-api-docs/issues/2111 for alternatives
+		// #76
+		getAllUsers: true,
 	});
 
 	// Log on notable events
