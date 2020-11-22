@@ -53,7 +53,7 @@ module.exports = {
 
 		// Members of the given guild, if any
 		if (guild) {
-			const [member, rest] = module.exports.parseGuildMember(str, guild, me);
+			const [member, rest] = await module.exports.parseGuildMember(str, guild, me);
 			if (member) return [member.user, rest];
 		}
 
@@ -79,7 +79,7 @@ module.exports = {
 	 * @returns {Array} An array where the first item is either a Member or
 	 * undefined, and the second item is the rest of the string
 	 */
-	parseGuildMember (str, guild, me) {
+	async parseGuildMember (str, guild, me) {
 		let match;
 
 		// The "me" keyword, if we're provided with a context for it
@@ -91,7 +91,7 @@ module.exports = {
 		// Actual user mentions and raw IDs
 		match = str.match(/^(?:<@!?)?(\d+)>?(?:\s+|$)/);
 		if (match) {
-			const member = guild.members.get(match[1]);
+			const member = guild.members.get(match[1]) || await guild.getRESTMember(match[1]);
 			if (member) return [member, str.substr(match[0].length)];
 		}
 
