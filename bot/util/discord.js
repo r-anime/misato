@@ -91,7 +91,7 @@ module.exports = {
 		// Actual user mentions and raw IDs
 		match = str.match(/^(?:<@!?)?(\d+)>?(?:\s+|$)/);
 		if (match) {
-			const member = guild.members.get(match[1]) || await guild.getRESTMember(match[1]);
+			const member = guild.members.get(match[1]) || await guild.getRESTMember(match[1]).catch(() => undefined);
 			if (member) return [member, str.substr(match[0].length)];
 		}
 
