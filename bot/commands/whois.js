@@ -1,4 +1,5 @@
 const {Command} = require('yuuko');
+const config = require('../../config');
 const {parseUser, formatDate} = require('../util/discord');
 const {escape} = require('../util/formatting');
 
@@ -89,6 +90,7 @@ module.exports = new Command('whois', async (message, args, {db}) => {
 	}
 
 	message.channel.createMessage((await Promise.all([
+		`<${config.web.host}/guilds/${message.channel.guild.id}/members/${user.id}>`,
 		redditLine(user.id, message.channel.guild.id, db),
 		warningsLine(user.id, message.channel.guild.id, db),
 		kicksLine(user.id, message.channel.guild.id, db),

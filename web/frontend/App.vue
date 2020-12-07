@@ -31,12 +31,12 @@
 					</b-navbar-item>
 				</b-navbar-dropdown>
 				<b-navbar-item
-					v-else
+					v-else-if="discordInfo !== undefined"
 					tag="div"
 				>
 					<a
 						:href="'/auth/discord?next=' + encodedCurrentURL"
-						class="button is-primary is-inverted is-outlined"
+						class="button is-small is-primary is-inverted is-outlined"
 					>
 						Log in with Discord
 					</a>
@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import {mapState, mapActions} from 'vuex';
+import {mapState} from 'vuex';
 export default {
 	data () {
 		return {
@@ -57,12 +57,6 @@ export default {
 	},
 	computed: {
 		...mapState(['discordInfo']),
-	},
-	mounted () {
-		this.fetchDiscordInfo();
-	},
-	methods: {
-		...mapActions(['fetchDiscordInfo']),
 	},
 };
 </script>

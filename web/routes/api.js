@@ -3,6 +3,8 @@
 
 const app = require('polka')();
 const createVerificationApp = require('./verification');
+const createGuildsApp = require('./guilds');
 
-module.exports = db => app
+module.exports = (db, client) => app
+	.use('/guilds', createGuildsApp(db, client))
 	.use('/verification', createVerificationApp(db));

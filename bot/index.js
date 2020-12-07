@@ -4,24 +4,21 @@
 const path = require('path');
 
 const {Client} = require('yuuko');
-const {MongoClient} = require('mongodb');
 const log = require('another-logger')({label: 'discord'});
 
 const config = require('../config');
 
-(async () => {
-	// Set up MongoDB connection
-	const mongoClient = new MongoClient(config.mongodb.url, {useUnifiedTopology: true});
-	await mongoClient.connect();
-	log.success('Connected to MongoDB on', config.mongodb.url);
-	const db = mongoClient.db(config.mongodb.databaseName);
-
+module.exports = (mongoClient, db) => {
 	// Create the bot
 	const bot = new Client({
 		token: config.discord.token,
 		prefix: config.discord.prefix,
 		disableDefaultMessageListener: true,
 		restMode: true,
+		// HACK: required for user lookup by tag, better options available
+		// see https://github.com/discord/discord-api-docs/issues/2111 for alternatives
+		// #76
+		getAllUsers: true,
 	});
 
 	// Log on notable events
@@ -59,4 +56,6 @@ const config = require('../config');
 			log.error(`Failed to verify <@${userID}> (/u/${redditName})\n`, error);
 		}
 	});
-})();
+
+	return bot;
+};

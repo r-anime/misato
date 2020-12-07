@@ -34,7 +34,7 @@ module.exports = new Command('verify', async (msg, args, {db, client}) => {
 
 	// Do we have a Discord tag at the beginning of the message?
 	if (!discordUserID) {
-		const [member, rest] = parseGuildMember(args, msg.channel.guild);
+		const [member, rest] = await parseGuildMember(args, msg.channel.guild);
 		if (member) {
 			discordUserID = member.id;
 			args = rest.trim();

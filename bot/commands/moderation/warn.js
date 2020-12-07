@@ -16,7 +16,7 @@ function warnMessage (guild, reason) {
 }
 
 module.exports = new Command('warn', async (message, args, {db}) => {
-	const [member, reason] = parseGuildMember(args.join(' '), message.channel.guild);
+	const [member, reason] = await parseGuildMember(args.join(' '), message.channel.guild);
 	if (!member) {
 		message.channel.createMessage('Not sure who you want me to warn. Start your message with a mention, exact tag, or user ID.').catch(() => {});
 		return;

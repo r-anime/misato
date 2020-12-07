@@ -2,7 +2,7 @@ name: Build and deploy
 on:
   push:
     branches:
-    - master
+    - main
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -23,7 +23,7 @@ jobs:
           # checkout changes
           cd "$HOME/discord-mod-bot"
           git fetch --all
-          git reset --hard origin/master
+          git reset --hard origin/main
           
           # update dependencies, migrate db, rebuild
           yarn
