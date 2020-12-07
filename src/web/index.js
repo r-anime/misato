@@ -30,7 +30,7 @@ module.exports = (mongoClient, db, discordClient) => {
 
 	// Set up static serving of built frontend bundles
 	app.use(sirv(config.web.frontendBuildDir, {
-		dev: config.dev,
+		dev: process.env.NODE_ENV !== 'production',
 		single: true,
 		ignores: [
 			'/api',

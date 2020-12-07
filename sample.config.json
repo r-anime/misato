@@ -1,0 +1,27 @@
+{
+	"TEMP_guildID": "",
+	"TEMP_roleID": "",
+	"mongodb": {
+		"url": "",
+		"databaseName": ""
+	},
+	"discord": {
+		"token": "",
+		"prefix": ".",
+		"clientID": "",
+		"clientSecret": "",
+		"redirectURI": ""
+	},
+	"reddit": {
+		"clientID": "",
+		"clientSecret": "",
+		"userAgent": "",
+		"redirectURI": ""
+	},
+	"web": {
+		"host": "http://localhost:4567",
+		"port": 4567,
+		"frontendBuildDir": "frontend/dist",
+		"sessionSecret": "lkasjdf;"
+	}
+}

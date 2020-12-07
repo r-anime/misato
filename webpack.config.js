@@ -1,14 +1,13 @@
+const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const config = require('./config');
-
 module.exports = {
-	mode: config.dev ? 'development' : 'production',
-	devtool: config.dev ? 'source-map' : false,
-	entry: './web/frontend/index.js',
+	mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+	devtool: process.env.NODE_ENV === 'production' ? false : 'source-map',
+	entry: './frontend/index.js',
 	output: {
-		path: config.web.frontendBuildDir,
+		path: path.resolve(__dirname, 'frontend/dist'),
 		filename: 'bundle.js',
 		publicPath: '/',
 	},
@@ -22,7 +21,7 @@ module.exports = {
 		new VueLoaderPlugin(),
 		// Create HTML base
 		new HtmlWebpackPlugin({
-			template: './web/frontend/template.html',
+			template: './frontend/template.html',
 			filename: 'index.html',
 			title: 'test',
 		}),

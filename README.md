@@ -19,7 +19,7 @@ It's not much, but it's ours.
 # Install dependencies
 yarn
 # Create your config file from the sample and fill it in
-cp sample.config.js config.js && $EDITOR config.js
+cp sample.config.json config.js && $EDITOR config.json
 # Migrate the database
 yarn migrate up
 ```
@@ -27,15 +27,17 @@ yarn migrate up
 ### Running the bot
 
 ```bash
-# Build the web frontend
+# Build the backend
 yarn build
-# Run the project (discord bot, web server and all)
+# Build the frontend
+yarn build-web
+# Start the bot
 yarn start
 ```
 
 ### Production notes
 
-The provided sample configuration specifies a development-mode flag unless the `NODE_ENV` environment variable is set to `production`. This flag sets the Webpack build mode to `development` and disables caching filesystem calls on the web server. Therefore, in production environments, you should run the project with `NODE_ENV=production`, or manually set `dev: false` in the configuration file.
+Set the `NODE_ENV` environment variable to `production` when deploying. This flag sets the Webpack build mode to `production` and enables caching filesystem calls on the web server. This is done automatically when using `:prod` scripts (see the `scripts` section of [package.json](/package.json)).
 
 ## Contributing
 

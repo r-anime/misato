@@ -7,5 +7,5 @@ module.exports = {
 		erisWarn: {style: 'yellow', text: 'warning (eris)'},
 		hit: {style: 'magenta'},
 	},
-	ignoredLevels: config.dev ? [] : ['debug'],
+	ignoredLevels: process.env.NODE_ENV === 'production' ? [] : ['debug'],
 };

@@ -1,0 +1,15 @@
+{
+	"extends": "@tsconfig/recommended/tsconfig.json",
+	"include": [
+		"src/**/*"
+	],
+	"exclude": [
+		"config.js"
+	],
+	"compilerOptions": {
+		"rootDir": "src",
+		"allowJs": true,
+		"outDir": "build",
+		"resolveJsonModule": true,
+	}
+}
