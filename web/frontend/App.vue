@@ -36,7 +36,7 @@
 				>
 					<a
 						:href="'/auth/discord?next=' + encodedCurrentURL"
-						class="button is-primary is-inverted is-outlined"
+						class="button is-small is-primary is-inverted is-outlined"
 					>
 						Log in with Discord
 					</a>
