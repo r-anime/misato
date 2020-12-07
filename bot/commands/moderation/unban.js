@@ -44,3 +44,8 @@ module.exports = new Command('unban', async (message, args, {db}) => {
 		'banMembers',
 	],
 });
+
+module.exports.help = {
+	args: '<user>',
+	desc: 'Removes bans from specified users, allowing them to rejoin the server immediately.',
+};

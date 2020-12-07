@@ -26,6 +26,6 @@ module.exports = new Command('pick', (msg, args, context) => {
 
 // TODO: add args
 module.exports.help = {
-	args: '',
+	args: '<Comma-seperated list of items>',
 	desc: 'Picks from the options provided, separate them with a comma.',
 };

@@ -47,6 +47,6 @@ Be sure to use the first line and not leave any whitespace/newline immediately a
 
 // TODO: add args
 module.exports.help = {
-	args: '',
+	args: '<channel> <message>',
 	desc: 'Says the contents passed after the specified channel, or in the same channel if no channel is passed.',
 };

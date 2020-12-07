@@ -26,6 +26,6 @@ module.exports = new Command('roll', (msg, args) => {
 
 // TODO: add args
 module.exports.help = {
-	args: '',
+	args: '[lowest number] [highest number]',
 	desc: 'Rolls between 2 numbers provided or a default interval of 0-6',
 };

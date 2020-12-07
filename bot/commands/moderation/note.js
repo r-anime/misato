@@ -39,3 +39,8 @@ module.exports = new Command('note', async (message, args, {db}) => {
 		'manageMessages',
 	],
 });
+
+module.exports.help = {
+	args: '<user> <message>',
+	desc: 'Adds a note about the specified user to the database.',
+};

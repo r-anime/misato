@@ -103,3 +103,8 @@ module.exports = new Command('whois', async (message, args, {db}) => {
 		'banMembers',
 	],
 });
+
+module.exports.help = {
+	args: '<discord or reddit user>',
+	desc: 'Prints user information based on userID or name provided. ',
+};

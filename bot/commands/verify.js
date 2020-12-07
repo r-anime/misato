@@ -104,3 +104,8 @@ module.exports = new Command('verify', async (msg, args, {db, client}) => {
 		'manageRoles',
 	],
 });
+
+module.exports.help = {
+	args: '<discord user> <reddit username or /u/ link>',
+	desc: 'Forces link between mentioned accounts (does not go through OAuth)',
+};
