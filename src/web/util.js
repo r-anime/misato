@@ -1,4 +1,4 @@
-const config = require('../config');
+const config = require('../../config');
 
 module.exports = {
 	// TODO: make generic. probably need to set up some generic per-guild group

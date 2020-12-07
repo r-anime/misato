@@ -1,6 +1,6 @@
 const {EventListener} = require('yuuko');
 const log = require('another-logger')({label: 'event:verification'});
-const config = require('../../config');
+const config = require('../../../config');
 
 // Check if members are already verified when being added to a guild
 // TODO more verification hardcoding

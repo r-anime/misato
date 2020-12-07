@@ -1,5 +1,5 @@
 const {Command} = require('yuuko');
-const config = require('../../config');
+const config = require('../../../config');
 const {parseUser, formatDate} = require('../util/discord');
 const {escape} = require('../util/formatting');
 

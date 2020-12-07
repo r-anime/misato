@@ -2,7 +2,7 @@ const log = require('another-logger')({label: 'cmd:unverify'});
 const {Command} = require('yuuko');
 const {awaitReaction, parseGuildMember} = require('../util/discord');
 const {escape} = require('../util/formatting');
-const config = require('../../config');
+const config = require('../../../config');
 
 const confirmationEmoji = '💔';
 
