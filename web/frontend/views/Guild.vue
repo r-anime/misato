@@ -1,5 +1,8 @@
 <template>
-	<div class="container">
+	<div
+		v-if="discordInfo"
+		class="container"
+	>
 		<div class="section">
 			<template v-if="!loaded">
 				<b-loading
@@ -48,9 +51,15 @@
 			</template>
 		</div>
 	</div>
+	<b-loading
+		v-else
+		:is-full-page="true"
+		:active="true"
+	/>
 </template>
 
 <script>
+import {mapState} from 'vuex';
 import {discordIconURL} from '../util';
 export default {
 	data () {
@@ -60,6 +69,7 @@ export default {
 		};
 	},
 	computed: {
+		...mapState(['discordInfo']),
 		guildID () {
 			return this.$route.params.guildID;
 		},
