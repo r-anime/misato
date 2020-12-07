@@ -33,11 +33,11 @@
 			Member not found
 		</h2>
 	</div>
-		<b-loading
+	<b-loading
 		v-else
-			:active="true"
-			:is-full-page="false"
-		/>
+		:active="true"
+		:is-full-page="false"
+	/>
 </template>
 
 <script>

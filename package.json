@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint './**/*.js'",
-    "lint-fix": "eslint './**/*.js' --fix",
+    "lint": "eslint . --ext js,vue",
+    "lint-fix": "eslint . --ext js,vue --fix",
     "build": "webpack",
     "build:prod": "NODE_ENV=production webpack",
     "start": "node core",
