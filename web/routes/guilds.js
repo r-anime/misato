@@ -1,5 +1,6 @@
 const log = require('another-logger');
 const polka = require('polka');
+const util = require('../util');
 
 module.exports = (db, client) => polka()
 	.get('/:guildID', async (request, response) => {
@@ -14,10 +15,15 @@ module.exports = (db, client) => polka()
 		}
 	})
 
-	// TODO: auth
-	// NOMERGE
 	.get('/:guildID/notes', async (request, response) => {
 		const {guildID} = request.params;
+
+		if (!await util.thisUserManagesGuild(request, client, db, guildID)) {
+			response.writeHead(401);
+			response.end();
+			return;
+		}
+
 		try {
 			response.end(JSON.stringify(await db.collection('notes').find({guildID}).toArray()));
 		} catch (error) {
@@ -26,8 +32,17 @@ module.exports = (db, client) => polka()
 		}
 	})
 
+	// TODO: auth
+	// NOMERGE
 	.get('/:guildID/members/:userID/notes', async (request, response) => {
 		const {guildID, userID} = request.params;
+
+		if (!await util.thisUserManagesGuild(request, client, db, guildID)) {
+			response.writeHead(401);
+			response.end();
+			return;
+		}
+
 		try {
 			response.end(JSON.stringify(await db.collection('notes').find({guildID, userID}).toArray()));
 		} catch (error) {
@@ -38,6 +53,13 @@ module.exports = (db, client) => polka()
 
 	.get('/:guildID/warnings', async (request, response) => {
 		const {guildID} = request.params;
+
+		if (!await util.thisUserManagesGuild(request, client, db, guildID)) {
+			response.writeHead(401);
+			response.end();
+			return;
+		}
+
 		try {
 			response.end(JSON.stringify(await db.collection('warnings').find({guildID}).toArray()));
 		} catch (error) {
@@ -48,6 +70,13 @@ module.exports = (db, client) => polka()
 
 	.get('/:guildID/members/:userID/warnings', async (request, response) => {
 		const {guildID, userID} = request.params;
+
+		if (!await util.thisUserManagesGuild(request, client, db, guildID)) {
+			response.writeHead(401);
+			response.end();
+			return;
+		}
+
 		try {
 			response.end(JSON.stringify(await db.collection('warnings').find({guildID, userID}).toArray()));
 		} catch (error) {
@@ -58,6 +87,13 @@ module.exports = (db, client) => polka()
 
 	.get('/:guildID/kicks', async (request, response) => {
 		const {guildID} = request.params;
+
+		if (!await util.thisUserManagesGuild(request, client, db, guildID)) {
+			response.writeHead(401);
+			response.end();
+			return;
+		}
+
 		try {
 			response.end(JSON.stringify(await db.collection('kicks').find({guildID}).toArray()));
 		} catch (error) {
@@ -68,6 +104,13 @@ module.exports = (db, client) => polka()
 
 	.get('/:guildID/members/:userID/kicks', async (request, response) => {
 		const {guildID, userID} = request.params;
+
+		if (!await util.thisUserManagesGuild(request, client, db, guildID)) {
+			response.writeHead(401);
+			response.end();
+			return;
+		}
+
 		try {
 			response.end(JSON.stringify(await db.collection('kicks').find({guildID, userID}).toArray()));
 		} catch (error) {
@@ -78,6 +121,13 @@ module.exports = (db, client) => polka()
 
 	.get('/:guildID/bans', async (request, response) => {
 		const {guildID} = request.params;
+
+		if (!await util.thisUserManagesGuild(request, client, db, guildID)) {
+			response.writeHead(401);
+			response.end();
+			return;
+		}
+
 		try {
 			response.end(JSON.stringify(await db.collection('bans').find({guildID}).toArray()));
 		} catch (error) {
@@ -88,6 +138,13 @@ module.exports = (db, client) => polka()
 
 	.get('/:guildID/members/:userID/bans', async (request, response) => {
 		const {guildID, userID} = request.params;
+
+		if (!await util.thisUserManagesGuild(request, client, db, guildID)) {
+			response.writeHead(401);
+			response.end();
+			return;
+		}
+
 		try {
 			response.end(JSON.stringify(await db.collection('bans').find({guildID, userID}).toArray()));
 		} catch (error) {
