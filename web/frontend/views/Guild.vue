@@ -44,7 +44,7 @@
 							</ul>
 						</aside>
 					</div>
-					<div class="column">
+					<div class="column is-relative">
 						<router-view />
 					</div>
 				</div>
