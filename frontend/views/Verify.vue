@@ -102,10 +102,12 @@ export default {
 			});
 		},
 		linkAccounts () {
-			fetch(`/api/verification/${this.guildID}`, {method: 'POST'}).then(async response => {
+			fetch(`/api/verification/${this.guildID}`, {method: 'POST'}).then(response => {
 				if (response.ok) {
+					// eslint-disable-next-line no-alert
 					alert('Accounts linked! You should now have access to the server. You can close this window now.');
 				} else {
+					// eslint-disable-next-line no-alert
 					alert('Failed to link your accounts. Get in touch with a chat moderator and give them your Reddit username.');
 				}
 			});

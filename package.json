@@ -4,7 +4,7 @@
   "scripts": {
     "build": "tsc",
     "build:prod": "NODE_ENV=production tsc",
-    "lint": "eslint . --ext js,ts",
+    "lint": "eslint . --ext js,ts,vue",
     "build-web": "webpack",
     "build-web:prod": "NODE_ENV=production webpack",
     "start": "node build",
