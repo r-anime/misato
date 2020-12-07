@@ -85,8 +85,6 @@ export default {
 			this.warnings = warnings;
 			this.kicks = kicks;
 			this.bans = bans;
-		}).catch(error => {
-
 		});
 	},
 };
