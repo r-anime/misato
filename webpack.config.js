@@ -5,6 +5,7 @@ const config = require('./config');
 
 module.exports = {
 	mode: config.dev ? 'development' : 'production',
+	devtool: config.dev ? 'source-map' : false,
 	entry: './web/frontend/index.js',
 	output: {
 		path: config.web.frontendBuildDir,
