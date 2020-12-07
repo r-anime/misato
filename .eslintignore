@@ -1,1 +1,3 @@
-dist
+build
+frontend/dist
+node_modules

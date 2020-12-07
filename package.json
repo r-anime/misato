@@ -4,7 +4,7 @@
   "scripts": {
     "build": "tsc",
     "build:prod": "NODE_ENV=production tsc",
-    "lint": "eslint './**/*.js'",
+    "lint": "eslint . --ext js,ts",
     "build-web": "webpack",
     "build-web:prod": "NODE_ENV=production webpack",
     "start": "node build",
@@ -31,7 +31,7 @@
   "devDependencies": {
     "@babel/core": "^7.10.3",
     "@babel/preset-env": "^7.10.3",
-    "@geo1088/eslint-config": "^3.1.0",
+    "@geo1088/eslint-config-ts": "^2.0.0",
     "@tsconfig/recommended": "^1.0.1",
     "babel-loader": "^8.1.0",
     "css-loader": "^3.6.0",

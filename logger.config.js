@@ -1,6 +1,4 @@
 // Describes custom log levels for the `another-logger` package.
-const config = require('./config');
-
 module.exports = {
 	levels: {
 		erisError: {style: 'red', text: 'error (eris)'},
