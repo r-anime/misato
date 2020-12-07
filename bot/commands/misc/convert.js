@@ -68,7 +68,10 @@ Command can be used with: \`${context.prefix}convert [amount] [baseUnit] [target
 		if (targetType === key) targetType = value;
 	}
 
-	const baseValue = match.groups.num || 1;
+	let baseValue = parseFloat(match.groups.num.replace(',', '.'));
+	if (isNaN(baseValue)) {
+		baseValue = 1;
+	}
 
 	let message;
 	try {
