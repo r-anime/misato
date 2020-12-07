@@ -38,7 +38,7 @@
 										active-class="is-active"
 										:to="{name: 'guild-members'}"
 									>
-										Moderation
+										Members
 									</router-link>
 								</li>
 							</ul>
