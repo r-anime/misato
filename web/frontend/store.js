@@ -14,7 +14,7 @@ export default new Vuex.Store({
 	},
 	actions: {
 		fetchDiscordInfo ({commit}) {
-			fetch('/auth/discord/about').then(async response => {
+			return fetch('/auth/discord/about').then(async response => {
 				commit('SET_DISCORD_INFO', response.ok ? await response.json().catch(() => null) : null);
 			});
 		},

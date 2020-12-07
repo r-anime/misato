@@ -1,7 +1,7 @@
 <template>
-	<div>
+	<div v-if="memberInfo">
 		<h1 class="title">
-			User Information: {{ userID }}
+			User Information: {{ memberInfo.user.username }}#{{ memberInfo.user.discriminator }}
 		</h1>
 		<table
 			v-if="things.length"
@@ -28,12 +28,23 @@
 			</tbody>
 		</table>
 	</div>
+	<div v-else-if="memberInfo === null">
+		<h2 class="title">
+			Member not found
+		</h2>
+	</div>
+		<b-loading
+		v-else
+			:active="true"
+			:is-full-page="false"
+		/>
 </template>
 
 <script>
 export default {
 	data () {
 		return {
+			memberInfo: undefined,
 			notes: null,
 			warnings: null,
 			kicks: null,
@@ -63,15 +74,19 @@ export default {
 	},
 	created () {
 		Promise.all([
+			fetch(`/api/guilds/${this.guildID}/members/${this.userID}/about`).then(response => response.json()),
 			fetch(`/api/guilds/${this.guildID}/members/${this.userID}/notes`).then(response => response.json()),
 			fetch(`/api/guilds/${this.guildID}/members/${this.userID}/warnings`).then(response => response.json()),
 			fetch(`/api/guilds/${this.guildID}/members/${this.userID}/kicks`).then(response => response.json()),
 			fetch(`/api/guilds/${this.guildID}/members/${this.userID}/bans`).then(response => response.json()),
-		]).then(([notes, warnings, kicks, bans]) => {
+		]).then(([memberInfo, notes, warnings, kicks, bans]) => {
+			this.memberInfo = memberInfo;
 			this.notes = notes;
 			this.warnings = warnings;
 			this.kicks = kicks;
 			this.bans = bans;
+		}).catch(error => {
+
 		});
 	},
 };

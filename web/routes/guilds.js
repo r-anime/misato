@@ -4,11 +4,45 @@ const util = require('../util');
 
 module.exports = (db, client) => polka()
 	.get('/:guildID', async (request, response) => {
+		const {guildID} = request.params;
+
+		if (!await util.thisUserManagesGuild(request, client, db, guildID)) {
+			response.writeHead(401);
+			response.end();
+			return;
+		}
+
 		try {
 			// TODO: check if any properties seen by the bot shouldn't be sent to end users
-			response.end(JSON.stringify(client.guilds.get(request.params.guildID) || await client.getRESTGuild(request.params.guildID)));
+			response.end(JSON.stringify(client.guilds.get(guildID) || await client.getRESTGuild(guildID)));
 		} catch (error) {
 			// TODO: handle errors other than not found
+			log.debug(error);
+			response.writeHead(404);
+			response.end();
+		}
+	})
+
+	.get('/:guildID/members', (request, response) => {
+		// TODO
+		response.writeHead(501);
+		response.end();
+	})
+
+	.get('/:guildID/members/:memberID/about', async (request, response) => {
+		const {guildID, memberID} = request.params;
+
+		if (!await util.thisUserManagesGuild(request, client, db, guildID)) {
+			response.writeHead(401);
+			response.end();
+			return;
+		}
+
+		try {
+			const guild = client.guilds.get(guildID) || await client.getRESTGuild(guildID);
+			const member = guild.members.get(memberID) || await guild.getRESTMember(memberID);
+			response.end(JSON.stringify(member));
+		} catch (error) {
 			log.debug(error);
 			response.writeHead(404);
 			response.end();
