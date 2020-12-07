@@ -74,6 +74,6 @@ module.exports = new Command('warn', async (message, args, {db}) => {
 });
 
 module.exports.help = {
-	args: '<Username, mention, or userID> <message>',
+	args: '<user> <message>',
 	desc: 'Sends a warning to the specified user, and saves the warning for future reference.',
 };

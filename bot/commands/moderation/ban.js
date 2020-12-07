@@ -88,6 +88,6 @@ module.exports = new Command('ban', async (message, args, {db}) => {
 });
 
 module.exports.help = {
-	args: '<user name, userID, or mention> <duration> <message>',
+	args: '<user> <duration> [message]',
 	desc: 'Ban the indicated user for the indicated duration with the indicated message. If Duration is blank, ban will be perminent.',
 };

@@ -77,6 +77,6 @@ module.exports = new Command('kick', async (message, args, {db}) => {
 });
 
 module.exports.help = {
-	args: '<username, mention, or userID> <message>',
+	args: '<user> [message]',
 	desc: 'Kick indicated user with indicated message, or no message if message left blank. (Note: User can immediately rejoin server)',
 };

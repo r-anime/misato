@@ -18,6 +18,6 @@ module.exports = new Command('avatar', async (msg, args) => {
 
 // TODO: add args
 module.exports.help = {
-	args: '<Discord user name>',
+	args: '<user>',
 	desc: 'Shows the avatar of the user provided.',
 };

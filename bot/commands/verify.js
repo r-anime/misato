@@ -106,6 +106,6 @@ module.exports = new Command('verify', async (msg, args, {db, client}) => {
 });
 
 module.exports.help = {
-	args: '<discord username or userid> <reddit username or /u/ link>',
+	args: '<discord user> <reddit username or /u/ link>',
 	desc: 'Forces link between mentioned accounts (does not go through OAuth)',
 };
