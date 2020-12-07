@@ -1,7 +1,6 @@
 const polka = require('polka');
 
 const log = require('another-logger')({label: 'web'});
-const {MongoClient} = require('mongodb');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 
@@ -12,15 +11,9 @@ const auth = require('./routes/auth');
 const api = require('./routes/api');
 const sirv = require('sirv');
 
-(async () => {
+module.exports = (mongoClient, db, discordClient) => {
 	// Set up our app
 	const app = polka();
-
-	// Set up MongoDB
-	const mongoClient = new MongoClient(config.mongodb.url, {useUnifiedTopology: true});
-	await mongoClient.connect();
-	const db = mongoClient.db(config.mongodb.databaseName);
-	log.success('Connected to MongoDB on', config.mongodb.url);
 
 	// Set up session storage, delegated to parent process via IPC
 	app.use(session({
@@ -50,7 +43,7 @@ const sirv = require('sirv');
 
 	// Register sub-apps for API routes
 	app.use('/auth', auth);
-	app.use('/api', api(db));
+	app.use('/api', api(db, discordClient));
 
 	// Start the server
 	app.listen(config.web.port, error => {
@@ -60,4 +53,4 @@ const sirv = require('sirv');
 		}
 		log.success(`Server listening on port ${config.web.port}`);
 	});
-})();
+};
