@@ -4,9 +4,17 @@ const util = require('../util');
 
 module.exports = (db, client) => polka()
 	.get('/:guildID', async (request, response) => {
+		const {guildID} = request.params;
+
+		if (!await util.thisUserManagesGuild(request, client, db, guildID)) {
+			response.writeHead(401);
+			response.end();
+			return;
+		}
+
 		try {
 			// TODO: check if any properties seen by the bot shouldn't be sent to end users
-			response.end(JSON.stringify(client.guilds.get(request.params.guildID) || await client.getRESTGuild(request.params.guildID)));
+			response.end(JSON.stringify(client.guilds.get(guildID) || await client.getRESTGuild(guildID)));
 		} catch (error) {
 			// TODO: handle errors other than not found
 			log.debug(error);
