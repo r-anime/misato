@@ -31,7 +31,7 @@
 					</b-navbar-item>
 				</b-navbar-dropdown>
 				<b-navbar-item
-					v-else
+					v-else-if="discordInfo !== undefined"
 					tag="div"
 				>
 					<a
