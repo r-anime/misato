@@ -16,8 +16,7 @@ module.exports = new Command('avatar', async (msg, args) => {
 	msg.channel.createMessage(member.avatarURL).catch(() => {});
 });
 
-// TODO: add args
 module.exports.help = {
-	args: '<user>',
-	desc: 'Shows the avatar of the user provided.',
+	args: '[user]',
+	desc: 'Shows your avatar, or the avatar of the given user.',
 };

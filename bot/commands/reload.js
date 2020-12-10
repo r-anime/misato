@@ -3,6 +3,5 @@
 module.exports = require('yuuko/dist/commands/reload');
 
 module.exports.help = {
-	args: '',
 	desc: 'Allows the bot owner to reload the bot from disk for development purposes.',
 };

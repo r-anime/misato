@@ -16,7 +16,12 @@ function kickMessage (guild, reason) {
 	return `You've been kicked from __${escape(guild.name)}__.\n${reason ? blockquote(escape(reason)) : ''}`;
 }
 
-module.exports = new Command('kick', async (message, args, {db}) => {
+module.exports = new Command('kick', async (message, args, context) => {
+	if (!args.length) {
+		return context.sendHelp(message, context);
+	}
+	const {db} = context;
+
 	const [member, reason] = await parseGuildMember(args.join(' '), message.channel.guild);
 	if (!member) {
 		message.channel.createMessage('Not sure who you want me to kick. Start your message with a mention, exact tag, or user ID.').catch(() => {});

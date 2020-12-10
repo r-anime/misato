@@ -4,7 +4,12 @@
 const {Command} = require('yuuko');
 const log = require('another-logger');
 
-module.exports = new Command('remind', async (message, args, {db}) => {
+module.exports = new Command('remind', async (message, args, context) => {
+	if (!args.length) {
+		return context.sendHelp(message, context);
+	}
+	const {db} = context;
+
 	// TODO: actually parse a date from arguments
 	const due = new Date(Date.now() + 1000 * 60); // one minute from now
 	// Reminder's text is just the entire rest of the message

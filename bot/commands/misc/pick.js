@@ -9,23 +9,17 @@ function getRandomInt (min, max) {
 }
 
 module.exports = new Command('pick', (msg, args, context) => {
-	// We use a comma as a separator for each choice, and we don't use args because want choices to have spaces
-	let choices = msg.content.split(',');
-
-	// Remove the command from the first choice, don't want the bot to say 'I pick .pick firstChoice'
-	choices[0] = choices[0].replace(`${context.prefix}pick`, '');
-
-	choices = choices.map(element => element.trim());
-
-	if (choices.length < 2) {
-		msg.channel.createMessage('Not enough things to pick from! Use a comma to separate choices.').catch(() => {});
-	} else {
-		msg.channel.createMessage(`I pick **${choices[getRandomInt(0, choices.length - 1)]}**`).catch(() => {});
+	if (!args.length) {
+		return context.sendHelp(msg, context);
 	}
+
+	// We use a comma as a separator for each choice
+	const choices = args.join(' ').split(',').map(str => str.trim());
+
+	msg.channel.createMessage(`I pick **${choices[getRandomInt(0, choices.length - 1)]}**`).catch(() => {});
 });
 
-// TODO: add args
 module.exports.help = {
-	args: '<Comma-seperated list of items>',
-	desc: 'Picks from the options provided, separate them with a comma.',
+	args: '<choice>, <choice>, <more choices...>',
+	desc: 'Picks randomly from the given options. Options are separated with commas.',
 };

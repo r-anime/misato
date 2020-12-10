@@ -5,7 +5,12 @@ const {escape} = require('../util/formatting');
 
 const confirmationEmoji = '✅';
 
-module.exports = new Command('verify', async (msg, args, {db, client}) => {
+module.exports = new Command('verify', async (msg, args, context) => {
+	if (!args.length) {
+		return context.sendHelp(msg, context);
+	}
+	const {db, client} = context;
+
 	args = args.join(' ').trim();
 
 	// This command takes two arguments, a reddit user and a Discord user. Each

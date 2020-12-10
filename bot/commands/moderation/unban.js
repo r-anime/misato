@@ -2,7 +2,12 @@ const log = require('another-logger')({label: 'command:unban'});
 const {Command} = require('yuuko');
 const {parseUser} = require('../../util/discord');
 
-module.exports = new Command('unban', async (message, args, {db}) => {
+module.exports = new Command('unban', async (message, args, context) => {
+	if (!args.length) {
+		return context.sendHelp(message, context);
+	}
+	const {db} = context;
+
 	const [user] = await parseUser(args.join(' ').trim(), message.channel.guild);
 	if (!user) {
 		message.channel.createMessage("Couldn't tell who you mean. Use a user ID or direct mention (user#discrim won't work).").catch(() => {});

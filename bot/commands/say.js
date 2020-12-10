@@ -3,10 +3,8 @@
 const {Command} = require('yuuko');
 
 module.exports = new Command('say', async (msg, args, context) => {
-	if (args.length < 1) {
-		msg.channel.createMessage(`Command can be used with: \`${context.prefix}say [channelId] [text...]\`
-Be sure to use the first line and not leave any whitespace/newline immediately after the channel/message IDs.`).catch(() => {});
-		return;
+	if (!args.length) {
+		return context.sendHelp(msg, context);
 	}
 
 	// try to get the channel, if none is found just post it in the channel the message was sent
@@ -14,9 +12,8 @@ Be sure to use the first line and not leave any whitespace/newline immediately a
 	try {
 		channel = context.client.getChannel(args[0].split('\n')[0]) || await context.client.getRESTChannel(args[0]);
 	} catch (_) {
-	// pass, channel stays undefined
+		// pass, channel stays undefined
 	}
-
 
 	if (channel) {
 		const messageContent = args.slice(1, args.length).join(' ');
@@ -45,7 +42,6 @@ Be sure to use the first line and not leave any whitespace/newline immediately a
 	}
 }, {permissions: ['manageMessages']});
 
-// TODO: add args
 module.exports.help = {
 	args: '<channel> <message>',
 	desc: 'Says the contents passed after the specified channel, or in the same channel if no channel is passed.',
