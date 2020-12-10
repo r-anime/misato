@@ -53,10 +53,7 @@ module.exports = new Command('convert', async (msg, args, context) => {
 	const match = args.join(' ').match(argRegex);
 
 	if (!match) {
-		msg.channel.createMessage(`For currency codes visit: <https://www.xe.com/en/iso4217.php>
-For units visit: <https://www.npmjs.com/package/convert-units#supported-units>
-Command can be used with: \`${context.prefix}convert [amount] [baseUnit] [targetUnit]\``).catch(() => {});
-		return;
+		return context.sendHelp(msg, context);
 	}
 
 	let {baseType, targetType} = match.groups;
@@ -92,5 +89,7 @@ Command can be used with: \`${context.prefix}convert [amount] [baseUnit] [target
 // TODO: add args
 module.exports.help = {
 	args: '<amount> <source currency or unit> <destination currency or unit>',
-	desc: 'Converts units and currency, the latter being based on this API: <http://exchangeratesapi.io/>',
+	desc: `Converts units and currency. Uses <http://exchangeratesapi.io/> for live currency exchange rates.
+For a list of valid currency codes, visit: <https://www.xe.com/en/iso4217.php>
+For a list of valid units, visit: <https://www.npmjs.com/package/convert-units#supported-units>`,
 };

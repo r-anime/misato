@@ -12,9 +12,8 @@ module.exports = new Command('say', async (msg, args, context) => {
 	try {
 		channel = context.client.getChannel(args[0].split('\n')[0]) || await context.client.getRESTChannel(args[0]);
 	} catch (_) {
-	// pass, channel stays undefined
+		// pass, channel stays undefined
 	}
-
 
 	if (channel) {
 		const messageContent = args.slice(1, args.length).join(' ');

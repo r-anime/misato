@@ -155,5 +155,5 @@ module.exports = new Command(['unverify', 'deverify'], async (msg, args, context
 
 module.exports.help = {
 	args: '<discord user> <reddit username>',
-	desc: 'Deletes the connection between the indicated Discord user name and the indicated Reddit user name. \n If only one is provided, deletes all associations with the indicated name.',
+	desc: 'Deletes the connection between the indicated Discord user name and the indicated Reddit user name. If only one is provided, deletes all associations with the indicated name.',
 };

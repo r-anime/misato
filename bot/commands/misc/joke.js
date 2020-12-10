@@ -16,8 +16,6 @@ module.exports = new Command('joke', async msg => {
 		msg.channel.createMessage(err.message).catch(() => {});
 	}
 });
-// TODO: add args
 module.exports.help = {
-	args: '',
 	desc: 'Fetches a random joke from <https://github.com/15Dkatz/official_joke_api>',
 };
