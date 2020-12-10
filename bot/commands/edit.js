@@ -25,7 +25,6 @@ module.exports = new Command('edit', async (msg, args, context) => {
 	context.client.editMessage(channelId, messageId, newMessageContent).catch(() => {});
 }, {permissions: ['manageMessages']});
 
-// TODO: add args
 module.exports.help = {
 	args: '<channel ID> <message ID> <message text...>',
 	desc: `Edits the given message to have the given content. Logs the previous content in <#${botLogChannelId}>.`,

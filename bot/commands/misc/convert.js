@@ -86,10 +86,9 @@ module.exports = new Command('convert', async (msg, args, context) => {
 	msg.channel.createMessage(message).catch(() => {});
 });
 
-// TODO: add args
 module.exports.help = {
-	args: '<amount> <source currency or unit> <destination currency or unit>',
-	desc: `Converts units and currency. Uses <http://exchangeratesapi.io/> for live currency exchange rates.
+	args: '[amount] <source currency or unit> <destination currency or unit>',
+	desc: `Converts units and currency. Uses <http://exchangeratesapi.io/> for live currency exchange rates. If no amount is specified, assumes 1.
 For a list of valid currency codes, visit: <https://www.xe.com/en/iso4217.php>
 For a list of valid units, visit: <https://www.npmjs.com/package/convert-units#supported-units>`,
 };

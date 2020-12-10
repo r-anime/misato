@@ -19,7 +19,6 @@ module.exports = new Command('pick', (msg, args, context) => {
 	msg.channel.createMessage(`I pick **${choices[getRandomInt(0, choices.length - 1)]}**`).catch(() => {});
 });
 
-// TODO: add args
 module.exports.help = {
 	args: '<choice>, <choice>, <more choices...>',
 	desc: 'Picks randomly from the given options. Options are separated with commas.',

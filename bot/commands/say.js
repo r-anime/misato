@@ -42,7 +42,6 @@ module.exports = new Command('say', async (msg, args, context) => {
 	}
 }, {permissions: ['manageMessages']});
 
-// TODO: add args
 module.exports.help = {
 	args: '<channel> <message>',
 	desc: 'Says the contents passed after the specified channel, or in the same channel if no channel is passed.',

@@ -23,8 +23,6 @@ module.exports = new Command('roll', (msg, args) => {
 		msg.channel.createMessage(`You rolled a ${getRandomInt(min, max)}`).catch(() => {});
 	}
 });
-
-// TODO: add args
 module.exports.help = {
 	args: '[lowest number] [highest number]',
 	desc: 'Rolls between 2 numbers provided or a default interval of 0-6',
