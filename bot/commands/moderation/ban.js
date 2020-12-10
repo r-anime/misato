@@ -16,7 +16,12 @@ function banMessage (guild, reason, expirationDate) {
 	return `You've been banned from __${escape(guild.name)}__ ${expirationDate ? `until ${formatDateTime(expirationDate)}` : 'permanently'}.\n${reason ? blockquote(escape(reason)) : ''}`;
 }
 
-module.exports = new Command('ban', async (message, args, {db}) => {
+module.exports = new Command('ban', async (message, args, context) => {
+	if (!args.length) {
+		return context.sendHelp(message, context);
+	}
+	const {db} = context;
+
 	const [user, rest] = await parseUser(args.join(' '), message.channel.guild);
 	if (!user) {
 		message.channel.createMessage('Not sure who you want me to ban. Start your message with a mention, exact tag, or user ID.').catch(() => {});

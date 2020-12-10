@@ -6,7 +6,12 @@ const config = require('../../config');
 
 const confirmationEmoji = '💔';
 
-module.exports = new Command(['unverify', 'deverify'], async (msg, args, {db}) => {
+module.exports = new Command(['unverify', 'deverify'], async (msg, args, context) => {
+	if (!args.length) {
+		return context.sendHelp(msg, context);
+	}
+	const {db} = context;
+
 	args = args.join(' ').trim();
 
 	// This command takes two arguments, a Reddit username and a Discord user;

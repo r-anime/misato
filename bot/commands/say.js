@@ -3,10 +3,8 @@
 const {Command} = require('yuuko');
 
 module.exports = new Command('say', async (msg, args, context) => {
-	if (args.length < 1) {
-		msg.channel.createMessage(`Command can be used with: \`${context.prefix}say [channelId] [text...]\`
-Be sure to use the first line and not leave any whitespace/newline immediately after the channel/message IDs.`).catch(() => {});
-		return;
+	if (!args.length) {
+		return context.sendHelp(msg, context);
 	}
 
 	// try to get the channel, if none is found just post it in the channel the message was sent

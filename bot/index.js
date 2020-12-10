@@ -35,6 +35,17 @@ module.exports = (mongoClient, db) => {
 	bot.addDir(path.join(__dirname, 'commands'));
 	bot.addDir(path.join(__dirname, 'events'));
 
+	// Make a helper for displaying help information from commands
+	const helpCommand = bot.commandForName('help');
+	bot.extendContext({
+		helpCommand,
+		sendHelp (msg, ctx) {
+			const command = ctx.commandName;
+			ctx.commandName = helpCommand.names[0];
+			helpCommand.process(msg, command.split(' '), ctx);
+		},
+	});
+
 	// Connect the bot to Discord
 	bot.connect();
 

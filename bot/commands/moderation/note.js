@@ -2,7 +2,12 @@ const log = require('another-logger')({label: 'command:note'});
 const {Command} = require('yuuko');
 const {parseUser} = require('../../util/discord');
 
-module.exports = new Command('note', async (message, args, {db}) => {
+module.exports = new Command('note', async (message, args, context) => {
+	if (!args.length) {
+		return context.sendHelp(message, context);
+	}
+	const {db} = context;
+
 	const [member, reason] = await parseUser(args.join(' '), message.channel.guild);
 	if (!member) {
 		message.channel.createMessage('Not sure who you want me to add the note to. Start your message with a mention, exact tag, or user ID.').catch(() => {});

@@ -15,7 +15,12 @@ function warnMessage (guild, reason) {
 	return `You've been issued a warning in __${escape(guild.name)}__.\n${reason ? blockquote(escape(reason)) : ''}`;
 }
 
-module.exports = new Command('warn', async (message, args, {db}) => {
+module.exports = new Command('warn', async (message, args, context) => {
+	if (!args.length) {
+		return context.sendHelp(message, context);
+	}
+	const {db} = context;
+
 	const [member, reason] = await parseGuildMember(args.join(' '), message.channel.guild);
 	if (!member) {
 		message.channel.createMessage('Not sure who you want me to warn. Start your message with a mention, exact tag, or user ID.').catch(() => {});

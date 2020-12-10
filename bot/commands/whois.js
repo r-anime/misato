@@ -69,7 +69,12 @@ async function notesLine (userID, guildID, db) {
 	}`;
 }
 
-module.exports = new Command('whois', async (message, args, {db}) => {
+module.exports = new Command('whois', async (message, args, context) => {
+	if (!args.length) {
+		return context.sendHelp(message, context);
+	}
+	const {db} = context;
+
 	const [user] = await parseUser(args.join(' '), message.channel.guild, message.author);
 	if (!user) {
 		const match = args.join(' ').match(/(?:\/?u\/)?([a-zA-Z0-9-_]+)/);
