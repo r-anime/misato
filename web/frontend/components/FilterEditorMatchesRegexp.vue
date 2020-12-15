@@ -6,10 +6,10 @@
 				placeholder="Field"
 			>
 				<option value="content">
-					content
+					Content
 				</option>
 				<option value="filename">
-					filename
+					Filename
 				</option>
 			</b-select>
 		</div>

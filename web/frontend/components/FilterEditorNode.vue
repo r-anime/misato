@@ -39,6 +39,20 @@ import FilterEditorContainsText from './FilterEditorContainsText';
 import FilterEditorMatchesRegexp from './FilterEditorMatchesRegexp';
 import FilterEditorMultiple from './FilterEditorMultiple';
 
+const sharedKeysBySelection = {
+	containsText: ['field'],
+	matchesRegexp: ['field'],
+	any: ['type', 'children'],
+	all: ['type', 'children'],
+};
+
+const yeet = {
+	containsText: {type: 'containsText', field: 'content', text: ''},
+	matchesRegexp: {type: 'matchesRegexp', field: 'content', pattern: '', flags: ''},
+	any: {type: 'multiple', op: 'or', children: []},
+	all: {type: 'multiple', op: 'and', children: []},
+};
+
 export default {
 	name: 'FilterEditorNode',
 	components: {
@@ -67,14 +81,17 @@ export default {
 			console.log('data changed');
 			this.$emit('input', this.data);
 		},
-		selection (newType) {
-			if (newType === 'containsText') {
-				this.data = '{"type":"containsText","field":"content","text":""}';
-			} else if (newType === 'matchesRegexp') {
-				this.data = '{"type":"matchesRegexp","field":"content","pattern":"","flags":""}';
-			} else {
-				this.data = `{"type":"multiple","op":"${newType}","children":[]}`;
+		selection (newSelection) {
+			console.log(newSelection);
+			const currentVal = JSON.parse(this.value);
+			const newVal = {};
+			for (const key of sharedKeysBySelection[newSelection]) {
+				if (Reflect.has(currentVal, key)) {
+					newVal[key] = currentVal[key];
+				}
 			}
+			Object.assign(newVal, yeet[newSelection], newVal);
+			this.data = JSON.stringify(newVal);
 		},
 	},
 	methods: {
