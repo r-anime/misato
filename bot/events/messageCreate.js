@@ -1,6 +1,6 @@
 const log = require('another-logger')({label: 'messageCreate'});
 const {EventListener} = require('yuuko');
-const {messageMatchesRule, isValidRule} = require('../filters');
+const {messageMatchesRule, isValidRule} = require('../../common/filters');
 
 /**
  * Given a list of promises and a condition, returns a new promise that resolves
