@@ -4,18 +4,22 @@
 			v-model="selection"
 			class="mb-4"
 		>
-			<option value="containsText">
-				Text match
-			</option>
-			<option value="matchesRegexp">
-				RegExp match
-			</option>
-			<option value="any">
-				Any of the following
-			</option>
-			<option value="all">
-				All of the following
-			</option>
+			<optgroup label="Text matches">
+				<option value="containsText">
+					Has text
+				</option>
+				<option value="matchesRegexp">
+					Matches regular expression
+				</option>
+			</optgroup>
+			<optgroup label="Multi-matches">
+				<option value="any">
+					Any of...
+				</option>
+				<option value="all">
+					All of...
+				</option>
+			</optgroup>
 		</b-select>
 
 		<filter-editor-contains-text
