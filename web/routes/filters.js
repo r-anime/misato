@@ -28,7 +28,7 @@ module.exports = (db, client) => polka()
 			response.end();
 		}
 
-		response.end(JSON.stringify(filterConfig));
+		response.end(JSON.stringify(filterConfig.rule));
 	})
 
 	.post('/:guildID/configuration', async (request, response) => {

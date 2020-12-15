@@ -1,6 +1,6 @@
 <template>
 	<div class="box">
-		<b-select v-model="selectedType">
+		<b-select v-model="selection">
 			<option value="containsText">
 				Text match
 			</option>
@@ -16,18 +16,21 @@
 		</b-select>
 
 		<filter-editor-contains-text
-			v-if="selectedType === 'containsText'"
+			v-if="selection === 'containsText'"
 			v-model="data"
 		/>
 		<filter-editor-matches-regexp
-			v-if="selectedType === 'matchesRegexp'"
+			v-else-if="selection === 'matchesRegexp'"
 			v-model="data"
 		/>
 		<filter-editor-multiple
-			v-if="['any', 'all'].includes(selectedType)"
+			v-else-if="['any', 'all'].includes(selection)"
 			v-model="data"
-			:op="selectedType === 'any' ? 'or' : 'and'"
+			:op="selection === 'any' ? 'or' : 'and'"
 		/>
+		<div v-else>
+			something is wrong
+		</div>
 	</div>
 </template>
 
@@ -46,20 +49,25 @@ export default {
 	props: {
 		value: {
 			type: String,
-			default: '{"type":"containsText","field":"content","text":""}',
+			required: true,
 		},
 	},
 	data () {
 		return {
-			selectedType: JSON.parse(this.value).type,
+			selection: this.selectionForValue(this.value),
 			data: this.value,
 		};
 	},
 	watch: {
+		value (newValue) {
+			this.selection = this.selectionForValue(newValue);
+			this.data = newValue;
+		},
 		data () {
+			console.log('data changed');
 			this.$emit('input', this.data);
 		},
-		selectedType (newType) {
+		selection (newType) {
 			if (newType === 'containsText') {
 				this.data = '{"type":"containsText","field":"content","text":""}';
 			} else if (newType === 'matchesRegexp') {
@@ -67,6 +75,15 @@ export default {
 			} else {
 				this.data = `{"type":"multiple","op":"${newType}","children":[]}`;
 			}
+		},
+	},
+	methods: {
+		selectionForValue (val) {
+			val = JSON.parse(val);
+			if (val.type === 'multiple') {
+				return val.op === 'or' ? 'any' : 'all';
+			}
+			return val.type;
 		},
 	},
 };

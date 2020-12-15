@@ -17,7 +17,7 @@ export default {
 	props: {
 		value: {
 			type: String,
-			default: '{"type":"containsText","field":"content","text":""}',
+			required: true,
 		},
 	},
 };

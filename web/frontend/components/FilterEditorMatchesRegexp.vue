@@ -37,7 +37,7 @@ export default {
 	props: {
 		value: {
 			type: String,
-			default: '{"type":"containsText","field":"content","pattern":"","flags":""}',
+			required: true,
 		},
 	},
 	data () {
