@@ -1,7 +1,9 @@
 # Files in this directory are processed with Babel through Webpack, so using ES6
 # module imports is fine
 parserOptions:
+  parser: babel-eslint
   sourceType: module
 extends: plugin:vue/recommended
 rules:
+  indent: [error, tab]
   vue/html-indent: [error, tab]
