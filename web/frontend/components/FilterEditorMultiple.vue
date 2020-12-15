@@ -13,7 +13,7 @@
 				class="node-delete-button"
 				@click="deleteChild(child.id)"
 			>
-				Delete
+				Remove
 			</b-button>
 		</div>
 

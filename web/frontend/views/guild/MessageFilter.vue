@@ -11,6 +11,7 @@
 						<b-button
 							type="is-success"
 							:disabled="rule === lastRule"
+							:loading="submitting"
 							@click="submit()"
 						>
 							Save
@@ -20,22 +21,34 @@
 						<b-button
 							type="is-danger"
 							:disabled="rule === lastRule"
-							@click="reset()"
+							@click="revert()"
 						>
-							Reset
+							Revert
 						</b-button>
 					</div>
 				</div>
 			</div>
 			<div class="level-right">
 				<div class="field has-addons">
-					<b-button disabled>
-						Import
-					</b-button>
-					<b-button disabled>
-						Export
-					</b-button>
+					<div class="control">
+						<b-button disabled>
+							Import
+						</b-button>
+					</div>
+					<div class="control">
+						<b-button disabled>
+							Export
+						</b-button>
+					</div>
 				</div>
+			</div>
+		</div>
+
+		<div class="block">
+			<div class="content">
+				<p class="subtitle">
+					Delete any message that...
+				</p>
 			</div>
 		</div>
 
@@ -55,11 +68,14 @@
 import FilterEditor from '../../components/FilterEditor';
 
 export default {
-	components: {FilterEditor},
+	components: {
+		FilterEditor,
+	},
 	data () {
 		return {
 			rule: null,
 			lastRule: null,
+			submitting: false,
 		};
 	},
 	computed: {
@@ -82,6 +98,7 @@ export default {
 	},
 	methods: {
 		async submit () {
+			this.submitting = true;
 			const response = await fetch(`/api/filters/${this.guildID}/configuration`, {
 				method: 'POST',
 				headers: {
@@ -89,6 +106,7 @@ export default {
 				},
 				body: this.rule,
 			});
+			this.submitting = false;
 			if (response.ok) {
 				this.lastRule = this.rule;
 			} else {
@@ -96,7 +114,7 @@ export default {
 				alert(`Failed to save, status code ${response.status} ${response.statusText}.`);
 			}
 		},
-		reset () {
+		revert () {
 			this.rule = this.lastRule;
 		},
 	},
