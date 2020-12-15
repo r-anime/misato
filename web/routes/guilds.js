@@ -185,4 +185,23 @@ module.exports = (db, client) => polka()
 			response.writeHead(500);
 			response.end();
 		}
+	})
+
+	.get('/:guildID/roles', async (request, response) => {
+		const {guildID} = request.params;
+
+		if (!await util.thisUserManagesGuild(request, client, db, guildID)) {
+			response.writeHead(401);
+			response.end();
+			return;
+		}
+
+		try {
+			const guild = client.guilds.get(guildID) || await client.getRESTGuild(guildID);
+			const roles = [...guild.roles.values()];
+			response.end(JSON.stringify(roles));
+		} catch (error) {
+			response.writeHead(500);
+			response.end();
+		}
 	});
