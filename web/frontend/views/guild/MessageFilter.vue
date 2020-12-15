@@ -91,7 +91,7 @@ export default {
 			if (response.ok) {
 				return response.json();
 			}
-			return {};
+			return {type: 'multiple', op: 'or', children: []};
 		});
 		this.rule = JSON.stringify(rule);
 		this.lastRule = this.rule;
