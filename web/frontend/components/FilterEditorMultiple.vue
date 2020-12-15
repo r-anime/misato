@@ -8,11 +8,19 @@
 		</b-button>
 
 		<div class="filter-multiple-indent">
-			<div class="filter-multiple-node-wrapper" v-for="child in children" :key="child.id">
+			<div
+				v-for="child in children"
+				:key="child.id"
+				class="filter-multiple-node-wrapper"
+			>
 				<filter-editor-node
 					v-model="child.data"
 				/>
-				<b-button type="is-danger" class="delete-button" @click="deleteChild(child.id)">
+				<b-button
+					type="is-danger"
+					class="delete-button"
+					@click="deleteChild(child.id)"
+				>
 					Delete
 				</b-button>
 			</div>
@@ -34,18 +42,18 @@ export default {
 	props: {
 		value: {
 			type: String,
-			default: '{"type":"multiple","op":"or","children":[]}',
+			required: true,
 		},
 		op: {
 			type: String,
-			default: 'or',
+			required: true,
 		},
 	},
 	data () {
 		console.log(this.value);
 		const val = JSON.parse(this.value);
 		return {
-			children: val.children.map(childJSON => ({data: childJSON})),
+			children: val.children.map(childData => ({data: JSON.stringify(childData)})),
 		};
 	},
 	watch: {
@@ -81,7 +89,7 @@ export default {
 		},
 		deleteChild (id) {
 			this.children.splice(this.children.findIndex(c => c.id === id), 1);
-		}
+		},
 	},
 };
 </script>

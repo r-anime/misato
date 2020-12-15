@@ -47,7 +47,11 @@
 			v-if="loaded"
 			v-model="rule"
 		/>
-		<b-loading v-else />
+		<b-loading
+			v-else
+			:active="true"
+			:is-full-page="false"
+		/>
 	</div>
 </template>
 
