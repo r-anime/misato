@@ -13,6 +13,7 @@ module.exports = {
 	 */
 	async thisUserManagesGuild (request, bot, db, guildID) {
 		if (!request.session.discordUserInfo) return false;
+		// TODO: hardcoded
 		if (guildID !== config.TEMP_guildID) return false;
 
 		const guild = bot.guilds.get(guildID);

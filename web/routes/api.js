@@ -7,4 +7,4 @@ const createGuildsApp = require('./guilds');
 
 module.exports = (db, client) => app
 	.use('/guilds', createGuildsApp(db, client))
-	.use('/verification', createVerificationApp(db));
+	.use('/verification', createVerificationApp(db, client));

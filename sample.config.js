@@ -3,9 +3,8 @@ const path = require('path');
 // Sample configuration file. Rename this to `config.js` and fill in your values.
 
 module.exports = {
-	// temporary verification stuff, this will be handled in the db eventually
+	// temporary stuff, this will be handled in the db eventually
 	TEMP_guildID: '',
-	TEMP_roleID: '',
 
 	// Dev mode (disables sirv cache, runs webpack in development mode, etc.)
 	dev: process.env.NODE_ENV !== 'production',

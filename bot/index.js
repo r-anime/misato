@@ -49,7 +49,7 @@ module.exports = (mongoClient, db) => {
 	// Connect the bot to Discord
 	bot.connect();
 
-	// TODO hardcoded verification crap here
+	// TODO this should be handled elsewhere
 	db.collection('redditAccounts').watch().on('change', async change => {
 		log.info('change', change);
 		if (change.operationType !== 'insert') {
@@ -57,14 +57,24 @@ module.exports = (mongoClient, db) => {
 		}
 		const {userID, redditName, guildID} = change.fullDocument;
 		log.debug(userID, redditName, guildID);
-		if (guildID !== config.TEMP_guildID) {
+
+		let roleID;
+		try {
+			const verificationConfig = await db.collection('verificationConfiguration').findOne({guildID});
+			if (!verificationConfig) {
+				return;
+			}
+			roleID = verificationConfig.roleID;
+		} catch (error) {
+			log.error(`Database error fetching verification config for guild ${guildID}:`, error);
 			return;
 		}
+
 		try {
-			await bot.addGuildMemberRole(guildID, userID, config.TEMP_roleID);
+			await bot.addGuildMemberRole(guildID, userID, roleID);
 			log.debug(`Verified <@${userID}> (/u/${redditName})`);
 		} catch (error) {
-			log.error(`Failed to verify <@${userID}> (/u/${redditName})\n`, error);
+			log.error(`Failed to add role ${roleID} to <@${userID}> (/u/${redditName}) in guild ${guildID}:`, error);
 		}
 	});
 
