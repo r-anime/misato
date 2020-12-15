@@ -6,6 +6,7 @@ import Home from './views/Home';
 import Verify from './views/Verify';
 import Guild from './views/Guild';
 
+import GuildInfo from './views/guild/Info';
 import GuildVerification from './views/guild/Verification';
 import GuildMembers from './views/guild/Members';
 import GuildMemberInfo from './views/guild/MemberInfo';
@@ -23,6 +24,7 @@ const router = new VueRouter({
 				{path: 'members/:userID', component: GuildMemberInfo, name: 'guild-member-info'},
 				{path: 'members', component: GuildMembers, name: 'guild-members'},
 				{path: 'verification', component: GuildVerification, name: 'guild-verification'},
+				{path: '', component: GuildInfo, name: 'guild-info'},
 			],
 		},
 		{path: '/guilds', component: null, name: 'guilds'},
