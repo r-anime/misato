@@ -65,6 +65,7 @@ module.exports = (db, client) => polka()
 		} catch (error) {
 			response.writeHead(400);
 			response.end();
+			return;
 		}
 
 		// Save the rule to the database

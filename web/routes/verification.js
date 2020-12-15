@@ -45,6 +45,7 @@ module.exports = (db, client) => polka()
 			log.error('Database error while processing reddit-discord link:', error);
 			response.writeHead(500);
 			response.end('An unexpected error occured. Get in touch with a bot developer.');
+			return;
 		}
 
 		response.writeHead(201);
@@ -90,6 +91,7 @@ module.exports = (db, client) => polka()
 		if (request.headers['content-type'] !== 'application/json') {
 			response.writeHead(415);
 			response.end();
+			return;
 		}
 
 		// Read the body of the request

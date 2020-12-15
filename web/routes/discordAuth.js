@@ -167,6 +167,7 @@ module.exports = polka()
 			// This should never happen - we somehow created a state that isn't valid JSON
 			log.error('When parsing state:', parsingError, 'State:', state);
 			response.end('Please try again. If issues persist, report this error to the bot administrator.\n\nError parsing state');
+			return;
 		}
 		const {prev, next} = parsedState;
 
