@@ -26,6 +26,7 @@ module.exports = (db, client) => polka()
 		if (!filterConfig) {
 			response.writeHead(404);
 			response.end();
+			return;
 		}
 
 		response.end(JSON.stringify(filterConfig.rule));
