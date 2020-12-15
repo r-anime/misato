@@ -29,16 +29,12 @@
 			</div>
 			<div class="level-right">
 				<div class="field has-addons">
-					<div class="control">
-						<b-button>
-							Import
-						</b-button>
-					</div>
-					<div class="control">
-						<b-button>
-							Export
-						</b-button>
-					</div>
+					<b-button disabled>
+						Import
+					</b-button>
+					<b-button disabled>
+						Export
+					</b-button>
 				</div>
 			</div>
 		</div>

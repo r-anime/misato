@@ -1,6 +1,9 @@
 <template>
-	<div class="box">
-		<b-select v-model="selection">
+	<div class="box mb-4">
+		<b-select
+			v-model="selection"
+			class="mb-4"
+		>
 			<option value="containsText">
 				Text match
 			</option>

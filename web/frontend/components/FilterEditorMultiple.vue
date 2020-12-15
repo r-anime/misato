@@ -1,30 +1,28 @@
 <template>
 	<div>
+		<div
+			v-for="child in children"
+			:key="child.id"
+			class="node-wrapper"
+		>
+			<filter-editor-node
+				v-model="child.data"
+			/>
+			<b-button
+				type="is-danger"
+				class="node-delete-button"
+				@click="deleteChild(child.id)"
+			>
+				Delete
+			</b-button>
+		</div>
+
 		<b-button
 			type="is-primary"
 			@click="addChild()"
 		>
 			Add another
 		</b-button>
-
-		<div class="filter-multiple-indent">
-			<div
-				v-for="child in children"
-				:key="child.id"
-				class="filter-multiple-node-wrapper"
-			>
-				<filter-editor-node
-					v-model="child.data"
-				/>
-				<b-button
-					type="is-danger"
-					class="delete-button"
-					@click="deleteChild(child.id)"
-				>
-					Delete
-				</b-button>
-			</div>
-		</div>
 	</div>
 </template>
 
@@ -93,3 +91,14 @@ export default {
 	},
 };
 </script>
+
+<style lang="scss">
+.node-wrapper {
+	position: relative;
+}
+.button.node-delete-button {
+	position: absolute;
+	right: 1.25rem;
+	top: 1.25rem;
+}
+</style>

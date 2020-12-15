@@ -1,28 +1,24 @@
 <template>
 	<div class="field has-addons">
-		<div class="control">
-			<b-select
-				v-model="field"
-				placeholder="Field"
-			>
-				<option value="content">
-					Content
-				</option>
-				<option value="filename">
-					Filename
-				</option>
-			</b-select>
-		</div>
+		<b-select
+			v-model="field"
+			placeholder="Field"
+		>
+			<option value="content">
+				Content
+			</option>
+			<option value="filename">
+				Filename
+			</option>
+		</b-select>
 		<div class="control">
 			<span class="button is-static">
 				contains
 			</span>
 		</div>
-		<div class="control">
-			<b-input
-				v-model="text"
-			/>
-		</div>
+		<b-input
+			v-model="text"
+		/>
 	</div>
 </template>
 
