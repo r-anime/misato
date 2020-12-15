@@ -121,15 +121,12 @@ module.exports = (db, client) => polka()
 		// Update configuration in the database
 		try {
 			const collection = db.collection('verificationConfiguration');
-			const existingEntry = await collection.findOne({guildID});
-			if (existingEntry) {
-				if (roleID) {
-					await collection.updateOne({guildID}, {roleID});
-				} else {
-					await collection.deleteOne({guildID});
-				}
-			} else if (roleID) {
-				await collection.insertOne({guildID, roleID});
+			if (roleID) {
+				await collection.replaceOne({guildID}, {guildID, roleID}, {
+					upsert: true,
+				});
+			} else {
+				await collection.deleteOne({guildID});
 			}
 			response.end();
 		} catch (error) {
