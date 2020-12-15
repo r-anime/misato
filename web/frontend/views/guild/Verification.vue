@@ -22,6 +22,19 @@
 			</b-select>
 		</b-field>
 
+		<b-field
+			label="Verification URL"
+			message="Send your members to this link to verify their accounts."
+		>
+			<div class="control">
+				<input
+					class="input"
+					readonly
+					:value="verificationURL"
+				>
+			</div>
+		</b-field>
+
 		<b-field grouped>
 			<b-button
 				type="is-success"
@@ -50,6 +63,9 @@ export default {
 		},
 		guildID () {
 			return this.$route.params.guildID;
+		},
+		verificationURL () {
+			return `${window.location.origin}/verify/${this.guildID}`;
 		},
 	},
 	async created () {
