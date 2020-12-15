@@ -3,8 +3,9 @@
 
 const polka = require('polka');
 const log = require('another-logger');
+const util = require('../util');
 
-module.exports = db => polka()
+module.exports = (db, client) => polka()
 
 	// This route actually creates the relationship in the database
 	.post('/:guildID', async (request, response) => {
@@ -48,4 +49,89 @@ module.exports = db => polka()
 
 		response.writeHead(201);
 		response.end();
+	})
+
+	// Gets the verification configuration for the guild
+	.get('/:guildID/configuration', async (request, response) => {
+		const {guildID} = request.params;
+
+		if (!await util.thisUserManagesGuild(request, client, db, guildID)) {
+			response.writeHead(401);
+			response.end();
+			return;
+		}
+
+		try {
+			const guildVerificationConfig = await db.collection('verificationConfiguration').findOne({guildID});
+			if (!guildVerificationConfig) {
+				response.writeHead(404);
+				response.end();
+				return;
+			}
+			response.end(JSON.stringify(guildVerificationConfig));
+		} catch (error) {
+			response.writeHead(500);
+			response.end();
+		}
+	})
+
+	// Updates the verification configuration for the guild
+	.post('/:guildID/configuration', async (request, response) => {
+		const {guildID} = request.params;
+
+		// Users updating configuration must have permission
+		if (!await util.thisUserManagesGuild(request, client, db, guildID)) {
+			response.writeHead(401);
+			response.end();
+			return;
+		}
+
+		// Request must have a JSON content-type
+		if (request.headers['content-type'] !== 'application/json') {
+			response.writeHead(415);
+			response.end();
+		}
+
+		// Read the body of the request
+		let requestBody = '';
+		request.on('data', chunk => {
+			requestBody += chunk;
+		});
+		await new Promise(resolve => request.once('end', resolve));
+
+		// Try to parse information from the request body
+		let roleID;
+		try {
+			const requestJSON = JSON.parse(requestBody);
+			roleID = requestJSON.roleID;
+		} catch (error) {
+			response.writeHead(400);
+			response.end();
+			return;
+		}
+
+		// Ensure roleID is valid
+		const guild = client.guilds.get(guildID) || await client.getRESTGuild(guildID);
+		if (!guild.roles.some(role => role.id === roleID)) {
+			response.writeHead(422);
+			response.end();
+			return;
+		}
+
+		// Update configuration in the database
+		try {
+			const collection = db.collection('verificationConfiguration');
+			const existingEntry = await collection.findOne({guildID});
+			if (existingEntry) {
+				await collection.updateOne({guildID}, {roleID});
+			} else {
+				await collection.insertOne({guildID, roleID});
+			}
+			response.end();
+		} catch (error) {
+			log.error('Database error while processing verification config:', error);
+			response.writeHead(500);
+			response.end();
+		}
 	});
+
