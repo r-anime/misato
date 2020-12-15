@@ -112,7 +112,7 @@ module.exports = (db, client) => polka()
 
 		// Ensure roleID is valid, if present
 		const guild = client.guilds.get(guildID) || await client.getRESTGuild(guildID);
-		if (roleID && !guild.roles.some(role => role.id === roleID)) {
+		if (roleID && (!guild.roles.some(role => role.id === roleID) || roleID === guildID)) {
 			response.writeHead(422);
 			response.end();
 			return;

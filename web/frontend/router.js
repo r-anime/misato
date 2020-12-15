@@ -6,9 +6,10 @@ import Home from './views/Home';
 import Verify from './views/Verify';
 import Guild from './views/Guild';
 
-import ManagementInfo from './views/guild/GuildInfo';
-import GuildMembers from './views/guild/GuildMembers';
-import GuildMemberInfo from './views/guild/GuildMemberInfo';
+import GuildInfo from './views/guild/Info';
+import GuildVerification from './views/guild/Verification';
+import GuildMembers from './views/guild/Members';
+import GuildMemberInfo from './views/guild/MemberInfo';
 
 const router = new VueRouter({
 	mode: 'history',
@@ -22,7 +23,8 @@ const router = new VueRouter({
 			children: [
 				{path: 'members/:userID', component: GuildMemberInfo, name: 'guild-member-info'},
 				{path: 'members', component: GuildMembers, name: 'guild-members'},
-				{path: '', component: ManagementInfo, name: 'guild-info'},
+				{path: 'verification', component: GuildVerification, name: 'guild-verification'},
+				{path: '', component: GuildInfo, name: 'guild-info'},
 			],
 		},
 		{path: '/guilds', component: null, name: 'guilds'},

@@ -28,7 +28,7 @@
 								<li>
 									<router-link
 										exact-active-class="is-active"
-										:to="{name: 'guild-info', params: {guildID}}"
+										:to="{name: 'guild-info'}"
 									>
 										Information
 									</router-link>
@@ -39,6 +39,14 @@
 										:to="{name: 'guild-members'}"
 									>
 										Members
+									</router-link>
+								</li>
+								<li>
+									<router-link
+										exact-active-class="is-active"
+										:to="{name: 'guild-verification', params: {guildID}}"
+									>
+										Verification
 									</router-link>
 								</li>
 							</ul>
