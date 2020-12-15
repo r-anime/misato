@@ -2,7 +2,6 @@ const log = require('another-logger')({label: 'cmd:unverify'});
 const {Command} = require('yuuko');
 const {awaitReaction, parseGuildMember} = require('../util/discord');
 const {escape} = require('../util/formatting');
-const config = require('../../config');
 
 const confirmationEmoji = '💔';
 
@@ -106,43 +105,68 @@ module.exports = new Command(['unverify', 'deverify'], async (msg, args, context
 	} catch (error) {
 		log.error('Failed to unlink accounts:', error);
 		msg.channel.createMessage('Failed to unlink the accounts.').catch(() => {});
+		return;
 	}
 
-	// Check all impacted users - if they don't have any other Reddit accounts linked, remove the verified role from them
-	// TODO: this is hardcoded
+	// We will check all impacted Discord users, and if they don't have any
+	// other Reddit accounts linked, remove the verified role from them.
+
+	// Tracks users who didn't have the role removed from them
 	const failures = [];
-	await Promise.all(discordUserIDs.map(async id => {
-		log.debug('processing id', id);
-		const linkedAccounts = await db.collection('redditAccounts').find({
-			userID: id,
+
+	// Get verification config for this guild so we know which role to remove
+	let verificationConfig;
+	try {
+		verificationConfig = await db.collection('verificationConfiguration').findOne({
 			guildID: msg.channel.guild.id,
-		}).toArray();
-			// If the user still has linked accounts, leave them as-is
-		if (linkedAccounts.length) {
-			return;
-		}
-		// If the user isn't in the guild, we can't do anything about them
-		// (to check this, we first look for the member in the guild's member cache, and if they don't show up
-		// there, we try to find them in the REST API, which will fail if they're not in the guild)
-		if (!msg.channel.guild.members.get(id) && !await msg.channel.guild.getRESTMember(id).catch(() => null)) {
-			log.debug('member not in guild', id);
-			return;
-		}
-		// They're in the guild and have no more linked accounts, try to yeet the role
-		// potential error intentionally not handled
-		try {
-			await msg.channel.guild.removeMemberRole(id, config.TEMP_roleID);
-		} catch (error) {
-			log.error('Error removing role', config.TEMP_roleID, 'from user', id, ':', error);
-			failures.push(id);
-		}
-	}));
+		});
+	} catch (error) {
+		// If we don't know what role to remove, we already failed for all users
+		log.error(`Database error fetching verification config for guild ${msg.channel.guild.id}:`, error);
+		msg.channel.createMessage(`Unlinked ${existing.length} account${existing.length === 1 ? '' : 's'}. A database error occurred trying to get the configured role;`);
+	}
+
+	if (verificationConfig) {
+		// We know what role to remove - let's try it for everyone
+		const {roleID} = verificationConfig;
+
+		await Promise.all(discordUserIDs.map(async id => {
+			log.debug('processing id', id);
+			const linkedAccounts = await db.collection('redditAccounts').find({
+				userID: id,
+				guildID: msg.channel.guild.id,
+			}).toArray();
+				// If the user still has linked accounts, leave them as-is
+			if (linkedAccounts.length) {
+				return;
+			}
+
+			// If the user isn't in the guild, we can't do anything about them
+			// (to check this, we first look for the member in the guild's member cache, and if they don't show up
+			// there, we try to find them in the REST API, which will fail if they're not in the guild)
+			if (!msg.channel.guild.members.get(id) && !await msg.channel.guild.getRESTMember(id).catch(() => null)) {
+				log.debug('member not in guild', id);
+				return;
+			}
+
+			// They're in the guild and have no more linked accounts, try to yeet the role
+			try {
+				await msg.channel.guild.removeMemberRole(id, roleID);
+			} catch (error) {
+				log.warn('Error removing role', roleID, 'from user', id, ':', error);
+				failures.push(id);
+			}
+		}));
+	} else {
+		// We don't know what role to remove, so we failed for all users
+		failures.push(...discordUserIDs);
+	}
 
 	// Send final message and wrap up
 	let messageText = `Unlinked ${existing.length} account${existing.length === 1 ? '' : 's'}.`;
-	// If one or more role removals failed, include that in the response
 	if (failures.length) {
-		messageText += ` Couldn't remove the role from ${failures.length} member${failures.length === 1 ? '' : 's'}; do this manually. Are my permissions correct?`;
+		// If one or more role removals failed, include that in the response
+		messageText += ` Couldn't remove the role from ${failures.length} member${failures.length === 1 ? '' : 's'}; do this manually. Are my permissions correct? Is the verification role configured correctly?`;
 		messageText += failures.map(id => `\n- <@${id}>`).join('');
 	}
 	msg.channel.createMessage(messageText).catch(() => {});
@@ -151,7 +175,6 @@ module.exports = new Command(['unverify', 'deverify'], async (msg, args, context
 		'manageRoles',
 	],
 });
-
 
 module.exports.help = {
 	args: '<discord user> <reddit username>',
