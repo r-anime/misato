@@ -82,6 +82,7 @@ export default {
 			});
 			this.submitting = false;
 			if (!response.ok) {
+				// eslint-disable-next-line no-alert
 				alert(`Couldn't save settings, server gave status code ${response.status}.`);
 			}
 		},
