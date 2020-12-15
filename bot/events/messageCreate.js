@@ -6,8 +6,9 @@ module.exports = new EventListener('messageCreate', async (message, {client, db}
 	if (message.author.bot) return;
 	if (message.guildID) {
 		// Fetch filter for this guild
-		const {rule} = await db.collection('messageFilters').findOne({guildID: message.guildID});
-		console.info('rule for message', rule);
+		const configuration = await db.collection('messageFilters').findOne({guildID: message.guildID});
+		if (!configuration || !configuration.rule) return;
+		const {rule} = configuration;
 
 		// Map each filter to a promise returning whether or not the message matches that filter
 		if (!isValidRule(rule)) {
