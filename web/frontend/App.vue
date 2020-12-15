@@ -9,7 +9,7 @@
 					tag="router-link"
 					:to="{name: 'home'}"
 				>
-					/r/anime Discord!
+					Misato
 				</b-navbar-item>
 			</template>
 			<template slot="end">

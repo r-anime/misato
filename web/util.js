@@ -1,6 +1,8 @@
 const config = require('../config');
 
 module.exports = {
+	asyncFilter: (arr, predicate) => Promise.all(arr.map(predicate)).then(results => arr.filter((_v, index) => results[index])),
+
 	// TODO: make generic. probably need to set up some generic per-guild group
 	// system so people can set who can manage what features.
 	/**

@@ -1,8 +1,43 @@
 const log = require('another-logger');
 const polka = require('polka');
+const fetch = require('node-fetch');
 const util = require('../util');
 
 module.exports = (db, client) => polka()
+	// TODO: this needs to be done better, more generically somehow
+	.get('/managed', async (request, response) => {
+		if (!request.session.discordUserInfo) {
+			response.writeHead(401);
+			response.end();
+			return;
+		}
+
+		let guilds;
+		try {
+			guilds = await fetch('https://discordapp.com/api/v6/users/@me/guilds', {
+				headers: {
+					Authorization: `Bearer ${request.session.discordAccessToken}`,
+				},
+			}).then(r => {
+				if (r.status !== 200) {
+					throw new Error('Non-200 status code');
+				}
+				return r.json();
+			});
+		} catch (error) {
+			log.error(error);
+			response.writeHead(500);
+			response.end();
+			return;
+		}
+		log.info(guilds);
+
+		// TODO: do we need to check if the bot is in the guild too?
+		guilds = await util.asyncFilter(guilds, guild => util.thisUserManagesGuild(request, client, db, guild.id));
+
+		response.end(JSON.stringify(guilds));
+	})
+
 	.get('/:guildID', async (request, response) => {
 		const {guildID} = request.params;
 
