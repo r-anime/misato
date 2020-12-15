@@ -51,13 +51,13 @@ export default {
 	},
 	data () {
 		return {
-			selectedType: JSON.parse(this.value),
+			selectedType: JSON.parse(this.value).type,
 			data: this.value,
 		};
 	},
 	watch: {
 		data () {
-			this.$emit('input', JSON.stringify(this.data));
+			this.$emit('input', this.data);
 		},
 		selectedType (newType) {
 			if (newType === 'containsText') {
