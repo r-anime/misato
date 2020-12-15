@@ -110,9 +110,9 @@ module.exports = (db, client) => polka()
 			return;
 		}
 
-		// Ensure roleID is valid
+		// Ensure roleID is valid, if present
 		const guild = client.guilds.get(guildID) || await client.getRESTGuild(guildID);
-		if (!guild.roles.some(role => role.id === roleID)) {
+		if (roleID && !guild.roles.some(role => role.id === roleID)) {
 			response.writeHead(422);
 			response.end();
 			return;
@@ -123,8 +123,12 @@ module.exports = (db, client) => polka()
 			const collection = db.collection('verificationConfiguration');
 			const existingEntry = await collection.findOne({guildID});
 			if (existingEntry) {
-				await collection.updateOne({guildID}, {roleID});
-			} else {
+				if (roleID) {
+					await collection.updateOne({guildID}, {roleID});
+				} else {
+					await collection.deleteOne({guildID});
+				}
+			} else if (roleID) {
 				await collection.insertOne({guildID, roleID});
 			}
 			response.end();
