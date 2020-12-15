@@ -54,7 +54,9 @@ export default {
 	},
 	async created () {
 		// TODO: error handling
-		this.guildRoles = await fetch(`/api/guilds/${this.guildID}/roles`).then(response => response.json());
+		this.guildRoles = (await fetch(`/api/guilds/${this.guildID}/roles`).then(response => response.json()))
+			.sort((a, b) => b.position - a.position)
+			.filter(role => role.id !== this.guildID);
 
 		const guildSettings = await fetch(`/api/verification/${this.guildID}/configuration`).then(response => {
 			if (response.status === 404) {
