@@ -7,7 +7,10 @@
 			<h1 class="title">
 				Servers
 			</h1>
-			<div v-if="!guilds">
+			<div
+				v-if="!guilds"
+				style="position: relative; height: 5em;"
+			>
 				<b-loading
 					:active="true"
 					:is-full-page="false"
