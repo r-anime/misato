@@ -10,6 +10,7 @@ import GuildInfo from './views/guild/Info';
 import GuildVerification from './views/guild/Verification';
 import GuildMembers from './views/guild/Members';
 import GuildMemberInfo from './views/guild/MemberInfo';
+import GuildMessageFilter from './views/guild/MessageFilter';
 
 const router = new VueRouter({
 	mode: 'history',
@@ -24,6 +25,7 @@ const router = new VueRouter({
 				{path: 'members/:userID', component: GuildMemberInfo, name: 'guild-member-info'},
 				{path: 'members', component: GuildMembers, name: 'guild-members'},
 				{path: 'verification', component: GuildVerification, name: 'guild-verification'},
+				{path: 'filter', component: GuildMessageFilter, name: 'guild-filter'},
 				{path: '', component: GuildInfo, name: 'guild-info'},
 			],
 		},
