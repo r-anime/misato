@@ -71,7 +71,13 @@ export default {
 		...mapState(['discordInfo']),
 	},
 	async created () {
-		this.guilds = await fetch('/api/guilds/managed').then(response => response.json());
+		const response = await fetch('/api/guilds/managed');
+
+		if (response.status === 200) {
+			this.guilds = await response.json();
+		} else {
+			this.guilds = [];
+		}
 	},
 	methods: {
 		guildIconURL (guild) {

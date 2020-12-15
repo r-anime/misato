@@ -20,7 +20,7 @@ module.exports = (db, client) => polka()
 				},
 			}).then(r => {
 				if (r.status !== 200) {
-					throw new Error('Non-200 status code');
+					throw new Error(`Non-200 status code: ${r.status}`);
 				}
 				return r.json();
 			});
