@@ -90,7 +90,7 @@ export default {
 				body: this.rule,
 			});
 			if (response.ok) {
-				this.lastRUle = this.rule;
+				this.lastRule = this.rule;
 			} else {
 				// eslint-disable-next-line no-alert
 				alert(`Failed to save, status code ${response.status} ${response.statusText}.`);
