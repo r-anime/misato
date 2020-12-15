@@ -123,7 +123,7 @@ module.exports = new Command(['unverify', 'deverify'], async (msg, args, context
 	} catch (error) {
 		// If we don't know what role to remove, we already failed for all users
 		log.error(`Database error fetching verification config for guild ${msg.channel.guild.id}:`, error);
-		msg.channel.createMessage(`Unlinked ${existing.length} account${existing.length === 1 ? '' : 's'}. A database error occurred trying to get the configured role;`);
+		msg.channel.createMessage('A database error occurred trying to get the configured verification role. Contact the bot developer.').catch(() => {});
 	}
 
 	if (verificationConfig) {
