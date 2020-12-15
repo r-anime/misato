@@ -19,7 +19,7 @@ const discordAuthURIBase = 'https://discordapp.com/api/oauth2/authorize'
 	+ `?client_id=${config.discord.clientID}`
 	+ '&response_type=code'
 	+ `&redirect_uri=${encodeURIComponent(discordRedirectURI)}`
-	+ '&scope=identify'
+	+ `&scope=${encodeURIComponent(['identify', 'guilds'].join(' '))}`
 	+ '&prompt=consent'; // Special Discord-only thing, always show prompt even if user previously authorized
 /* eslint-enable */
 
