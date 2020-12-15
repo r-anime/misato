@@ -30,7 +30,6 @@ module.exports = (db, client) => polka()
 			response.end();
 			return;
 		}
-		log.info(guilds);
 
 		// TODO: do we need to check if the bot is in the guild too?
 		guilds = await util.asyncFilter(guilds, guild => util.thisUserManagesGuild(request, client, db, guild.id));
