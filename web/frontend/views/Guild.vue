@@ -43,10 +43,18 @@
 								</li>
 								<li>
 									<router-link
-										exact-active-class="is-active"
+										active-class="is-active"
 										:to="{name: 'guild-verification', params: {guildID}}"
 									>
 										Verification
+									</router-link>
+								</li>
+								<li>
+									<router-link
+										active-class="is-active"
+										:to="{name: 'guild-filter', params: {guildID}}"
+									>
+										Message Filter
 									</router-link>
 								</li>
 							</ul>

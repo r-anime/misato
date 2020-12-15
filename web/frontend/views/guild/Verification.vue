@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<h1 class="title">
-			Guild Information
+			Verification Settings
 		</h1>
 		<b-field label="Verification role">
 			<b-select
