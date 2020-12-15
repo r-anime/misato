@@ -21,7 +21,7 @@
 			type="is-primary"
 			@click="addChild()"
 		>
-			Add another
+			Add condition
 		</b-button>
 	</div>
 </template>
