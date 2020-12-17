@@ -61,7 +61,9 @@
 						</aside>
 					</div>
 					<div class="column is-relative">
-						<router-view />
+						<keep-alive>
+							<router-view />
+						</keep-alive>
 					</div>
 				</div>
 			</template>

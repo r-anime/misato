@@ -43,7 +43,9 @@
 				</b-navbar-item>
 			</template>
 		</b-navbar>
-		<router-view />
+		<keep-alive>
+			<router-view />
+		</keep-alive>
 	</div>
 </template>
 
