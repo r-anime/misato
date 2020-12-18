@@ -51,7 +51,10 @@ export default {
 		console.log(this.value);
 		const val = JSON.parse(this.value);
 		return {
-			children: val.children.map(childData => ({data: JSON.stringify(childData)})),
+			children: val.children.map(childData => ({
+				data: JSON.stringify(childData),
+				id: nextID(),
+			})),
 		};
 	},
 	watch: {
@@ -87,6 +90,7 @@ export default {
 		},
 		deleteChild (id) {
 			this.children.splice(this.children.findIndex(c => c.id === id), 1);
+			this.children.splice();
 		},
 	},
 };
