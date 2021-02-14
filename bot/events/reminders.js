@@ -60,4 +60,6 @@ module.exports = new EventListener('ready', ({client, db}) => {
 		// Queue this check to run again in 30 seconds
 		setTimeout(checkReminders, 30 * 1000);
 	})();
+}, {
+	once: true,
 });
