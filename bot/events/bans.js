@@ -23,4 +23,6 @@ module.exports = new EventListener('ready', ({client, db}) => {
 		// Queue this check to run again in 60 seconds
 		setTimeout(checkBans, 10 * 1000);
 	})();
+}, {
+	once: true,
 });
