@@ -82,6 +82,6 @@ module.exports = new Command('remind', async (message, args, context) => {
 	message.channel.createMessage(`Reminder created for ${due.toLocaleString()}.`).catch(() => {});
 });
 module.exports.help = {
-	desc: "Sets a reminder that you'll get pinged for in the future. In development; currently doesn't take a time and always sets the reminder for one minute in the future.",
-	args: '<optional message...>',
+	desc: "Sets a reminder that you'll get pinged for in the future.",
+	args: '<time in "2d 3h 10m" format> [optional message...]',
 };
