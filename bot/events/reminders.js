@@ -47,17 +47,17 @@ module.exports = new EventListener('ready', ({client, db}) => {
 	//       case sharding is needed in the future.
 	(async function checkReminders () {
 		// Fetch reminders from the database that have become due since the last check
-		const reminders = await collection.find({due: {$lt: new Date()}}).toArray();
+		const now = new Date();
+		const reminders = await collection.find({due: {$lt: now}}).toArray();
 		log.debug('Due reminders:', reminders);
+		// Delete the reminders we're about to send from the database
+		await collection.deleteMany({due: {$lt: now}});
 
-		reminders.forEach(reminder => {
-			// Send the reminder, but don't wait to complete, and silently throw away any errors)
-			sendReminder(client, reminder).catch(() => {});
-			// Remove the reminder from the database, don't wait to complete, just log on error
-			collection.deleteOne({_id: reminder._id}).catch(log.error);
-		});
+		// Queue each reminder to be sent
+		// We don't need to await each message, since we already deleted the records from the DB there won't be dupes
+		reminders.forEach(reminder => sendReminder(client, reminder).catch(() => {}));
 
-		// Queue this check to run again in 30 seconds
+		// Queue this check to run again in 30 seconds (without waiting for the current reminders to be processed)
 		setTimeout(checkReminders, 30 * 1000);
 	})();
 }, {
