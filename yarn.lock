@@ -5422,6 +5422,7 @@ yargs@^13.3.2:
     y18n "^4.0.0"
     yargs-parser "^13.1.2"
 
-yuuko@Geo1088/yuuko#builds/event-listener-class:
-  version "2.0.2"
-  resolved "https://codeload.github.com/Geo1088/yuuko/tar.gz/af189161a5404ab8bf880471c70fe98106c08d8f"
+yuuko@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/yuuko/-/yuuko-2.1.0.tgz#64b8e0b89e1110faeb04c2e04d515f69b3c2f2d5"
+  integrity sha512-WhkUL1vq5KSpRpGZpb+YlJAPRblrFlSB3JYe3c/23xkBiN829BmyiQ3rCgqrGSFGeLNekZbFX2fB01FXsjFAjA==

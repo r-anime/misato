@@ -26,7 +26,7 @@
     "vue": "^2.6.11",
     "vue-router": "^3.3.4",
     "vuex": "^3.5.1",
-    "yuuko": "Geo1088/yuuko#builds/event-listener-class"
+    "yuuko": "^2.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.10.3",
