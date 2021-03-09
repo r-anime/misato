@@ -21,7 +21,7 @@ function makeRuleForText (text) {
 
 module.exports = new Command('filteradd', async (msg, args, {db}) => {
 	const guildID = msg.channel.guild.id;
-	const ruleText = args.join(' ');
+	const ruleText = args.join(' ').toLowerCase();
 
 	// Fetch the existing configuration
 	const filterConfig = await db.collection('messageFilters').findOne({guildID});
