@@ -100,8 +100,6 @@ module.exports = (db, client) => polka()
 		}
 	})
 
-	// TODO: auth
-	// NOMERGE
 	.get('/:guildID/members/:userID/notes', async (request, response) => {
 		const {guildID, userID} = request.params;
 
@@ -114,6 +112,39 @@ module.exports = (db, client) => polka()
 		try {
 			response.end(JSON.stringify(await db.collection('notes').find({guildID, userID}).toArray()));
 		} catch (error) {
+			response.writeHead(500);
+			response.end();
+		}
+	})
+
+	.delete('/:guildID/members/:userID/notes/:noteID', async (request, response) => {
+		const {guildID, userID, noteID} = request.params;
+
+		if (!await util.thisUserManagesGuild(request, client, db, guildID)) {
+			response.writeHead(401);
+			response.end();
+			return;
+		}
+
+		try {
+			const {deletedCount} = await db.collection('notes').deleteOne({
+				_id: new ObjectID(noteID),
+				// NOTE: IDs are unique universally, but we want guild and user ID to match too
+				guildID,
+				userID,
+			});
+
+			// If there was no document to delete, it must not exist
+			if (!deletedCount) {
+				response.writeHead(404);
+				response.end();
+				return;
+			}
+
+			response.writeHead(204);
+			response.end();
+		} catch (error) {
+			log.error(`Database error deleting note ${noteID} on user ${userID} in guild ${guildID}:`, error);
 			response.writeHead(500);
 			response.end();
 		}
