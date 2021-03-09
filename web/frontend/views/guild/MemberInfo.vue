@@ -26,7 +26,10 @@
 					<td>{{ thing.note }}</td>
 					<td>{{ thing.modID }}</td>
 					<td>
-						<b-dropdown position="is-bottom-left">
+						<b-dropdown
+							v-if="thing.type !== 'ban'"
+							position="is-bottom-left"
+						>
 							<template #trigger>
 								<b-button
 									label="Actions..."
