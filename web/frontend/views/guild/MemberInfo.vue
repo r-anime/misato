@@ -13,6 +13,7 @@
 					<th>Type</th>
 					<th>Note</th>
 					<th>Moderator</th>
+					<th />
 				</tr>
 			</thead>
 			<tbody>
@@ -24,6 +25,25 @@
 					<td>{{ thing.type }}</td>
 					<td>{{ thing.note }}</td>
 					<td>{{ thing.modID }}</td>
+					<td>
+						<b-dropdown
+							v-if="thing.type !== 'ban'"
+							position="is-bottom-left"
+						>
+							<template #trigger>
+								<b-button
+									label="Actions..."
+									size="is-small"
+								/>
+							</template>
+							<b-dropdown-item
+								class="has-text-danger"
+								@click="deleteThing(thing)"
+							>
+								Delete
+							</b-dropdown-item>
+						</b-dropdown>
+					</td>
 				</tr>
 			</tbody>
 		</table>
@@ -86,6 +106,40 @@ export default {
 			this.kicks = kicks;
 			this.bans = bans;
 		});
+	},
+	methods: {
+		deleteThing (thing) {
+			fetch(`/api/guilds/${this.guildID}/members/${this.userID}/${thing.type}s/${thing._id}`, {
+				method: 'DELETE',
+			}).then(response => {
+				if (response.ok) {
+					this.$buefy.toast.open({
+						duration: 1000,
+						message: `Deleted ${thing.type}.`,
+						position: 'is-bottom',
+						type: 'is-success',
+					});
+					// remove item from display
+					// TODO: oh my lord please no this is terrible #94
+					const things = this[`${thing.type}s`];
+					things.splice(things.findIndex(t => t._id === thing._id), 1);
+				} else {
+					console.error(`Non-OK response with code ${response.status} when deleting ${thing.type} ${thing._id}:`, response);
+					this.$buefy.toast.open({
+						duration: 3000,
+						message: `Failed to delete ${thing.type}.`,
+						position: 'is-bottom',
+						type: 'is-danger',
+					});
+				}
+			}, error => {
+				console.error(`Network error when deleting ${thing.type} ${thing._id}:`, error);
+				this.$buefy.toast.open({
+					duration: 3000,
+					message: 'Network error, please try again. More information in console.',
+				});
+			});
+		},
 	},
 };
 </script>
