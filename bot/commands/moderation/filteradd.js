@@ -20,6 +20,11 @@ function makeRuleForText (text) {
 }
 
 module.exports = new Command('filteradd', async (msg, args, {db}) => {
+	if (!args.length) {
+		msg.channel.createMessage('Don\'t know what filter you want to add.').catch(() => {});
+		return;
+	}
+
 	const guildID = msg.channel.guild.id;
 	const ruleText = args.join(' ').toLowerCase();
 

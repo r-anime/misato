@@ -3,6 +3,11 @@ const log = require('another-logger');
 const {escape} = require('../../util/formatting');
 
 module.exports = new Command(['filterdel', 'filterdelete', 'filterremove'], async (msg, args, {db}) => {
+	if (!args.length) {
+		msg.channel.createMessage('Don\'t know what filter you want to delete.').catch(() => {});
+		return;
+	}
+
 	const guildID = msg.channel.guild.id;
 	const ruleText = args.join(' ').toLowerCase();
 
