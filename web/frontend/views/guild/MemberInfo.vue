@@ -114,7 +114,7 @@ export default {
 						duration: 1000,
 						message: `Deleted ${thing.type}.`,
 						position: 'is-bottom',
-						type: 'is-danger',
+						type: 'is-success',
 					});
 					// remove item from display
 					// TODO: oh my lord please no this is terrible #94
