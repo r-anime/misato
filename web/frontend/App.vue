@@ -26,7 +26,10 @@
 					<b-navbar-item tag="span">
 						<span>Hi, <strong>{{ discordInfo.username }}#{{ discordInfo.discriminator }}</strong></span>
 					</b-navbar-item>
-					<b-navbar-item :href="'/auth/discord/logout?next=' + encodedCurrentURL">
+					<b-navbar-item
+						:href="'/auth/discord/logout?next=' + encodedCurrentURL"
+						class="has-text-danger"
+					>
 						Log out
 					</b-navbar-item>
 				</b-navbar-dropdown>
@@ -36,7 +39,7 @@
 				>
 					<a
 						:href="'/auth/discord?next=' + encodedCurrentURL"
-						class="button is-small is-primary is-inverted is-outlined"
+						class="button is-small is-primary is-inverted"
 					>
 						Log in with Discord
 					</a>
