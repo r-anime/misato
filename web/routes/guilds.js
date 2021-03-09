@@ -1,6 +1,7 @@
 const log = require('another-logger');
 const polka = require('polka');
 const fetch = require('node-fetch');
+const {ObjectID} = require('mongodb');
 const util = require('../util');
 
 module.exports = (db, client) => polka()
@@ -184,6 +185,39 @@ module.exports = (db, client) => polka()
 		}
 	})
 
+	.delete('/:guildID/members/:userID/warnings/:warningID', async (request, response) => {
+		const {guildID, userID, warningID} = request.params;
+
+		if (!await util.thisUserManagesGuild(request, client, db, guildID)) {
+			response.writeHead(401);
+			response.end();
+			return;
+		}
+
+		try {
+			const {deletedCount} = await db.collection('warnings').deleteOne({
+				_id: new ObjectID(warningID),
+				// NOTE: IDs are unique universally, but we want guild and user ID to match too
+				guildID,
+				userID,
+			});
+
+			// If there was no document to delete, it must not exist
+			if (!deletedCount) {
+				response.writeHead(404);
+				response.end();
+				return;
+			}
+
+			response.writeHead(204);
+			response.end();
+		} catch (error) {
+			log.error(`Database error deleting warning ${warningID} on user ${userID} in guild ${guildID}:`, error);
+			response.writeHead(500);
+			response.end();
+		}
+	})
+
 	.get('/:guildID/kicks', async (request, response) => {
 		const {guildID} = request.params;
 
@@ -213,6 +247,39 @@ module.exports = (db, client) => polka()
 		try {
 			response.end(JSON.stringify(await db.collection('kicks').find({guildID, userID}).toArray()));
 		} catch (error) {
+			response.writeHead(500);
+			response.end();
+		}
+	})
+
+	.delete('/:guildID/members/:userID/kicks/:kickID', async (request, response) => {
+		const {guildID, userID, kickID} = request.params;
+
+		if (!await util.thisUserManagesGuild(request, client, db, guildID)) {
+			response.writeHead(401);
+			response.end();
+			return;
+		}
+
+		try {
+			const {deletedCount} = await db.collection('kicks').deleteOne({
+				_id: new ObjectID(kickID),
+				// NOTE: IDs are unique universally, but we want guild and user ID to match too
+				guildID,
+				userID,
+			});
+
+			// If there was no document to delete, it must not exist
+			if (!deletedCount) {
+				response.writeHead(404);
+				response.end();
+				return;
+			}
+
+			response.writeHead(204);
+			response.end();
+		} catch (error) {
+			log.error(`Database error deleting kick ${kickID} on user ${userID} in guild ${guildID}:`, error);
 			response.writeHead(500);
 			response.end();
 		}
