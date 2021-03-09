@@ -7,16 +7,20 @@ module.exports = new EventListener('messageCreate', async (message, {client, db}
 	if (message.guildID) {
 		// Fetch filter for this guild
 		const configuration = await db.collection('messageFilters').findOne({guildID: message.guildID});
-		if (configuration && configuration.rule) {
-			const {rule} = configuration;
-			if (isValidRule(rule)) {
-				if (await messageMatchesRule(message, rule)) {
-					message.delete().catch(() => {});
-					return;
+
+		// TODO: temporary hardcode to ignore the filter for people with manage messages
+		if (!message.channel.permissionsOf(message.author.id).has('manageMessages')) {
+			if (configuration && configuration.rule) {
+				const {rule} = configuration;
+				if (isValidRule(rule)) {
+					if (await messageMatchesRule(message, rule)) {
+						message.delete().catch(() => {});
+						return;
+					}
+				} else {
+					// weird
+					log.error('Encountered invalid rule in guild', message.guildID, rule);
 				}
-			} else {
-				// weird
-				log.error('Encountered invalid rule in guild', message.guildID, rule);
 			}
 		}
 	}
