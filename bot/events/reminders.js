@@ -50,12 +50,17 @@ module.exports = new EventListener('ready', ({client, db}) => {
 		const now = new Date();
 		const reminders = await collection.find({due: {$lt: now}}).toArray();
 		log.debug('Due reminders:', reminders);
-		// Delete the reminders we're about to send from the database
-		await collection.deleteMany({due: {$lt: now}});
 
-		// Queue each reminder to be sent
-		// We don't need to await each message, since we already deleted the records from the DB there won't be dupes
-		reminders.forEach(reminder => sendReminder(client, reminder).catch(() => {}));
+		try {
+			// Delete the reminders we're about to send from the database, throwing if it fails for some reason
+			await collection.deleteMany({due: {$lt: now}});
+
+			// Queue each reminder to be sent
+			// We don't need to await each message, since we already deleted the records from the DB there won't be dupes
+			reminders.forEach(reminder => sendReminder(client, reminder).catch(() => {}));
+		} catch (error) {
+			log.error('Error deleting due reminders from database (reminders not sent):', error);
+		}
 
 		// Queue this check to run again in 30 seconds (without waiting for the current reminders to be processed)
 		setTimeout(checkReminders, 30 * 1000);
