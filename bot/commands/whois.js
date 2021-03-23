@@ -7,7 +7,7 @@ const {escape} = require('../util/formatting');
 async function redditLine (userID, guildID, db) {
 	const results = await db.collection('redditAccounts').find({userID, guildID}).toArray();
 	return `__Reddit accounts: **${results.length}**__${
-		results.map(r => `\n- /u/${escape(r.redditName)}`).join('')
+		results.map(r => `\n- https://www.reddit.com/u/${escape(r.redditName)}`).join('')
 	}`;
 }
 
