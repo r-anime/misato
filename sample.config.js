@@ -45,4 +45,9 @@ module.exports = {
 		// 	certPath: '',
 		// },
 	},
+
+	// Third party APIs for command functionality
+	thirdParty: {
+		exchangeRates: '',
+	},
 };
