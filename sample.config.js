@@ -48,6 +48,7 @@ module.exports = {
 
 	// Third party APIs for command functionality
 	thirdParty: {
+		// https://exchangeratesapi.io
 		exchangeRates: '',
 	},
 };
