@@ -79,7 +79,7 @@ module.exports = new Command('convert', async (msg, args, context) => {
 		try {
 			// if it can't convert it normally, try to find it as a currency, throws if it can't find a currency either
 			message = await convertCurrency(baseValue, baseType, targetType);
-		} catch (error) {
+		} catch (__) {
 			message = `Couldn't convert from ${baseValue} ${baseType} to ${targetType}. Type \`${context.prefix}convert\` to see all available units.`;
 		}
 	}
