@@ -10,7 +10,7 @@ const log = require('another-logger');
 
 const config = require('../../config');
 
-/** The redirect URI for Discord to send the user back to. */
+/** The redirect URI for Reddit to send the user back to. */
 const redditRedirectURI = `${config.web.host}/auth/reddit/callback`;
 
 /** The base of the URI that starts the OAuth flow. State is attached later. */
@@ -115,7 +115,11 @@ module.exports = polka()
 	// OAuth entry point, generate a state and redirect to Reddit
 	.get('/', (request, response) => {
 		const state = JSON.stringify({
+			// The page we came from (send here if user cancels verification)
+			prev: request.query.prev || '/',
+			// The page we want to go to (send here if verification succeeds)
 			next: request.query.next || '/',
+			// A random element to ensure others can't tamper with the state
 			unique: crypto.randomBytes(16).toString('hex'),
 		});
 		request.session.redditState = state;
@@ -126,21 +130,38 @@ module.exports = polka()
 	.get('/callback', async (request, response) => {
 		const {error, state, code} = request.query;
 
-		// Check for errors or state mismatches
-		if (error) {
-			log.error('Reddit gave error after auth page:', error);
-			response.end('uh-oh');
-			return;
-		}
-		if (state !== request.session.redditState) {
+		// Check for missing state/state mismatch
+		if (!state || !request.session.redditState || state !== request.session.redditState) {
 			log.error('Reddit gave incorrect state after auth page: ', state, ', expected', request.session.state);
 			response.end('uh-oh');
 			return;
 		}
 
-		// This should be safe, because the block above ensures we only ever try to parse things that we put in the
-		// session ourselves, and we only put valid JSON there. We want to get the next URL so we can use it later.
-		const {next} = JSON.parse(state);
+		// Parse information from the state
+		let parsedState;
+		try {
+			parsedState = JSON.parse(state);
+		} catch (parsingError) {
+			// This should never happen - we somehow created a state that isn't valid JSON
+			log.error('When parsing state:', parsingError, 'State:', state);
+			response.end('Please try again. If issues persist, report this error to the bot administrator.\n\nError parsing state');
+			return;
+		}
+		const {prev, next} = parsedState;
+
+		// We're done storing the state now
+		delete request.session.redditState;
+
+		// Check for access denied (cancellation condition) and other errors
+		if (error === 'access_denied') {
+			response.redirect(prev);
+			return;
+		} else if (error) {
+			log.error('Reddit gave error after auth page:', error);
+			// TODO: error page
+			response.end(`Please try again. If issues persist, report this error to the bot adminstrator.\n\nError: ${error}`);
+			return;
+		}
 
 		// Exchange the code for access/refresh tokens
 		let tokens;
