@@ -152,8 +152,8 @@ module.exports = polka()
 	.get('/callback', async (request, response) => {
 		const {error, error_description: errorDescription, state, code} = request.query;
 
-		// Check for state mismatch
-		if (state !== request.session.discordState) {
+		// Check for missing state/state mismatch
+		if (!state || !request.session.discordState || state !== request.session.discordState) {
 			log.debug('Discord gave incorrect state after auth page: ', state, 'Expected:', request.session.state);
 			response.end('Please try again. If issues persist, report this error to the bot administrator.\n\nInvalid state');
 			return;

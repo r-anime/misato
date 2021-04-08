@@ -126,13 +126,13 @@ module.exports = polka()
 	.get('/callback', async (request, response) => {
 		const {error, state, code} = request.query;
 
-		// Check for errors or state mismatches
+		// Check for errors or missing state/state mismatche
 		if (error) {
 			log.error('Reddit gave error after auth page:', error);
 			response.end('uh-oh');
 			return;
 		}
-		if (state !== request.session.redditState) {
+		if (!state || !request.session.redditState || state !== request.session.redditState) {
 			log.error('Reddit gave incorrect state after auth page: ', state, ', expected', request.session.state);
 			response.end('uh-oh');
 			return;
