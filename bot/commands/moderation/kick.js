@@ -52,8 +52,15 @@ module.exports = new Command('kick', async (message, args, context) => {
 	// Kick the member
 	try {
 		await member.kick(reason);
-	} catch (_) {
-		message.channel.createMessage('Failed to kick. Are my permissions set up correctly?').catch(() => {});
+	} catch (error) {
+		log.error(`Error kicking user ${member.id} from guild ${message.channel.guild.id}:`, error);
+
+		let feedbackText = 'Failed to kick. Are my permissions set up correctly?';
+		if (messageSent) {
+			feedbackText += "\nYou should manually kick this user - they've already received a message stating they've been kicked.";
+		}
+
+		message.channel.createMessage(feedbackText).catch(() => {});
 		return;
 	}
 
