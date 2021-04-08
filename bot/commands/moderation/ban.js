@@ -61,8 +61,15 @@ module.exports = new Command('ban', async (message, args, context) => {
 		// TODO: check if member is already banned before banning again
 		// TODO: service to clear bans after they expire
 		await message.channel.guild.banMember(user.id, 0, reason);
-	} catch (_) {
-		message.channel.createMessage('Failed to ban. Are permissions set up correctly? I need the "Ban Members" permission, and I can\'t ban users with a higher role than me.').catch(() => {});
+	} catch (error) {
+		log.error(`Error banning user ${user.id} from guild ${message.channel.guild.id}:`, error);
+
+		let feedbackText = 'Failed to ban. Are permissions set up correctly? I need the "Ban Members" permission, and I can\'t ban users with a higher role than me.';
+		if (messageSent) {
+			feedbackText += "\nYou should manually ban this user - they've already received a message stating they've been banned.";
+		}
+
+		message.channel.createMessage(feedbackText).catch(() => {});
 		return;
 	}
 
