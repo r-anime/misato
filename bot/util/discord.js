@@ -13,10 +13,10 @@ module.exports = {
 		// TODO: use a single listener for this rather than adding and removing, this will not scale well
 		const client = message.channel.guild ? message.channel.guild._client : message.channel._client;
 		return new Promise((resolve, reject) => {
-			function reactionListener (reactedMessage, reactedEmote, reactedUserID) {
+			function reactionListener (reactedMessage, reactedEmote, reactingMember) {
 				// reaction has to be on the message we sent, by the user who sent the command, with the same emoji
 				if (reactedMessage.id !== message.id) return;
-				if (reactedUserID !== userID) return;
+				if (reactingMember.id !== userID) return;
 				if (reactedEmote.name !== emote && reactedEmote.id !== emote) return;
 				client.removeListener('messageReactionAdd', reactionListener);
 				resolve();
