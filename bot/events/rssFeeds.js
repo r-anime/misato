@@ -3,6 +3,38 @@ const {EventListener} = require('yuuko');
 const Parser = require('rss-parser');
 const rssParser = new Parser();
 
+/**
+ * Builds an embed object to use when posting a feed.
+ * @param {string} title The title of the embed.
+ * @param {string} author  The author of the content in the embed.
+ * @param {Date} date The date the content was made available.
+ * @param {number} color The color of the embed frame.
+ * @param {string} url The URL of the source of the content.
+ * @returns {object}
+ */
+function buildRssEmbed (title, author, date, color, url) {
+	let tempTitle = title;
+	// titles in embeds have a 256 char limit
+	if (title.length > 253) {
+		tempTitle = title.substring(0, 252).concat('...');
+	}
+	// build the footer
+	const footerText = `${date.getUTCFullYear()}/${date.getUTCMonth()}/${date.getUTCDate()} - ${date.getUTCHours()}:${date.getUTCMinutes()} UTC | ${url}`;
+	// build embed
+	const embed = {
+		title: tempTitle,
+		author: {name: author},
+		footer: {text: footerText},
+		color,
+	};
+	// temporary way to get a pretty (standardized) thumbnail if the source is reddit
+	if (url.includes('reddit')) {
+		embed.thumbnail = {url: 'https://i.imgur.com/F66Nd8H.png'};
+	}
+
+	return embed;
+}
+
 module.exports = new EventListener('ready', ({client, db}) => {
 	const collection = db.collection('rssFeeds');
 
@@ -19,10 +51,12 @@ module.exports = new EventListener('ready', ({client, db}) => {
 			// check every post, if it was posted after the latest check for this feed, post it in a channel
 			for (const post of rssFeed.items) {
 				if (Date.parse(post.isoDate) > Date.parse(storedFeed.lastCheck)) {
-					client.getChannel(storedFeed.channelId).createMessage(post.link).catch(() => {});
+					const embed = buildRssEmbed(post.title, post.author, new Date(post.isoDate), 0xFF4401, storedFeed.url);
+					client.getChannel(storedFeed.channelId).createMessage({content: post.link, embed}).catch(error => {
+						log.error('Failed to post feed in RSS Feed event.', error);
+					});
 					// TODO: Here we can check the DB to know if anything in post.title matches a channel name
 					// and if so post it there, but that has to be mapped by a human because channel names can get weird
-					// Additionally, we could also make embeds here prettier in the future.
 				}
 			}
 
