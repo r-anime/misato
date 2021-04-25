@@ -1,6 +1,7 @@
 // Converts from one currency to another based on this API: http://exchangeratesapi.io/
 
 const {Command} = require('yuuko');
+const config = require('../../../config');
 const fetch = require('node-fetch');
 const convert = require('convert-units');
 
@@ -27,7 +28,7 @@ function convertUnits (baseValue, baseType, targetType) {
 async function convertCurrency (baseValue, baseType, targetType) {
 	baseType = baseType.toUpperCase();
 	targetType = targetType.toUpperCase();
-	const res = await fetch(`https://api.exchangeratesapi.io/latest?base=${baseType}&symbols=${targetType}`);
+	const res = await fetch(`http://api.exchangeratesapi.io/latest?access_key=${config.thirdParty.exchangeRates}&base=${baseType}&symbols=${targetType}`);
 	if (res.status !== 200) {
 		throw new Error('non-OK status code');
 	}
@@ -79,7 +80,7 @@ module.exports = new Command('convert', async (msg, args, context) => {
 			// if it can't convert it normally, try to find it as a currency, throws if it can't find a currency either
 			message = await convertCurrency(baseValue, baseType, targetType);
 		} catch (__) {
-			message = `Couldn't convert from ${baseValue} ${baseType} to ${baseValue}. Type \`${context.prefix}convert\` to see all available units.`;
+			message = `Couldn't convert from ${baseValue} ${baseType} to ${targetType}. Type \`${context.prefix}convert\` to see all available units.`;
 		}
 	}
 
