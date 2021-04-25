@@ -1,5 +1,6 @@
 const {Command} = require('yuuko');
 const log = require('another-logger')({label: 'command:createrssfeed'});
+const {escape} = require('../../util/formatting');
 
 module.exports = new Command('createrssfeed', async (message, args, context) => {
 	if (!args.length || args.length < 3) {
@@ -16,7 +17,8 @@ module.exports = new Command('createrssfeed', async (message, args, context) => 
 		context.client.getChannel(channelId) || await context.client.getRESTChannel(channelId);
 	} catch (error) {
 		message.channel.createMessage('Couldn\'t find the channel with the specified ID. Please make sure it is visible to me and the ID is correct.').catch(() => {});
-		log.error(error);
+		log.error(`Failed to locate channel ${escape(channelId)}:`, error);
+		return;
 	}
 
 	// Check if there isn't a feed with that name already in use
@@ -29,23 +31,23 @@ module.exports = new Command('createrssfeed', async (message, args, context) => 
 
 	// Create a feed and store it in DB
 	const feed = {
-		rssFeedName,
-		rssFeedUrl,
+		name: rssFeedName,
+		url: rssFeedUrl,
 		channelId,
 		lastCheck: new Date(),
 	};
 
 	try {
 		// Insert information to database
-		await collection.insertOne(feed, {ignoreUndefined: true});
+		await collection.insertOne(feed);
 	} catch (error) {
-		message.channel.createMessage('Could not write feed to database. Have a developer check the logs, this should not happen.').catch(() => {});
-		log.error(error);
+		message.channel.createMessage('Couldn\'t write feed to database. Have a developer check the logs, this should not happen.').catch(() => {});
+		log.error('Failed to write to database while creating feed:', error);
 		log.error('Rejected document:', feed);
 		return;
 	}
 
-	message.channel.createMessage(`Feed ${rssFeedName} created successfully.`);
+	message.channel.createMessage(`Feed **${escape(rssFeedName)}** created successfully.`);
 }, {
 	permissions: [
 		'manageMessages',
@@ -53,6 +55,6 @@ module.exports = new Command('createrssfeed', async (message, args, context) => 
 });
 
 module.exports.help = {
-	args: '<rssFeedName> <rssFeedUrl> <channelId>',
+	args: '<feed name> <feed url> <channel ID>',
 	desc: 'Creates an RSS feed from a given URL that will post new content every 60 seconds on the given channel.',
 };

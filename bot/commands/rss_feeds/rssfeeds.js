@@ -1,7 +1,7 @@
 const {Command} = require('yuuko');
+const {escape} = require('../../util/formatting');
 
-module.exports = new Command('rssfeeds', async (message, args, context) => {
-	const {db} = context;
+module.exports = new Command('rssfeeds', async (message, args, {client, db}) => {
 	const collection = db.collection('rssFeeds');
 	let str = '';
 	const feeds = await collection.find().toArray();
@@ -12,8 +12,8 @@ module.exports = new Command('rssfeeds', async (message, args, context) => {
 	}
 
 	for (const feed of feeds) {
-		const channelName = context.client.getChannel(feed.channelId).name;
-		str += `Feed: **${feed.rssFeedName}**\nChannel: **${channelName}**\nURL: ${feed.rssFeedUrl} \n \n`;
+		const channelName = client.getChannel(feed.channelId).name;
+		str += `Feed: **${escape(feed.name)}**\nChannel: **${escape(channelName)}**\nURL: <${feed.url}> \n \n`;
 	}
 
 	message.channel.createMessage(str).catch(() => { });

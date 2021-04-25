@@ -10,12 +10,12 @@ module.exports.up = async () => {
 		validator: {
 			$jsonSchema: {
 				bsonType: 'object',
-				required: ['rssFeedName', 'rssFeedUrl', 'channelId', 'lastCheck'],
+				required: ['name', 'url', 'channelId', 'lastCheck'],
 				properties: {
-					rssFeedName: {
+					name: {
 						bsonType: 'string',
 					},
-					rssFeedUrl: {
+					url: {
 						bsonType: 'string',
 					},
 					channelId: {
