@@ -54,7 +54,7 @@ export default new Vuex.Store({
 						guildID,
 						channels: response.ok ? await response.json().catch(() => null) : null,
 					});
-					fetchGuildRolesPromise = null;
+					fetchGuildChannelsPromise = null;
 				});
 			}
 		},
