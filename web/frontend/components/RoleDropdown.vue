@@ -3,8 +3,9 @@
 		:value="value"
 		@input="$emit('input', $event)"
 	>
+		<slot name="options" />
 		<option
-			v-for="role in roles"
+			v-for="role in sortedRoles"
 			:key="role.id"
 			:value="role.id"
 			:style="roleColorStyle(role.color)"
@@ -24,6 +25,11 @@ export default {
 		roles: {
 			type: Array,
 			required: true,
+		},
+	},
+	computed: {
+		sortedRoles () {
+			return [...this.roles].sort((a, b) => b.position - a.position);
 		},
 	},
 	methods: {
