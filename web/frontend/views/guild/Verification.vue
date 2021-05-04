@@ -4,22 +4,12 @@
 			Verification Settings
 		</h1>
 		<b-field label="Verification role">
-			<b-select
+			<role-dropdown
 				v-model="verificationRoleID"
 				placeholder="Select a role"
 				:loading="!loaded"
-			>
-				<template v-if="loaded">
-					<option
-						v-for="role in guildRoles"
-						:key="role.id"
-						:value="role.id"
-						:style="roleColorStyle(role.color)"
-					>
-						{{ role.name }}
-					</option>
-				</template>
-			</b-select>
+				:roles="guildRoles"
+			/>
 		</b-field>
 
 		<b-field
@@ -48,7 +38,10 @@
 </template>
 
 <script>
+import RoleDropdown from '../../components/RoleDropdown.vue';
+
 export default {
+	components: {RoleDropdown},
 	data () {
 		return {
 			guildRoles: null,
@@ -84,9 +77,6 @@ export default {
 		this.loadedGuildSettings = true;
 	},
 	methods: {
-		roleColorStyle (color) {
-			return `color: #${color.toString(16).padStart(6, '0')};`;
-		},
 		async submit () {
 			this.submitting = true;
 			const response = await fetch(`/api/verification/${this.guildID}/configuration`, {
