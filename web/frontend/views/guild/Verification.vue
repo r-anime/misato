@@ -8,7 +8,7 @@
 				v-model="verificationRoleID"
 				placeholder="Select a role"
 				:loading="!loaded"
-				:roles="guildRoles"
+				:roles="roles"
 			/>
 		</b-field>
 
@@ -38,21 +38,28 @@
 </template>
 
 <script>
+import {mapActions, mapState} from 'vuex';
+
 import RoleDropdown from '../../components/RoleDropdown.vue';
 
 export default {
 	components: {RoleDropdown},
 	data () {
 		return {
-			guildRoles: null,
 			verificationRoleID: null,
 			loadedGuildSettings: false,
 			submitting: false,
 		};
 	},
 	computed: {
+		...mapState([
+			'guildRoles',
+		]),
+		roles () {
+			return this.guildRoles.get(this.guildID);
+		},
 		loaded () {
-			return this.guildRoles && this.loadedGuildSettings;
+			return this.roles && this.loadedGuildSettings;
 		},
 		guildID () {
 			return this.$route.params.guildID;
@@ -62,11 +69,7 @@ export default {
 		},
 	},
 	async created () {
-		// TODO: error handling
-		this.guildRoles = (await fetch(`/api/guilds/${this.guildID}/roles`).then(response => response.json()))
-			.sort((a, b) => b.position - a.position)
-			.filter(role => role.id !== this.guildID);
-
+		this.fetchGuildRoles(this.guildID);
 		const guildSettings = await fetch(`/api/verification/${this.guildID}/configuration`).then(response => {
 			if (response.status === 404) {
 				return {};
@@ -77,6 +80,9 @@ export default {
 		this.loadedGuildSettings = true;
 	},
 	methods: {
+		...mapActions([
+			'fetchGuildRoles',
+		]),
 		async submit () {
 			this.submitting = true;
 			const response = await fetch(`/api/verification/${this.guildID}/configuration`, {
