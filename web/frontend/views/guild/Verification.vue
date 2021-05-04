@@ -56,7 +56,7 @@ export default {
 			'guildRoles',
 		]),
 		roles () {
-			return this.guildRoles.get(this.guildID);
+			return this.guildRoles[this.guildID];
 		},
 		loaded () {
 			return this.roles && this.loadedGuildSettings;

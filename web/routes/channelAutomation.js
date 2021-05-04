@@ -2,6 +2,7 @@ const log = require('another-logger');
 const polka = require('polka');
 const util = require('../util');
 const config = require('../../config');
+const Eris = require('eris');
 
 const TEMP_channelID = '835710881680588840';
 
@@ -43,6 +44,7 @@ function getStuffFromGuild (listMessages) {
 	}
 
 	const result = {
+		channelID: TEMP_channelID,
 		categories: [],
 	};
 	categoryOrder.filter(name => allCategories.get(name)).forEach(name => {
@@ -119,6 +121,7 @@ module.exports = (db, client) => polka()
 			response.end();
 			return;
 		}
+		log.info('json:', json);
 
 		// TODO: Okay this is the weird custom logic part that eventually we'll want to completely redo
 
@@ -133,6 +136,53 @@ module.exports = (db, client) => polka()
 		// Wipe the reaction triggers
 		const allOldTriggers = [].concat(...otherJson.categories.map(category => category.triggers));
 		const allNewTriggers = [].concat(...json.categories.map(category => category.triggers));
+
+		// Handle role/channel creation for triggers that need to create channels
+		for (const t of allNewTriggers) {
+			log.info('new trigger', t);
+			if (t.roleID === 'new-channel') {
+				log.info('Creating new channel');
+				// eslint-disable-next-line no-await-in-loop
+				const role = await guild.createRole({
+					name: t.createdRoleName,
+					hoist: false,
+					mentionable: false,
+					permissions: 0,
+				}, 'New role and channel for reaction trigger');
+
+				// eslint-disable-next-line no-await-in-loop
+				await guild.createChannel(t.createdChannelName, 0, {
+					parentID: t.createdChannelParentID || undefined,
+					permissionOverwrites: [
+						{
+							id: guild.id,
+							type: 0,
+							allow: 0,
+							deny: String(Number(Eris.Constants.Permissions.viewChannel)),
+						},
+						{
+							id: role.id,
+							type: 0,
+							allow: Number(Eris.Constants.Permissions.viewChannel),
+							deny: 0,
+						},
+					],
+					reason: 'New role and channel for reaction trigger',
+				});
+
+				t.roleID = role.id;
+			} else if (t.roleID === 'new-role') {
+				log.info('Creating new role');
+				// eslint-disable-next-line no-await-in-loop
+				const role = await guild.createRole({
+					name: t.createdRoleName,
+					hoist: false,
+					mentionable: false,
+					permissions: 0,
+				}, 'New role for reaction trigger');
+				t.roleID = role.id;
+			}
+		}
 
 		// inefficient, kinda thrashes the db, but idc
 		await Promise.all(allOldTriggers.map(async trigger => {

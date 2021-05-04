@@ -336,4 +336,42 @@ module.exports = (db, client) => polka()
 			response.writeHead(500);
 			response.end();
 		}
+	})
+
+	.get('/:guildID/channels', async (request, response) => {
+		const {guildID} = request.params;
+
+		if (!await util.thisUserManagesGuild(request, client, db, guildID)) {
+			response.writeHead(401);
+			response.end();
+			return;
+		}
+
+		try {
+			const guild = client.guilds.get(guildID) || await client.getRESTGuild(guildID);
+			const channels = [...guild.channels.values()];
+			response.end(JSON.stringify(channels));
+		} catch (error) {
+			response.writeHead(500);
+			response.end();
+		}
+	})
+
+	.get('/:guildID/emojis', async (request, response) => {
+		const {guildID} = request.params;
+
+		if (!await util.thisUserManagesGuild(request, client, db, guildID)) {
+			response.writeHead(401);
+			response.end();
+			return;
+		}
+
+		try {
+			const guild = client.guilds.get(guildID) || await client.getRESTGuild(guildID);
+			const emojis = guild.emojis;
+			response.end(JSON.stringify(emojis));
+		} catch (error) {
+			response.writeHead(500);
+			response.end();
+		}
 	});

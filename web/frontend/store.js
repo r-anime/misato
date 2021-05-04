@@ -12,22 +12,22 @@ let fetchGuildEmojisPromise = null;
 export default new Vuex.Store({
 	state: {
 		discordInfo: undefined,
-		guildRoles: new Map(),
-		guildChannels: new Map(),
-		guildEmojis: new Map(),
+		guildRoles: {},
+		guildChannels: {},
+		guildEmojis: {},
 	},
 	mutations: {
 		SET_DISCORD_INFO (state, info) {
 			state.discordInfo = info;
 		},
 		SET_GUILD_ROLES (state, {guildID, roles}) {
-			state.guildRoles.set(guildID, roles);
+			Vue.set(state.guildRoles, guildID, roles);
 		},
 		SET_GUILD_CHANNELS (state, {guildID, channels}) {
-			state.guildChannels.set(guildID, channels);
+			Vue.set(state.guildChannels, guildID, channels);
 		},
 		SET_GUILD_EMOJIS (state, {guildID, emojis}) {
-			state.guildEmojis.set(guildID, emojis);
+			Vue.set(state.guildEmojis, guildID, emojis);
 		},
 	},
 	actions: {
