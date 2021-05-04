@@ -30,7 +30,7 @@ module.exports = new EventListener('ready', ({client, db}) => {
 	// TODO: eventually yuuko will support exporting multiple event listeners from a single file - do that instead of\
 	//       waiting to register one listener after ready (this isn't a memory leak since we're using `once: true` on
 	//       the ready listener, it's just ugly)
-	client.on('messageReactionAdd', async (message, emoji, userID) => {
+	client.on('messageReactionAdd', async (message, emoji, user) => {
 		// If we're not in a guild, we know we can't have reaction roles
 		if (!message.channel.guild) {
 			return;
@@ -45,11 +45,11 @@ module.exports = new EventListener('ready', ({client, db}) => {
 
 		// Assign the user the specified role
 		try {
-			await message.channel.guild.addMemberRole(userID, relevantReactionRoleConfig.roleID);
+			await message.channel.guild.addMemberRole(user.id, relevantReactionRoleConfig.roleID);
 			log.debug('Success');
 		} catch (error) {
 			// probably don't have permission, or the user is above us in the role list
-			log.error(`Error adding role ${relevantReactionRoleConfig.roleID} to member ${userID}:`, error);
+			log.error(`Error adding role ${relevantReactionRoleConfig.roleID} to member ${user.id}:`, error);
 		}
 	});
 
