@@ -3,6 +3,9 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
+// Promises used to track whether or not something is already being fetched
+let fetchDiscordInfoPromise = null;
+
 export default new Vuex.Store({
 	state: {
 		discordInfo: undefined,
@@ -14,9 +17,13 @@ export default new Vuex.Store({
 	},
 	actions: {
 		fetchDiscordInfo ({commit}) {
-			return fetch('/auth/discord/about').then(async response => {
+			if (!fetchDiscordInfoPromise) {
+				fetchDiscordInfoPromise = fetch('/auth/discord/about').then(async response => {
 				commit('SET_DISCORD_INFO', response.ok ? await response.json().catch(() => null) : null);
+					fetchDiscordInfoPromise = null;
 			});
+			}
+			return fetchDiscordInfoPromise;
 		},
 	},
 });
