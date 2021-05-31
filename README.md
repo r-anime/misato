@@ -1,4 +1,4 @@
-# discord-mod-bot
+# discord-mod-bot [![deploy status](https://img.shields.io/github/deployments/r-anime/discord-mod-bot/production?label=deploy)](https://github.com/r-anime/discord-mod-bot/deployments/activity_log?environment=production)
 
 It's not much, but it's ours.
 
@@ -8,10 +8,9 @@ It's not much, but it's ours.
 
 - [Node](https://nodejs.org/en/download/) (tested against current LTS release)
 - [Yarn 1.x](https://classic.yarnpkg.com/en/docs/install) (project not yet configured for yarn 2.x; using npm is not recommended)
-- [MongoDB](https://www.mongodb.com/) 3.6+ ~~with a configured [replica set](https://docs.mongodb.com/manual/administration/replica-set-deployment/)~~
-  - For development purposes, you can [install MongoDB on your computer](https://docs.mongodb.com/manual/installation/) ~~and then [convert your installed instance to a replica set without actually replicating data](https://docs.mongodb.com/manual/tutorial/convert-standalone-to-replica-set/)~~.
-  - In production, you probably want to configure your replica set to do actual replication; check the [MongoDB replication docs](https://docs.mongodb.com/manual/administration/replica-set-deployment/) for more information. You can also use [Atlas](https://www.mongodb.com/cloud/atlas), Mongo's cloud hosting offering.
-  - **Note:** Future features will require a connection to a replica set in order to take advantage of [change streams](https://docs.mongodb.com/v3.6/changeStreams/), but there are none that require it yet.
+- [MongoDB](https://www.mongodb.com/) 3.6+
+  - For development purposes, you can [install MongoDB on your computer](https://docs.mongodb.com/manual/installation/).
+  - In production, you probably want to configure a replica set to provide redundancy; check the [MongoDB replication docs](https://docs.mongodb.com/manual/administration/replica-set-deployment/) for more information. You can also use [Atlas](https://www.mongodb.com/cloud/atlas), Mongo's cloud hosting offering.
 
 ### First-time setup
 
