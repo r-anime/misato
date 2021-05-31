@@ -11,6 +11,15 @@ jobs:
       uses: webfactory/ssh-agent@v0.4.1
       with:
         ssh-private-key: ${{ secrets.DISCORD_MOD_BOT_SSH_KEY }}
+
+    - name: Create GitHub deployment
+      uses: chrnorm/deployment-action@v1.0.0
+      id: github_deployment
+      with:
+        token: ${{ github.token }}
+        target_url: https://discord.r-anime.moe
+        environment: production
+
     - name: Deploy to shared server
       run: |
         ssh -o StrictHostKeyChecking=no discord-mod-bot@134.209.0.181 /bin/bash << 'EOF'
@@ -19,17 +28,33 @@ jobs:
 
           # .bashrc exits early in non-interactive shells, so we have to source nvm manually
           source "$HOME/.nvm/nvm.sh"
-          
+
           # checkout changes
           cd "$HOME/discord-mod-bot"
           git fetch --all
           git reset --hard origin/main
-          
+
           # update dependencies, migrate db, rebuild
           yarn
           yarn migrate up
           yarn build:prod
-          
+
           # restart production service
           sudo systemctl restart discord-mod-bot.service
         EOF
+
+    - name: Update deployment status (success)
+      if: success()
+      uses: chrnorm/deployment-status@v1.0.0
+      with:
+        token: ${{ github.token }}
+        state: success
+        deployment_id: ${{ steps.github_deployment.outputs.deployment_id }}
+
+    - name: Update deployment status (failure)
+      if: failure()
+      uses: chrnorm/deployment-status@v1.0.0
+      with:
+        token: ${{ github.token }}
+        state: failure
+        deployment_id: ${{ steps.github_deployment.outputs.deployment_id }}
