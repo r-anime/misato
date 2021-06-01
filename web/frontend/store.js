@@ -7,14 +7,14 @@ Vue.use(Vuex);
 let fetchDiscordInfoPromise = null;
 let fetchGuildRolesPromise = null;
 let fetchGuildChannelsPromise = null;
-let fetchGuildEmojisPromise = null;
+let fetchEmojisPromise = null;
 
 export default new Vuex.Store({
 	state: {
 		discordInfo: undefined,
 		guildRoles: {},
 		guildChannels: {},
-		guildEmojis: {},
+		emojis: null,
 	},
 	mutations: {
 		SET_DISCORD_INFO (state, info) {
@@ -26,8 +26,8 @@ export default new Vuex.Store({
 		SET_GUILD_CHANNELS (state, {guildID, channels}) {
 			Vue.set(state.guildChannels, guildID, channels);
 		},
-		SET_GUILD_EMOJIS (state, {guildID, emojis}) {
-			Vue.set(state.guildEmojis, guildID, emojis);
+		SET_EMOJIS (state, emojis) {
+			state.emojis = emojis;
 		},
 	},
 	actions: {
@@ -63,14 +63,11 @@ export default new Vuex.Store({
 				});
 			}
 		},
-		fetchGuildEmojis ({commit}, guildID) {
-			if (!fetchGuildEmojisPromise) {
-				fetchGuildEmojisPromise = fetch(`/api/guilds/${guildID}/emojis`).then(async response => {
-					commit('SET_GUILD_EMOJIS', {
-						guildID,
-						emojis: response.ok ? await response.json().catch(() => null) : null,
-					});
-					fetchGuildEmojisPromise = null;
+		fetchEmojis ({commit}) {
+			if (!fetchEmojisPromise) {
+				fetchEmojisPromise = fetch('/api/channel-automation/emojis').then(async response => {
+					commit('SET_EMOJIS', response.ok ? await response.json().catch(() => null) : null);
+					fetchEmojisPromise = null;
 				});
 			}
 		},

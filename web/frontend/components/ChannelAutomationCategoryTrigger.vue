@@ -95,7 +95,7 @@ export default {
 		...mapState([
 			'guildRoles',
 			'guildChannels',
-			'guildEmojis',
+			'emojis',
 		]),
 		guildID () {
 			return this.$route.params.guildID;
@@ -105,9 +105,6 @@ export default {
 		},
 		channels () {
 			return this.guildChannels[this.guildID];
-		},
-		emojis () {
-			return this.guildEmojis[this.guildID];
 		},
 		loaded () {
 			return this.roles && this.channels && this.emojis;
@@ -164,14 +161,14 @@ export default {
 			this.fetchGuildChannels(this.guildID).then(() => this.$forceUpdate());
 		}
 		if (!this.emojis) {
-			this.fetchGuildEmojis(this.guildID).then(() => this.$forceUpdate());
+			this.fetchEmojis().then(() => this.$forceUpdate());
 		}
 	},
 	methods: {
 		...mapActions([
 			'fetchGuildRoles',
 			'fetchGuildChannels',
-			'fetchGuildEmojis',
+			'fetchEmojis',
 		]),
 		emojiForValue (val) {
 			val = JSON.parse(val);
