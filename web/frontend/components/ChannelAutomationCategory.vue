@@ -11,6 +11,7 @@
 				<tr>
 					<th>Emoji</th>
 					<th>Role</th>
+					<th>Actions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -18,16 +19,29 @@
 					v-for="(trigger, index) in triggers"
 					:key="index"
 					v-model="triggers[index]"
+					@delete="deleteTrigger(trigger)"
 				/>
 			</tbody>
 		</table>
 
-		<b-button
-			type="is-primary"
-			@click="addTrigger()"
-		>
-			Add reaction button
-		</b-button>
+		<div class="level">
+			<div class="level-left">
+				<b-button
+					type="is-primary"
+					@click="addTrigger()"
+				>
+					Add reaction button
+				</b-button>
+			</div>
+			<div class="level-right">
+				<b-button
+					type="is-danger"
+					@click="$emit('delete')"
+				>
+					Delete Category
+				</b-button>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -83,6 +97,9 @@ export default {
 		},
 		addTrigger ({emoji = '', roleID = ''} = {}) {
 			this.triggers.push(JSON.stringify({emoji, roleID}));
+		},
+		deleteTrigger (trigger) {
+			this.triggers.splice(this.triggers.indexOf(trigger), 1);
 		},
 	},
 };

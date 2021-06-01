@@ -48,7 +48,10 @@
 				v-for="(category, index) of categories"
 				:key="index"
 			>
-				<channel-automation-category v-model="categories[index]" />
+				<channel-automation-category
+					v-model="categories[index]"
+					@delete="deleteCategory(categories[index])"
+				/>
 			</div>
 
 			<b-button
@@ -91,6 +94,9 @@ export default {
 	methods: {
 		addCategory (name = 'New Section') {
 			this.categories.push(JSON.stringify({name, triggers: []}));
+		},
+		deleteCategory (category) {
+			this.categories.splice(this.categories.indexOf(category), 1);
 		},
 		submit () {
 			if (this.submitting) return;

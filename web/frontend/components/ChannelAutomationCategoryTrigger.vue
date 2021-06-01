@@ -60,6 +60,14 @@
 				</p>
 			</template>
 		</td>
+		<td>
+			<button
+				class="button is-danger"
+				@click="$emit('delete')"
+			>
+				Delete
+			</button>
+		</td>
 	</tr>
 </template>
 
