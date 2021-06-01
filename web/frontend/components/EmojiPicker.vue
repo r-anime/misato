@@ -1,17 +1,20 @@
 <template>
 	<b-dropdown custom>
 		<template #trigger>
-			<button
-				class="button"
-			>
-				<img
-					class="emoji-display"
-					:src="emojiImageLocation(emoji)"
-					:alt="emoji.name"
-				>
-				<span>
-					{{ emoji.name }}
-				</span>
+			<button class="button">
+				<template v-if="emoji">
+					<img
+						class="emoji-display"
+						:src="emojiImageLocation(emoji)"
+						:alt="emoji.name"
+					>
+					<span>
+						{{ emoji.name }}
+					</span>
+				</template>
+				<template v-else>
+					Choose an emoji
+				</template>
 			</button>
 		</template>
 
@@ -25,7 +28,7 @@
 				<img
 					class="emoji-display"
 					:src="emojiImageLocation(e)"
-					:alt="emoji.name"
+					:alt="e.name"
 				>
 			</button>
 		</div>
