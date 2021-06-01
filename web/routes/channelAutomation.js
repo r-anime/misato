@@ -58,6 +58,28 @@ function getStuffFromGuild (listMessages) {
 }
 
 module.exports = (db, client) => polka()
+	// TODO: move this to a different route
+	.get('/emojis', (request, response) => {
+		// Get emojis from all guilds
+		const emojis = [];
+		for (const guild of client.guilds.values()) {
+			log.debug('guild emojis', guild, guild.id, guild.emojis);
+			for (const emoji of guild.emojis) {
+				if (emoji.available) {
+					emojis.push({
+						id: emoji.id,
+						name: emoji.name,
+						animated: emoji.animated,
+						guildID: guild.id,
+					});
+				}
+			}
+		}
+
+		response.setHeader('content-type', 'application/json; charset=utf-8');
+		response.end(JSON.stringify(emojis));
+	})
+
 	.get('/:guildID', async (request, response) => {
 		const {guildID} = request.params;
 
