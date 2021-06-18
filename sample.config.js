@@ -5,6 +5,7 @@ const path = require('path');
 module.exports = {
 	// temporary stuff, this will be handled in the db eventually
 	TEMP_guildID: '',
+	TEMP_channelAutomationChannelID: '',
 
 	// Dev mode (disables sirv cache, runs webpack in development mode, etc.)
 	dev: process.env.NODE_ENV !== 'production',
