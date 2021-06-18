@@ -4,9 +4,8 @@ const util = require('../util');
 const config = require('../../config');
 const Eris = require('eris');
 
-const TEMP_channelID = '835710881680588840';
+const tempChannelID = config.TEMP_channelAutomationChannelID;
 
-/** Source(s): dude trust me */
 function getStuffFromGuild (listMessages) {
 	const allChannelContent = listMessages.reverse().map(message => message.content).join('\n');
 
@@ -44,7 +43,7 @@ function getStuffFromGuild (listMessages) {
 	}
 
 	const result = {
-		channelID: TEMP_channelID,
+		channelID: tempChannelID,
 		categories: [],
 	};
 	categoryOrder.filter(name => allCategories.get(name)).forEach(name => {
@@ -96,7 +95,7 @@ module.exports = (db, client) => polka()
 
 		// Search through the messages in the channel and find all the existing categories and mappings
 		const guild = client.guilds.get(config.TEMP_guildID);
-		const listChannel = guild.channels.get(TEMP_channelID) || await client.getRESTChannel(TEMP_channelID);
+		const listChannel = guild.channels.get(tempChannelID) || await client.getRESTChannel(tempChannelID);
 		const listMessages = await listChannel.getMessages();
 
 		// Gets the existing set of category mappings from the channel messages
@@ -149,7 +148,7 @@ module.exports = (db, client) => polka()
 
 		// Search through the messages in the channel and find all the existing categories and mappings
 		const guild = client.guilds.get(config.TEMP_guildID);
-		const listChannel = guild.channels.get(TEMP_channelID) || await client.getRESTChannel(TEMP_channelID);
+		const listChannel = guild.channels.get(tempChannelID) || await client.getRESTChannel(tempChannelID);
 		const listMessages = await listChannel.getMessages();
 
 		// Gets the existing set of category mappings from the channel messages
@@ -214,7 +213,7 @@ module.exports = (db, client) => polka()
 			await db.collection('reactionRoles').deleteOne({
 				emoji: trigger.emoji,
 				roleID: trigger.roleID,
-				channelID: TEMP_channelID,
+				channelID: tempChannelID,
 			}).catch(log.warn);
 		}));
 
@@ -286,12 +285,12 @@ module.exports = (db, client) => polka()
 			if (allOldTriggers.some(t => t.emoji === trigger.emoji && t.roleID === trigger.roleID)) {
 				return;
 			}
-			const messageID = Object.entries(idToTriggers).find(([id, triggers]) => triggers.some(t => t.emoji === trigger.emoji && t.roleID === trigger.roleID))[0];
+			const messageID = Object.entries(idToTriggers).find(([_id, triggers]) => triggers.some(t => t.emoji === trigger.emoji && t.roleID === trigger.roleID))[0];
 			log.success(messageID);
 			await db.collection('reactionRoles').insertOne({
 				emoji: trigger.emoji,
 				roleID: trigger.roleID,
-				channelID: TEMP_channelID,
+				channelID: tempChannelID,
 				guildID: config.TEMP_guildID,
 				messageID,
 			}).catch(log.warn);

@@ -112,12 +112,14 @@ export default {
 				}),
 			}).then(response => {
 				if (!response.ok) {
+					// eslint-disable-next-line no-alert
 					alert('Failed');
 				}
 				this.submitting = false;
 			});
 		},
 		revert () {
+			// eslint-disable-next-line no-alert
 			alert('dont');
 		},
 	},
