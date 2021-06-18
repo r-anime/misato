@@ -79,7 +79,7 @@ module.exports = new EventListener('ready', ({client, db}) => {
 			await collection.updateOne(query, update, {upsert: false}).catch(error => log.error('Failed to update document in feed event:', error));
 		}));
 		// Queue this check to run again in 60 seconds
-		setTimeout(checkFeeds, 10 * 1000);
+		setTimeout(checkFeeds, 60 * 1000);
 	})();
 }, {
 	once: true,
