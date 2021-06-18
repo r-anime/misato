@@ -163,45 +163,61 @@ module.exports = (db, client) => polka()
 			log.info('new trigger', t);
 			if (t.roleID === 'new-channel') {
 				log.info('Creating new channel');
-				// eslint-disable-next-line no-await-in-loop
-				const role = await guild.createRole({
-					name: t.createdRoleName,
-					hoist: false,
-					mentionable: false,
-					permissions: 0,
-				}, 'New role and channel for reaction trigger');
+				try {
+					// eslint-disable-next-line no-await-in-loop
+					const role = await guild.createRole({
+						name: t.createdRoleName,
+						hoist: false,
+						mentionable: false,
+						permissions: 0,
+					}, 'New role and channel for reaction trigger');
 
-				// eslint-disable-next-line no-await-in-loop
-				await guild.createChannel(t.createdChannelName, 0, {
-					parentID: t.createdChannelParentID || undefined,
-					permissionOverwrites: [
-						{
-							id: guild.id,
-							type: 0,
-							allow: 0,
-							deny: String(Number(Eris.Constants.Permissions.viewChannel)),
-						},
-						{
-							id: role.id,
-							type: 0,
-							allow: Number(Eris.Constants.Permissions.viewChannel),
-							deny: 0,
-						},
-					],
-					reason: 'New role and channel for reaction trigger',
-				});
+					// eslint-disable-next-line no-await-in-loop
+					await guild.createChannel(t.createdChannelName, 0, {
+						parentID: t.createdChannelParentID || undefined,
+						permissionOverwrites: [
+							{
+								id: guild.id,
+								type: 0,
+								allow: 0,
+								deny: String(Number(Eris.Constants.Permissions.viewChannel)),
+							},
+							{
+								id: role.id,
+								type: 0,
+								allow: Number(Eris.Constants.Permissions.viewChannel),
+								deny: 0,
+							},
+						],
+						reason: 'New role and channel for reaction trigger',
+					});
 
-				t.roleID = role.id;
+					t.roleID = role.id;
+				} catch (error) {
+					log.error('Failed to create channel and role:', error);
+
+					response.writeHead(500);
+					response.end();
+					return;
+				}
 			} else if (t.roleID === 'new-role') {
 				log.info('Creating new role');
-				// eslint-disable-next-line no-await-in-loop
-				const role = await guild.createRole({
-					name: t.createdRoleName,
-					hoist: false,
-					mentionable: false,
-					permissions: 0,
-				}, 'New role for reaction trigger');
-				t.roleID = role.id;
+				try {
+					// eslint-disable-next-line no-await-in-loop
+					const role = await guild.createRole({
+						name: t.createdRoleName,
+						hoist: false,
+						mentionable: false,
+						permissions: 0,
+					}, 'New role for reaction trigger');
+					t.roleID = role.id;
+				} catch (error) {
+					log.error('Failed to create role:', error);
+
+					response.writeHead(500);
+					response.end();
+					return;
+				}
 			}
 		}
 
