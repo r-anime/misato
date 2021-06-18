@@ -5,10 +5,7 @@ const rssParser = new Parser();
 
 /**
  * Builds an embed object to use when posting a feed.
- * @param {string} title The title of the embed.
- * @param {string} author  The author of the content in the embed.
- * @param {Date} date The date the content was made available.
- * @param {number} color The color of the embed frame.
+ * @param {object} post The parsed feed entry to generate an embed for.
  * @param {string} url The URL of the source of the content.
  * @returns {object}
  */
