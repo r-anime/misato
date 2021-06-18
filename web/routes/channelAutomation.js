@@ -52,7 +52,6 @@ function getStuffFromGuild (listMessages) {
 			triggers: allCategories.get(name),
 		});
 	});
-	log.info(result);
 	return result;
 }
 
@@ -62,7 +61,6 @@ module.exports = (db, client) => polka()
 		// Get emojis from all guilds
 		const emojis = [];
 		for (const guild of client.guilds.values()) {
-			log.debug('guild emojis', guild, guild.id, guild.emojis);
 			for (const emoji of guild.emojis) {
 				if (emoji.available) {
 					emojis.push({
@@ -142,7 +140,6 @@ module.exports = (db, client) => polka()
 			response.end();
 			return;
 		}
-		log.info('json:', json);
 
 		// TODO: Okay this is the weird custom logic part that eventually we'll want to completely redo
 
@@ -160,9 +157,9 @@ module.exports = (db, client) => polka()
 
 		// Handle role/channel creation for triggers that need to create channels
 		for (const t of allNewTriggers) {
-			log.info('new trigger', t);
+			log.debug('new trigger', t);
 			if (t.roleID === 'new-channel') {
-				log.info('Creating new channel');
+				log.debug('Creating new channel');
 				try {
 					// eslint-disable-next-line no-await-in-loop
 					const role = await guild.createRole({
@@ -201,7 +198,7 @@ module.exports = (db, client) => polka()
 					return;
 				}
 			} else if (t.roleID === 'new-role') {
-				log.info('Creating new role');
+				log.debug('Creating new role');
 				try {
 					// eslint-disable-next-line no-await-in-loop
 					const role = await guild.createRole({
@@ -296,13 +293,11 @@ module.exports = (db, client) => polka()
 		}
 		await Promise.all([...editPromises, ...createPromises]);
 
-		log.info('asdf', idToTriggers);
 		await Promise.all(allNewTriggers.map(async trigger => {
 			if (allOldTriggers.some(t => t.emoji === trigger.emoji && t.roleID === trigger.roleID)) {
 				return;
 			}
 			const messageID = Object.entries(idToTriggers).find(([_id, triggers]) => triggers.some(t => t.emoji === trigger.emoji && t.roleID === trigger.roleID))[0];
-			log.success(messageID);
 			await db.collection('reactionRoles').insertOne({
 				emoji: trigger.emoji,
 				roleID: trigger.roleID,
