@@ -289,10 +289,10 @@ module.exports = (db, client) => polka()
 		});
 		const createPromises = [];
 		for (let i = negOffset; i < 0; i += 1) {
-			createPromises.push(async () => {
+			createPromises.push((async () => {
 				const newM = await listChannel.createMessage(messageTexts[messageTexts.length + negOffset]);
 				idToTriggers[newM.id] = messageTextTriggers[messageTexts.length + negOffset];
-			});
+			})());
 		}
 		await Promise.all([...editPromises, ...createPromises]);
 
