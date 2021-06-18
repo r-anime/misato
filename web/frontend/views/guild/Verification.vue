@@ -4,22 +4,12 @@
 			Verification Settings
 		</h1>
 		<b-field label="Verification role">
-			<b-select
+			<role-dropdown
 				v-model="verificationRoleID"
 				placeholder="Select a role"
 				:loading="!loaded"
-			>
-				<template v-if="loaded">
-					<option
-						v-for="role in guildRoles"
-						:key="role.id"
-						:value="role.id"
-						:style="roleColorStyle(role.color)"
-					>
-						{{ role.name }}
-					</option>
-				</template>
-			</b-select>
+				:roles="roles"
+			/>
 		</b-field>
 
 		<b-field
@@ -48,18 +38,28 @@
 </template>
 
 <script>
+import {mapActions, mapState} from 'vuex';
+
+import RoleDropdown from '../../components/RoleDropdown.vue';
+
 export default {
+	components: {RoleDropdown},
 	data () {
 		return {
-			guildRoles: null,
 			verificationRoleID: null,
 			loadedGuildSettings: false,
 			submitting: false,
 		};
 	},
 	computed: {
+		...mapState([
+			'guildRoles',
+		]),
+		roles () {
+			return this.guildRoles[this.guildID];
+		},
 		loaded () {
-			return this.guildRoles && this.loadedGuildSettings;
+			return this.roles && this.loadedGuildSettings;
 		},
 		guildID () {
 			return this.$route.params.guildID;
@@ -69,11 +69,7 @@ export default {
 		},
 	},
 	async created () {
-		// TODO: error handling
-		this.guildRoles = (await fetch(`/api/guilds/${this.guildID}/roles`).then(response => response.json()))
-			.sort((a, b) => b.position - a.position)
-			.filter(role => role.id !== this.guildID);
-
+		this.fetchGuildRoles(this.guildID);
 		const guildSettings = await fetch(`/api/verification/${this.guildID}/configuration`).then(response => {
 			if (response.status === 404) {
 				return {};
@@ -84,9 +80,9 @@ export default {
 		this.loadedGuildSettings = true;
 	},
 	methods: {
-		roleColorStyle (color) {
-			return `color: #${color.toString(16).padStart(6, '0')};`;
-		},
+		...mapActions([
+			'fetchGuildRoles',
+		]),
 		async submit () {
 			this.submitting = true;
 			const response = await fetch(`/api/verification/${this.guildID}/configuration`, {
