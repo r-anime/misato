@@ -57,6 +57,14 @@
 										Message Filter
 									</router-link>
 								</li>
+								<li>
+									<router-link
+										active-class="is-active"
+										:to="{name: 'guild-channel-automation', params: {guildID}}"
+									>
+										Channel Automation
+									</router-link>
+								</li>
 							</ul>
 						</aside>
 					</div>
