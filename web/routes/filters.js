@@ -46,6 +46,7 @@ module.exports = (db, client) => polka()
 		if (request.headers['content-type'] !== 'application/json') {
 			response.writeHead(415);
 			response.end();
+			return;
 		}
 
 		// Read the body of the request
