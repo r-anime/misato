@@ -58,8 +58,6 @@ module.exports = new Command('convert', async (msg, args, context) => {
 	}
 
 	let {baseType, targetType} = match.groups;
-	baseType = baseType.toLowerCase();
-	targetType = targetType.toLowerCase();
 
 	for (const [key, value] of Object.entries(unitAliases)) {
 		if (baseType === key) baseType = value;
