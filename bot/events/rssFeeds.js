@@ -12,24 +12,31 @@ const rssParser = new Parser();
  * @param {string} url The URL of the source of the content.
  * @returns {object}
  */
-function buildRssEmbed (title, author, date, color, url) {
-	let tempTitle = title;
+function buildRssEmbed (post, url) {
+	let tempTitle = post.title;
 	// titles in embeds have a 256 char limit
-	if (title.length > 253) {
-		tempTitle = title.substring(0, 252).concat('...');
+	if (post.title.length > 253) {
+		tempTitle = post.title.substring(0, 252).concat('...');
 	}
-	// build the footer
-	const footerText = `${date.getUTCFullYear()}/${date.getUTCMonth()}/${date.getUTCDate()} - ${date.getUTCHours()}:${date.getUTCMinutes()} UTC | ${url}`;
+
 	// build embed
 	const embed = {
+		author: {
+			name: post.author,
+		},
 		title: tempTitle,
-		author: {name: author},
-		footer: {text: footerText},
-		color,
+		url: post.link,
+		timestamp: post.isoDate,
+		footer: {
+			text: url,
+		},
 	};
-	// temporary way to get a pretty (standardized) thumbnail if the source is reddit
-	if (url.includes('reddit')) {
-		embed.thumbnail = {url: 'https://i.imgur.com/F66Nd8H.png'};
+
+	// Unique processing for different services
+	if (url.match(/^https?:\/\/(\w+\.)?reddit\.com/)) {
+		embed.color = 0xFF4500;
+		embed.footer.icon_url = 'https://i.imgur.com/F66Nd8H.png';
+		// TODO: fetch author's avatar and display it in author.icon_url
 	}
 
 	return embed;
@@ -55,8 +62,7 @@ module.exports = new EventListener('ready', ({client, db}) => {
 				const itemDate = new Date(post.isoDate);
 				// If this item is from after the last check, process it
 				if (itemDate > storedFeed.lastCheck) {
-					log.success(itemDate);
-					const embed = buildRssEmbed(post.title, post.author, itemDate, 0xFF4401, storedFeed.url);
+					const embed = buildRssEmbed(post, storedFeed.url);
 					client.getChannel(storedFeed.channelId).createMessage({content: post.link, embed}).catch(error => {
 						log.error('Failed to post feed in RSS Feed event.', error);
 					});
