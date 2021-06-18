@@ -52,7 +52,6 @@ function getStuffFromGuild (listMessages) {
 			triggers: allCategories.get(name),
 		});
 	});
-	log.info(result);
 	return result;
 }
 
@@ -62,7 +61,6 @@ module.exports = (db, client) => polka()
 		// Get emojis from all guilds
 		const emojis = [];
 		for (const guild of client.guilds.values()) {
-			log.debug('guild emojis', guild, guild.id, guild.emojis);
 			for (const emoji of guild.emojis) {
 				if (emoji.available) {
 					emojis.push({
@@ -142,7 +140,6 @@ module.exports = (db, client) => polka()
 			response.end();
 			return;
 		}
-		log.info('json:', json);
 
 		// TODO: Okay this is the weird custom logic part that eventually we'll want to completely redo
 
@@ -160,48 +157,64 @@ module.exports = (db, client) => polka()
 
 		// Handle role/channel creation for triggers that need to create channels
 		for (const t of allNewTriggers) {
-			log.info('new trigger', t);
+			log.debug('new trigger', t);
 			if (t.roleID === 'new-channel') {
-				log.info('Creating new channel');
-				// eslint-disable-next-line no-await-in-loop
-				const role = await guild.createRole({
-					name: t.createdRoleName,
-					hoist: false,
-					mentionable: false,
-					permissions: 0,
-				}, 'New role and channel for reaction trigger');
+				log.debug('Creating new channel');
+				try {
+					// eslint-disable-next-line no-await-in-loop
+					const role = await guild.createRole({
+						name: t.createdRoleName,
+						hoist: false,
+						mentionable: false,
+						permissions: 0,
+					}, 'New role and channel for reaction trigger');
 
-				// eslint-disable-next-line no-await-in-loop
-				await guild.createChannel(t.createdChannelName, 0, {
-					parentID: t.createdChannelParentID || undefined,
-					permissionOverwrites: [
-						{
-							id: guild.id,
-							type: 0,
-							allow: 0,
-							deny: String(Number(Eris.Constants.Permissions.viewChannel)),
-						},
-						{
-							id: role.id,
-							type: 0,
-							allow: Number(Eris.Constants.Permissions.viewChannel),
-							deny: 0,
-						},
-					],
-					reason: 'New role and channel for reaction trigger',
-				});
+					// eslint-disable-next-line no-await-in-loop
+					await guild.createChannel(t.createdChannelName, 0, {
+						parentID: t.createdChannelParentID || undefined,
+						permissionOverwrites: [
+							{
+								id: guild.id,
+								type: 0,
+								allow: 0,
+								deny: String(Number(Eris.Constants.Permissions.viewChannel)),
+							},
+							{
+								id: role.id,
+								type: 0,
+								allow: Number(Eris.Constants.Permissions.viewChannel),
+								deny: 0,
+							},
+						],
+						reason: 'New role and channel for reaction trigger',
+					});
 
-				t.roleID = role.id;
+					t.roleID = role.id;
+				} catch (error) {
+					log.error('Failed to create channel and role:', error);
+
+					response.writeHead(500);
+					response.end();
+					return;
+				}
 			} else if (t.roleID === 'new-role') {
-				log.info('Creating new role');
-				// eslint-disable-next-line no-await-in-loop
-				const role = await guild.createRole({
-					name: t.createdRoleName,
-					hoist: false,
-					mentionable: false,
-					permissions: 0,
-				}, 'New role for reaction trigger');
-				t.roleID = role.id;
+				log.debug('Creating new role');
+				try {
+					// eslint-disable-next-line no-await-in-loop
+					const role = await guild.createRole({
+						name: t.createdRoleName,
+						hoist: false,
+						mentionable: false,
+						permissions: 0,
+					}, 'New role for reaction trigger');
+					t.roleID = role.id;
+				} catch (error) {
+					log.error('Failed to create role:', error);
+
+					response.writeHead(500);
+					response.end();
+					return;
+				}
 			}
 		}
 
@@ -273,20 +286,18 @@ module.exports = (db, client) => polka()
 		});
 		const createPromises = [];
 		for (let i = negOffset; i < 0; i += 1) {
-			createPromises.push(async () => {
+			createPromises.push((async () => {
 				const newM = await listChannel.createMessage(messageTexts[messageTexts.length + negOffset]);
 				idToTriggers[newM.id] = messageTextTriggers[messageTexts.length + negOffset];
-			});
+			})());
 		}
 		await Promise.all([...editPromises, ...createPromises]);
 
-		log.info('asdf', idToTriggers);
 		await Promise.all(allNewTriggers.map(async trigger => {
 			if (allOldTriggers.some(t => t.emoji === trigger.emoji && t.roleID === trigger.roleID)) {
 				return;
 			}
 			const messageID = Object.entries(idToTriggers).find(([_id, triggers]) => triggers.some(t => t.emoji === trigger.emoji && t.roleID === trigger.roleID))[0];
-			log.success(messageID);
 			await db.collection('reactionRoles').insertOne({
 				emoji: trigger.emoji,
 				roleID: trigger.roleID,
