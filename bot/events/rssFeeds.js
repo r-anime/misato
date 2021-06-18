@@ -42,35 +42,44 @@ module.exports = new EventListener('ready', ({client, db}) => {
 	(async function checkFeeds () {
 		const storedFeeds = await collection.find().toArray();
 
+		log.debug('Checking feeds');
 		// go through and handle all the feeds,
 		// do not start the countdown again until all feeds were checked
 		await Promise.all(storedFeeds.map(async storedFeed => {
 			const rssFeed = await rssParser.parseURL(storedFeed.url);
-			log.debug('Checked feeds.');
 
 			// check every post, if it was posted after the latest check for this feed, post it in a channel
+			// Also keep track of the latest date of the items we process so we don't try to process them again
+			let latestDate = storedFeed.lastCheck;
 			for (const post of rssFeed.items) {
-				if (Date.parse(post.isoDate) > Date.parse(storedFeed.lastCheck)) {
-					const embed = buildRssEmbed(post.title, post.author, new Date(post.isoDate), 0xFF4401, storedFeed.url);
+				const itemDate = new Date(post.isoDate);
+				// If this item is from after the last check, process it
+				if (itemDate > storedFeed.lastCheck) {
+					log.success(itemDate);
+					const embed = buildRssEmbed(post.title, post.author, itemDate, 0xFF4401, storedFeed.url);
 					client.getChannel(storedFeed.channelId).createMessage({content: post.link, embed}).catch(error => {
 						log.error('Failed to post feed in RSS Feed event.', error);
 					});
 					// TODO: Here we can check the DB to know if anything in post.title matches a channel name
 					// and if so post it there, but that has to be mapped by a human because channel names can get weird
 				}
+				// Check if this is the latest post we've seen yet
+				if (itemDate > latestDate) {
+					latestDate = itemDate;
+				}
 			}
 
-			// update the DB with the date of the last post we checked.
+			// update the DB with the date of the latest post we found
 			const query = {name: storedFeed.name};
 			const update = {
 				$set: {
-					lastCheck: new Date(rssFeed.items[0].isoDate),
+					lastCheck: latestDate,
 				},
 			};
 			await collection.updateOne(query, update, {upsert: false}).catch(error => log.error('Failed to update document in feed event:', error));
 		}));
 		// Queue this check to run again in 60 seconds
-		setTimeout(checkFeeds, 60 * 1000);
+		setTimeout(checkFeeds, 10 * 1000);
 	})();
 }, {
 	once: true,
