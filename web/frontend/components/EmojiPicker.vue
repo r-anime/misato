@@ -2,13 +2,18 @@
 	<b-dropdown custom>
 		<template #trigger>
 			<button class="button">
-				<template v-if="emoji">
+				<template v-if="emoji && emoji.id">
 					<img
 						class="emoji-display"
 						:src="emojiImageLocation(emoji)"
 						:alt="emoji.name"
 					>
 					<span>
+						{{ emoji.name }}
+					</span>
+				</template>
+				<template v-else-if="emoji">
+					<span class="emoji-display native-emoji">
 						{{ emoji.name }}
 					</span>
 				</template>
@@ -21,21 +26,30 @@
 		<!-- TODO: add search bar -->
 		<div class="emoji-grid">
 			<button
-				v-for="e in emojis"
+				v-for="e in sortedEmojis"
 				:key="e.name + ':' + e.id"
 				@click="selectEmoji(e)"
 			>
-				<img
-					class="emoji-display"
-					:src="emojiImageLocation(e)"
-					:alt="e.name"
-				>
+				<template v-if="e.id">
+					<img
+						class="emoji-display"
+						:src="emojiImageLocation(e)"
+						:alt="e.name"
+					>
+				</template>
+				<template v-else>
+					<span class="emoji-display native-emoji">
+						{{ e.name }}
+					</span>
+				</template>
 			</button>
 		</div>
 	</b-dropdown>
 </template>
 
 <script>
+import {default as emojiList} from 'emojis-list';
+import {default as twemoji} from 'twemoji';
 export default {
 	props: {
 		value: {
@@ -47,20 +61,45 @@ export default {
 			default: () => [],
 		},
 	},
+	data () {
+		return {
+			nativeEmojis: emojiList.map(e => ({
+				animated: false,
+				guildID: null,
+				id: null,
+				name: e,
+			})),
+		};
+	},
 	computed: {
 		sortedEmojis () {
-			return [...this.emojis].sort((a, b) => a.name.localeCompare(b.name));
+			return [...this.emojis].sort((a, b) => a.name.localeCompare(b.name)).concat(...this.nativeEmojis);
 		},
 		emoji () {
-			return this.emojis.find(e => e.id === this.value || e.name === this.value);
+			return this.sortedEmojis.find(e => e.id === this.value || e.name === this.value);
 		},
+	},
+	watch: {
+		emoji () {
+			setTimeout(() => {
+				this.runTwemoji();
+			}, 50);
+		},
+	},
+	created () {
+		setTimeout(() => {
+			this.runTwemoji();
+		}, 5);
 	},
 	methods: {
 		emojiImageLocation (emoji) {
 			return `https://cdn.discordapp.com/emojis/${emoji.id}.png`;
 		},
 		selectEmoji (emoji) {
-			this.$emit('input', emoji.id);
+			this.$emit('input', emoji.id || emoji.name);
+		},
+		runTwemoji () {
+			twemoji.parse(this.$el);
 		},
 	},
 };
@@ -68,14 +107,19 @@ export default {
 
 <style lang="scss">
 .emoji-display {
-	height: 100%;
+	display: inline-block;
+	width: 2rem;
+	height: 2rem;
 }
 
 .emoji-grid {
 	display: flex;
 	flex-wrap: wrap;
-	width: 12em + (0.5em * 2);
+	width: 6 * (2rem + 0.125rem + 0.125rem) + 1.5rem;
+	max-height: 200px;
+	box-sizing: content-box;
 	padding: 0 0.5em;
+	overflow: auto;
 
 	button {
 		margin: 0;
