@@ -43,7 +43,7 @@ module.exports = new EventListener('ready', ({client, db}) => {
 	const collection = db.collection('rssFeeds');
 
 	// Calls itself repeatedly 60 seconds after retrieving RSS feeds (or failing to do so)
-	(async function checkFeeds () {
+	async function checkFeeds () {
 		const storedFeeds = await collection.find().toArray();
 
 		log.debug('Checking feeds');
@@ -81,9 +81,15 @@ module.exports = new EventListener('ready', ({client, db}) => {
 			};
 			await collection.updateOne(query, update, {upsert: false}).catch(error => log.error('Failed to update document in feed event:', error));
 		}));
-		// Queue this check to run again in 60 seconds
-		setTimeout(checkFeeds, 60 * 1000);
-	})();
+	}
+
+	setInterval(() => {
+		if (client.ready) {
+			checkFeeds().catch(log.error);
+		} else {
+			log.warn('Client disconnected while trying to check RSS feeds; skipping');
+		}
+	}, 60 * 1000);
 }, {
 	once: true,
 });

@@ -8,7 +8,7 @@ module.exports = new EventListener('ready', ({client, db}) => {
 
 	// This function calls itself every 60 seconds as long as the bot is running.
 	// TODO: same crap as with reminders
-	(async function checkBans () {
+	async function checkBans () {
 		// Fetch bans from the database that have become due since the last check
 		const expiredBans = await collection.find({expirationDate: {$lt: new Date()}}).toArray();
 		log.debug('Expired bans:', expiredBans);
@@ -19,10 +19,14 @@ module.exports = new EventListener('ready', ({client, db}) => {
 			// Remove the ban from the database, log on error
 			collection.deleteOne({_id: ban._id}).catch(log.error);
 		});
-
-		// Queue this check to run again in 60 seconds
-		setTimeout(checkBans, 10 * 1000);
-	})();
+	}
+	setInterval(() => {
+		if (client.ready) {
+			checkBans().catch(log.error);
+		} else {
+			log.warn('Client disconnected while trying to check bans; skipping');
+		}
+	}, 60 * 1000);
 }, {
 	once: true,
 });
