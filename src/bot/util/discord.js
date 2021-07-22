@@ -202,3 +202,10 @@ export const formatDate = date => `<t:${Math.round(date.getTime() / 1000)}:d>`;
  * @returns {string}
  */
 export const formatTime = date => `<t:${Math.round(date.getTime() / 1000)}:t>`;
+
+/**
+ * Formats a date/time using Discord's relative unix timestamp format.
+ * @param {Date} date
+ * @returns {string}
+ */
+export const formatDateRelative = date => `<t:${Math.round(date.getTime() / 1000)}:R>`;
