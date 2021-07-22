@@ -20,11 +20,17 @@ function findReactConfig (message, emoji) {
 
 module.exports = new EventListener('ready', ({client, db}) => {
 	// Refresh the list of reaction roles every 30 seconds
-	(async function fetchReactionRoles () {
+	async function fetchReactionRoles () {
 		reactionRoles = await db.collection('reactionRoles').find({}).toArray();
 		log.debug('Reaction roles:', reactionRoles);
-		setTimeout(fetchReactionRoles, 30 * 1000);
-	})();
+	}
+	setInterval(() => {
+		if (client.ready) {
+			fetchReactionRoles().catch(log.error);
+		} else {
+			log.warn('Client disconnected while trying to get reaction roles; skipping');
+		}
+	}, 30 * 1000);
 
 	// Handle incoming reactions
 	// TODO: eventually yuuko will support exporting multiple event listeners from a single file - do that instead of\

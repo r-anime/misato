@@ -45,7 +45,7 @@ module.exports = new EventListener('ready', ({client, db}) => {
 	// TODO: This bit should really be moved to the web server part, and reminders should be sent in response to
 	//       IPC broadcasts rather than polling from this process. This change will make the bot process future-proof in
 	//       case sharding is needed in the future.
-	(async function checkReminders () {
+	async function checkReminders () {
 		// Fetch reminders from the database that have become due since the last check
 		const now = new Date();
 		const reminders = await collection.find({due: {$lt: now}}).toArray();
@@ -61,10 +61,15 @@ module.exports = new EventListener('ready', ({client, db}) => {
 		} catch (error) {
 			log.error('Error deleting due reminders from database (reminders not sent):', error);
 		}
+	}
 
-		// Queue this check to run again in 30 seconds (without waiting for the current reminders to be processed)
-		setTimeout(checkReminders, 30 * 1000);
-	})();
+	setInterval(() => {
+		if (client.ready) {
+			checkReminders().catch(log.error);
+		} else {
+			log.warn('Client disconnected while trying to send reminders; skipping');
+		}
+	}, 30 * 1000);
 }, {
 	once: true,
 });
