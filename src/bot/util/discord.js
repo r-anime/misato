@@ -183,22 +183,22 @@ export function parseTime (str) {
 // TODO: these require extra locales that don't come with node by default until 14, until that hits LTS these will produce US-looking dates
 
 /**
- * Wraps `toLocaleString` with consistent formatting.
+ * Formats a date and time using Discord's styled unix timestamp format.
  * @param {Date} date
  * @returns {string}
  */
-export const formatDateTime = date => `${date.toLocaleString('en-GB', {timeZone: 'UTC'})} UTC`;
+export const formatDateTime = date => `<t:${Math.round(date.getTime() / 1000)}:f>`;
 
 /**
- * Wraps `toLocaleDateString` with consistent formatting.
+ * Formats a date using Discord's styled unix timestamp format.
  * @param {Date} date
  * @returns {string}
  */
-export const formatDate = date => `${date.toLocaleDateString('en-GB', {timeZone: 'UTC'})} UTC`;
+export const formatDate = date => `<t:${Math.round(date.getTime() / 1000)}:d>`;
 
 /**
- * Wraps `toLocaleTimeString` with consistent formatting.
+ * Formats a time using Discord's styled unix timestamp format.
  * @param {Date} date
  * @returns {string}
  */
-export const formatTime = date => `${date.toLocaleTimeString('en-GB', {timeZone: 'UTC'})} UTC`;
+export const formatTime = date => `<t:${Math.round(date.getTime() / 1000)}:t>`;
