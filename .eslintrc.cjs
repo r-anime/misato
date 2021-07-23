@@ -1,6 +1,7 @@
 module.exports = {
 	plugins: [
 		'@typescript-eslint',
+		'import',
 	],
 	parser: '@typescript-eslint/parser',
 	parserOptions: {
@@ -8,6 +9,7 @@ module.exports = {
 	},
 	extends: [
 		'@geo1088/ts',
+		'plugin:import/recommended',
 	],
 	env: {
 		node: true,
