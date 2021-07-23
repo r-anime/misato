@@ -1,7 +1,7 @@
 const log = require('another-logger');
 const polka = require('polka');
 const util = require('../util');
-const config = require('../../config');
+const config = require('../../../config');
 const Eris = require('eris');
 
 const tempChannelID = config.TEMP_channelAutomationChannelID;

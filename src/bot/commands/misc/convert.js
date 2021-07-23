@@ -1,7 +1,7 @@
 // Converts from one currency to another based on this API: http://exchangeratesapi.io/
 
 const {Command} = require('yuuko');
-const config = require('../../../config');
+const config = require('../../../../config');
 const fetch = require('node-fetch');
 const convert = require('convert-units');
 

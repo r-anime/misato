@@ -6,8 +6,8 @@ const log = require('another-logger')({label: 'core'});
 const {MongoClient} = require('mongodb');
 
 const config = require('../config');
-const createDiscordClient = require('../bot');
-const createWebServer = require('../web');
+const createDiscordClient = require('./bot');
+const createWebServer = require('./web');
 
 (async () => {
 	// Set up MongoDB

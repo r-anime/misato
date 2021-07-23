@@ -1,0 +1,10 @@
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"outDir": "build",
+		"skipLibCheck": true,
+	},
+	"include": [
+		"src"
+	]
+}

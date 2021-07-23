@@ -6,7 +6,7 @@ const path = require('path');
 const {Client} = require('yuuko');
 const log = require('another-logger')({label: 'discord'});
 
-const config = require('../config');
+const config = require('../../config');
 
 module.exports = (mongoClient, db) => {
 	// Create the bot

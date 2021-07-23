@@ -8,7 +8,7 @@ const polka = require('polka');
 const fetch = require('node-fetch');
 const log = require('another-logger');
 
-const config = require('../../config');
+const config = require('../../../config');
 
 /** The redirect URI for Reddit to send the user back to. */
 const redditRedirectURI = `${config.web.host}/auth/reddit/callback`;

@@ -1,5 +1,5 @@
 const {Command} = require('yuuko');
-const config = require('../../../config');
+const config = require('../../../../config');
 
 function filterConfigURL (guildID) {
 	return `${config.web.host}/guilds/${guildID}/filter`;
