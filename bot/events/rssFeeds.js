@@ -1,5 +1,6 @@
 const log = require('another-logger');
 const {EventListener} = require('yuuko');
+const {NewsChannel} = require('eris');
 const Parser = require('rss-parser');
 const rssParser = new Parser();
 
@@ -55,14 +56,21 @@ module.exports = new EventListener('ready', ({client, db}) => {
 			// check every post, if it was posted after the latest check for this feed, post it in a channel
 			// Also keep track of the latest date of the items we process so we don't try to process them again
 			let latestDate = storedFeed.lastCheck;
-			for (const post of rssFeed.items) {
+			const feedChannel = storedFeed.channelId;
+			await Promise.all(rssFeed.items.map(async post => {
 				const itemDate = new Date(post.isoDate);
 				// If this item is from after the last check, process it
 				if (itemDate > storedFeed.lastCheck) {
 					const embed = buildRssEmbed(post, storedFeed.url);
-					client.getChannel(storedFeed.channelId).createMessage({content: post.link, embed}).catch(error => {
+					try {
+						const message = await feedChannel.createMessage({content: post.link, embed});
+						// If this is an announcement channel, publish the message
+						if (feedChannel instanceof NewsChannel) {
+							await message.crosspost();
+						}
+					} catch (error) {
 						log.error('Failed to post feed in RSS Feed event.', error);
-					});
+					}
 					// TODO: Here we can check the DB to know if anything in post.title matches a channel name
 					// and if so post it there, but that has to be mapped by a human because channel names can get weird
 				}
@@ -70,7 +78,7 @@ module.exports = new EventListener('ready', ({client, db}) => {
 				if (itemDate > latestDate) {
 					latestDate = itemDate;
 				}
-			}
+			}));
 
 			// update the DB with the date of the latest post we found
 			const query = {name: storedFeed.name};
