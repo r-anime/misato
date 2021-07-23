@@ -1,5 +1,5 @@
 // Describes custom log levels for the `another-logger` package.
-const config = require('./config');
+import config from './config';
 
 module.exports = {
 	levels: {

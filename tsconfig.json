@@ -1,0 +1,11 @@
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"outDir": "build",
+		"skipLibCheck": true,
+		"esModuleInterop": true
+	},
+	"include": [
+		"src"
+	]
+}

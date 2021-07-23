@@ -6,7 +6,7 @@ const config = require('./config');
 module.exports = {
 	mode: config.dev ? 'development' : 'production',
 	devtool: config.dev ? 'source-map' : false,
-	entry: './web/frontend/index.js',
+	entry: './frontend/index.js',
 	output: {
 		path: config.web.frontendBuildDir,
 		filename: 'bundle.js',
@@ -22,7 +22,7 @@ module.exports = {
 		new VueLoaderPlugin(),
 		// Create HTML base
 		new HtmlWebpackPlugin({
-			template: './web/frontend/template.html',
+			template: './frontend/template.html',
 			filename: 'index.html',
 			title: 'test',
 		}),
