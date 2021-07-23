@@ -47,7 +47,7 @@ module.exports = new EventListener('ready', ({client, db}) => {
 		} else {
 			log.warn('Client disconnected while trying to check bans; skipping');
 		}
-	}, 1000);
+	}, 60 * 1000);
 }, {
 	once: true,
 });
