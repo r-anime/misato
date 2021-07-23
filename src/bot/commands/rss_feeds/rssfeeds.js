@@ -1,7 +1,7 @@
-const {Command} = require('yuuko');
-const {escape} = require('../../util/formatting');
+import {Command} from 'yuuko';
+import {escape} from '../../util/formatting';
 
-module.exports = new Command('rssfeeds', async (message, args, {client, db}) => {
+const command = new Command('rssfeeds', async (message, args, {client, db}) => {
 	const collection = db.collection('rssFeeds');
 	let str = '';
 	const feeds = await collection.find().toArray();
@@ -20,8 +20,8 @@ module.exports = new Command('rssfeeds', async (message, args, {client, db}) => 
 		'manageMessages',
 	],
 });
-
-module.exports.help = {
+command.help = {
 	args: '',
 	desc: 'Lists all RSS feeds the bot is tracking.',
 };
+export default command;

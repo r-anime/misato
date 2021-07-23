@@ -1,9 +1,9 @@
 // Edits the message and logs the old content in #bot-log
-const {Command} = require('yuuko');
+import {Command} from 'yuuko';
 
 const botLogChannelId = '284412480833191936'; // botlog text channel TODO: Change this to a file
 
-module.exports = new Command('edit', async (msg, args, context) => {
+const command = new Command('edit', async (msg, args, context) => {
 	if (args.length < 2) {
 		return context.sendHelp(msg, context);
 	}
@@ -24,8 +24,8 @@ module.exports = new Command('edit', async (msg, args, context) => {
 	// edit the message
 	context.client.editMessage(channelId, messageId, newMessageContent).catch(() => {});
 }, {permissions: ['manageMessages']});
-
-module.exports.help = {
+command.help = {
 	args: '<channel ID> <message ID> <message text...>',
 	desc: `Edits the given message to have the given content. Logs the previous content in <#${botLogChannelId}>.`,
 };
+export default command;

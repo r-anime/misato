@@ -1,14 +1,15 @@
 // Entry point for the bot. Manages the bot's database connection, command
 // loading, and Discord connection.
 
-const path = require('path');
+import path from 'path';
 
-const {Client} = require('yuuko');
-const log = require('another-logger')({label: 'discord'});
+import {Client} from 'yuuko';
+import createLogger from 'another-logger';
+const log = createLogger({label: 'discord'});
 
-const config = require('../../config');
+import config from '../../config';
 
-module.exports = (mongoClient, db) => {
+export default (mongoClient, db) => {
 	// Create the bot
 	const bot = new Client({
 		token: config.discord.token,

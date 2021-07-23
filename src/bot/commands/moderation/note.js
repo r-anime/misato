@@ -1,8 +1,9 @@
-const log = require('another-logger')({label: 'command:note'});
-const {Command} = require('yuuko');
-const {parseUser} = require('../../util/discord');
+import createLogger from 'another-logger';
+const log = createLogger({label: 'command:note'});
+import {Command} from 'yuuko';
+import {parseUser} from '../../util/discord';
 
-module.exports = new Command('note', async (message, args, context) => {
+const command = new Command('note', async (message, args, context) => {
 	if (!args.length) {
 		return context.sendHelp(message, context);
 	}
@@ -44,8 +45,8 @@ module.exports = new Command('note', async (message, args, context) => {
 		'manageMessages',
 	],
 });
-
-module.exports.help = {
+command.help = {
 	args: '<user> <message>',
 	desc: 'Adds a note about the specified user to the database.',
 };
+export default command;

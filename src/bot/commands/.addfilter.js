@@ -1,7 +1,7 @@
-const {Command} = require('yuuko');
-const {code} = require('../util/formatting');
+import {Command} from 'yuuko';
+import {code} from '../util/formatting';
 
-module.exports = new Command('addfilter', async (message, args, {db}) => {
+export default new Command('addfilter', async (message, args, {db}) => {
 	// const filter = {
 	// 	guildID: message.guildID,
 	// 	rule: {

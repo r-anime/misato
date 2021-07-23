@@ -1,3 +1,5 @@
 // Allows bot owners to set the bot's online status and message.
 
-module.exports = require('yuuko/dist/commands/setstatus');
+import {default as command, help} from 'yuuko/dist/commands/setstatus';
+command.help = help;
+export default command;

@@ -1,7 +1,8 @@
-const log = require('another-logger')({label: 'command:kick'});
-const {Command} = require('yuuko');
-const {parseGuildMember, awaitReaction} = require('../../util/discord');
-const {escape, blockquote} = require('../../util/formatting');
+import createLogger from 'another-logger';
+const log = createLogger({label: 'command:kick'});
+import {Command} from 'yuuko';
+import {parseGuildMember, awaitReaction} from '../../util/discord';
+import {escape, blockquote} from '../../util/formatting';
 
 const confirmationEmoji = '👢';
 
@@ -16,7 +17,7 @@ function kickMessage (guild, reason) {
 	return `You've been kicked from __${escape(guild.name)}__.\n${reason ? blockquote(escape(reason)) : ''}`;
 }
 
-module.exports = new Command('kick', async (message, args, context) => {
+const command = new Command('kick', async (message, args, context) => {
 	if (!args.length) {
 		return context.sendHelp(message, context);
 	}
@@ -87,8 +88,8 @@ module.exports = new Command('kick', async (message, args, context) => {
 		'kickMembers',
 	],
 });
-
-module.exports.help = {
+command.help = {
 	args: '<user> [message]',
 	desc: 'Kick indicated user with indicated message, or no message if message left blank. (Note: User can immediately rejoin server)',
 };
+export default command;

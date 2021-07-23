@@ -1,9 +1,9 @@
-const log = require('another-logger');
-const polka = require('polka');
-const util = require('../util');
-const {isValidRule} = require('../../common/filters');
+import log from 'another-logger';
+import polka from 'polka';
+import util from '../util';
+import {isValidRule} from '../../common/filters';
 
-module.exports = (db, client) => polka()
+export default (db, client) => polka()
 	.get('/:guildID/configuration', async (request, response) => {
 		const {guildID} = request.params;
 

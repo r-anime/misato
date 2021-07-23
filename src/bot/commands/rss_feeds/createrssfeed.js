@@ -1,8 +1,9 @@
-const {Command} = require('yuuko');
-const log = require('another-logger')({label: 'command:createrssfeed'});
-const {escape} = require('../../util/formatting');
+import {Command} from 'yuuko';
+import createLogger from 'another-logger';
+const log = createLogger({label: 'command:createrssfeed'});
+import {escape} from '../../util/formatting';
 
-module.exports = new Command('createrssfeed', async (message, args, context) => {
+const command = new Command('createrssfeed', async (message, args, context) => {
 	if (!args.length || args.length < 3) {
 		return context.sendHelp(message, context);
 	}
@@ -53,8 +54,8 @@ module.exports = new Command('createrssfeed', async (message, args, context) => 
 		'manageMessages',
 	],
 });
-
-module.exports.help = {
+command.help = {
 	args: '<feed name> <feed url> <channel ID>',
 	desc: 'Creates an RSS feed from a given URL that will post new content every 60 seconds on the given channel.',
 };
+export default command;

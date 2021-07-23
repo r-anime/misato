@@ -1,6 +1,6 @@
 // Provides helper functions for formatting Discord messages.
 
-module.exports = {
+export default {
 
 	/**
 	 * Wraps the given text in a blockquote by adding `>` to the beginning of

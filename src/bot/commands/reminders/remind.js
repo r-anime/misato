@@ -1,8 +1,8 @@
 // Sets reminders for the future. Actually sending the messages later is handled
 // in bot/reminder.js but will probably be moved later.
 
-const {Command} = require('yuuko');
-const log = require('another-logger');
+import {Command} from 'yuuko';
+import log from 'another-logger';
 
 // TODO: There's gotta be a better way to do this
 const msPerUnit = {
@@ -41,7 +41,7 @@ function parseDurationSpecifier (str) {
 	return parseInt(match[1], 10) * msPerUnit[match[2]];
 }
 
-module.exports = new Command('remind', async (message, args, context) => {
+const command = new Command('remind', async (message, args, context) => {
 	if (!args.length) {
 		return context.sendHelp(message, context);
 	}
@@ -81,7 +81,8 @@ module.exports = new Command('remind', async (message, args, context) => {
 	// Send confirmation, throw away any possible errors
 	message.channel.createMessage(`Reminder created for ${due.toLocaleString()}.`).catch(() => {});
 });
-module.exports.help = {
+command.help = {
 	desc: "Sets a reminder that you'll get pinged for in the future.",
 	args: '<time in "2d 3h 10m" format> [optional message...]',
 };
+export default command;

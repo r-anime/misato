@@ -1,8 +1,8 @@
-const log = require('another-logger');
-const polka = require('polka');
-const util = require('../util');
-const config = require('../../../config');
-const Eris = require('eris');
+import log from 'another-logger';
+import polka from 'polka';
+import util from '../util';
+import config from '../../../config';
+import Eris from 'eris';
 
 const tempChannelID = config.TEMP_channelAutomationChannelID;
 
@@ -55,7 +55,7 @@ function getStuffFromGuild (listMessages) {
 	return result;
 }
 
-module.exports = (db, client) => polka()
+export default (db, client) => polka()
 	// TODO: move this to a different route
 	.get('/emojis', (request, response) => {
 		// Get emojis from all guilds

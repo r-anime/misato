@@ -1,4 +1,0 @@
-extends: "@geo1088"
-rules:
-  strict: off
-  prefer-promise-reject-errors: [error, {allowEmptyReject: true}]

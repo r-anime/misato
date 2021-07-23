@@ -1,8 +1,9 @@
-const log = require('another-logger')({label: 'command:unban'});
-const {Command} = require('yuuko');
-const {parseUser} = require('../../util/discord');
+import createLogger from 'another-logger';
+const log = createLogger({label: 'command:unban'});
+import {Command} from 'yuuko';
+import {parseUser} from '../../util/discord';
 
-module.exports = new Command('unban', async (message, args, context) => {
+const command = new Command('unban', async (message, args, context) => {
 	if (!args.length) {
 		return context.sendHelp(message, context);
 	}
@@ -49,8 +50,8 @@ module.exports = new Command('unban', async (message, args, context) => {
 		'banMembers',
 	],
 });
-
-module.exports.help = {
+command.help = {
 	args: '<user>',
 	desc: 'Removes bans from specified users, allowing them to rejoin the server immediately.',
 };
+export default command;

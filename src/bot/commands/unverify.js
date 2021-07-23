@@ -1,11 +1,12 @@
-const log = require('another-logger')({label: 'cmd:unverify'});
-const {Command} = require('yuuko');
-const {awaitReaction, parseGuildMember} = require('../util/discord');
-const {escape} = require('../util/formatting');
+import createLogger from 'another-logger';
+const log = createLogger({label: 'cmd:unverify'});
+import {Command} from 'yuuko';
+import {awaitReaction, parseGuildMember} from '../util/discord';
+import {escape} from '../util/formatting';
 
 const confirmationEmoji = '💔';
 
-module.exports = new Command(['unverify', 'deverify'], async (msg, args, context) => {
+const command = new Command(['unverify', 'deverify'], async (msg, args, context) => {
 	if (!args.length) {
 		return context.sendHelp(msg, context);
 	}
@@ -175,8 +176,8 @@ module.exports = new Command(['unverify', 'deverify'], async (msg, args, context
 		'manageRoles',
 	],
 });
-
-module.exports.help = {
+command.help = {
 	args: '<discord user> <reddit username>',
 	desc: 'Deletes the connection between the indicated Discord user name and the indicated Reddit user name. If only one is provided, deletes all associations with the indicated name.',
 };
+export default command;

@@ -1,6 +1,7 @@
-const log = require('another-logger')({label: 'web'});
+import createLogger from 'another-logger';
+const log = createLogger({label: 'web'});
 
-module.exports = (request, response, next) => {
+export default (request, response, next) => {
 	log.hit(request.method, request.url);
 	next();
 };

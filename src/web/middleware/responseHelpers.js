@@ -1,6 +1,6 @@
 // This file defines helpful functions for working with HTTP responses.
 
-module.exports = (request, response, next) => {
+export default (request, response, next) => {
 	Object.assign(response, {
 
 		/**

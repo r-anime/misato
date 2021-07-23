@@ -1,10 +1,10 @@
-const log = require('another-logger');
-const polka = require('polka');
-const fetch = require('node-fetch');
-const {ObjectID} = require('mongodb');
-const util = require('../util');
+import log from 'another-logger';
+import polka from 'polka';
+import fetch from 'node-fetch';
+import {ObjectID} from 'mongodb';
+import util from '../util';
 
-module.exports = (db, client) => polka()
+export default (db, client) => polka()
 	// TODO: this needs to be done better, more generically somehow
 	.get('/managed', async (request, response) => {
 		if (!request.session.discordUserInfo) {

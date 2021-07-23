@@ -1,5 +1,8 @@
 // Temporary file since mounting multiple sub-apps to the same base doesn't seem to work with Polka
+import polka from 'polka';
+import redditAuth from './redditAuth';
+import discordAuth from './discordAuth';
 
-module.exports = require('polka')()
-	.use('/reddit', require('./redditAuth'))
-	.use('/discord', require('./discordAuth'));
+export default polka()
+	.use('/reddit', redditAuth)
+	.use('/discord', discordAuth);

@@ -1,9 +1,9 @@
 // Lists all your pending reminders.
 
-const {Command} = require('yuuko');
-const log = require('another-logger');
+import {Command} from 'yuuko';
+import log from 'another-logger';
 
-module.exports = new Command(['remindlist', 'reminderlist', 'listreminders'], async (message, args, {db}) => {
+const command = new Command(['remindlist', 'reminderlist', 'listreminders'], async (message, args, {db}) => {
 	try {
 		// Get the latest reminder
 		const reminders = await db.collection('reminders').find({userID: message.author.id}).toArray();
@@ -19,7 +19,8 @@ module.exports = new Command(['remindlist', 'reminderlist', 'listreminders'], as
 		log.error(error);
 	}
 });
-module.exports.help = {
+command.help = {
 	desc: 'Lists all your reminders.',
 	args: '',
 };
+export default command;

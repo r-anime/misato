@@ -1,5 +1,6 @@
-const {EventListener} = require('yuuko');
-const log = require('another-logger')({label: 'event:reactionRoles'});
+import {EventListener} from 'yuuko';
+import createLogger from 'another-logger';
+const log = createLogger({label: 'event:reactionRoles'});
 
 // A list of all the current reaction role configurations
 let reactionRoles = [];
@@ -18,7 +19,7 @@ function findReactConfig (message, emoji) {
 	});
 }
 
-module.exports = new EventListener('ready', ({client, db}) => {
+export default new EventListener('ready', ({client, db}) => {
 	// Refresh the list of reaction roles every 30 seconds
 	async function fetchReactionRoles () {
 		reactionRoles = await db.collection('reactionRoles').find({}).toArray();

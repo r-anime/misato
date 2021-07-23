@@ -1,8 +1,8 @@
-const {Command} = require('yuuko');
-const log = require('another-logger');
-const {escape} = require('../../util/formatting');
+import {Command} from 'yuuko';
+import log from 'another-logger';
+import {escape} from '../../util/formatting';
 
-module.exports = new Command(['filterdel', 'filterdelete', 'filterremove'], async (msg, args, {db}) => {
+const command = new Command(['filterdel', 'filterdelete', 'filterremove'], async (msg, args, {db}) => {
 	if (!args.length) {
 		msg.channel.createMessage('Don\'t know what filter you want to delete.').catch(() => {});
 		return;
@@ -47,8 +47,8 @@ module.exports = new Command(['filterdel', 'filterdelete', 'filterremove'], asyn
 		'manageMessages',
 	],
 });
-
-module.exports.help = {
+command.help = {
 	args: '<filter text>',
 	desc: 'Removes an existing filter rule which matches the given text.',
 };
+export default command;

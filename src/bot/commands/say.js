@@ -1,8 +1,8 @@
 // Says the contents in the specified channel, or in the same channel if no channel is passed
 
-const {Command} = require('yuuko');
+import {Command} from 'yuuko';
 
-module.exports = new Command('say', async (msg, args, context) => {
+const command = new Command('say', async (msg, args, context) => {
 	if (!args.length) {
 		return context.sendHelp(msg, context);
 	}
@@ -41,8 +41,8 @@ module.exports = new Command('say', async (msg, args, context) => {
 		context.client.deleteMessage(msg.channel.id, msg.id, 'Say Command').catch(() => {});
 	}
 }, {permissions: ['manageMessages']});
-
-module.exports.help = {
+command.help = {
 	args: '<channel> <message>',
 	desc: 'Says the contents passed after the specified channel, or in the same channel if no channel is passed.',
 };
+export default command;

@@ -1,7 +1,7 @@
 // Reloads bot components from disk for development (owner-only).
 
-module.exports = require('yuuko/dist/commands/reload');
-
-module.exports.help = {
+import reload from 'yuuko/dist/commands/reload';
+reload.help = {
 	desc: 'Allows the bot owner to reload the bot from disk for development purposes.',
 };
+export default reload;

@@ -1,7 +1,8 @@
-const log = require('another-logger')({label: 'command:warn'});
-const {Command} = require('yuuko');
-const {parseGuildMember, awaitReaction} = require('../../util/discord');
-const {escape, blockquote} = require('../../util/formatting');
+import createLogger from 'another-logger';
+const log = createLogger({label: 'command:warn'});
+import {Command} from 'yuuko';
+import {parseGuildMember, awaitReaction} from '../../util/discord';
+import {escape, blockquote} from '../../util/formatting';
 
 const confirmationEmoji = '⚠️';
 
@@ -15,7 +16,7 @@ function warnMessage (guild, reason) {
 	return `You've been issued a warning in __${escape(guild.name)}__.\n${reason ? blockquote(escape(reason)) : ''}`;
 }
 
-module.exports = new Command('warn', async (message, args, context) => {
+const command = new Command('warn', async (message, args, context) => {
 	if (!args.length) {
 		return context.sendHelp(message, context);
 	}
@@ -77,8 +78,8 @@ module.exports = new Command('warn', async (message, args, context) => {
 		'manageMessages',
 	],
 });
-
-module.exports.help = {
+command.help = {
 	args: '<user> <message>',
 	desc: 'Sends a warning to the specified user, and saves the warning for future reference.',
 };
+export default command;

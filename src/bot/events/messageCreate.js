@@ -1,8 +1,9 @@
-const log = require('another-logger')({label: 'messageCreate'});
-const {EventListener} = require('yuuko');
-const {messageMatchesRule, isValidRule} = require('../../common/filters');
+import createLogger from 'another-logger';
+const log = createLogger({label: 'messageCreate'});
+import {EventListener} from 'yuuko';
+import {messageMatchesRule, isValidRule} from '../../common/filters';
 
-module.exports = new EventListener('messageCreate', async (message, {client, db}) => {
+export default new EventListener('messageCreate', async (message, {client, db}) => {
 	if (message.author.bot) return;
 	if (message.guildID) {
 		// Fetch filter for this guild

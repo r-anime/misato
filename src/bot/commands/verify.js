@@ -1,11 +1,12 @@
-const log = require('another-logger')({label: 'cmd:verify'});
-const {Command} = require('yuuko');
-const {awaitReaction, parseGuildMember} = require('../util/discord');
-const {escape} = require('../util/formatting');
+import createLogger from 'another-logger';
+const log = createLogger({label: 'cmd:verify'});
+import {Command} from 'yuuko';
+import {awaitReaction, parseGuildMember} from '../util/discord';
+import {escape} from '../util/formatting';
 
 const confirmationEmoji = '✅';
 
-module.exports = new Command('verify', async (msg, args, context) => {
+const command = new Command('verify', async (msg, args, context) => {
 	if (!args.length) {
 		return context.sendHelp(msg, context);
 	}
@@ -109,8 +110,8 @@ module.exports = new Command('verify', async (msg, args, context) => {
 		'manageRoles',
 	],
 });
-
-module.exports.help = {
+command.help = {
 	args: '<discord user> <reddit username or /u/ link>',
 	desc: 'Forces link between mentioned accounts (does not go through OAuth)',
 };
+export default command;

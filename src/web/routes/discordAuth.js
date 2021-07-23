@@ -3,12 +3,12 @@
 // for details of Discord's OAuth implementation, and
 // https://tools.ietf.org/html/rfc6749 for information about OAuth in general.
 
-const crypto = require('crypto');
-const polka = require('polka');
-const fetch = require('node-fetch');
-const log = require('another-logger');
+import crypto from 'crypto';
+import polka from 'polka';
+import fetch from 'node-fetch';
+import log from 'another-logger';
 
-const config = require('../../../config');
+import config from '../../../config';
 
 /** The redirect URI for Discord to send the user back to. */
 const discordRedirectURI = `${config.web.host}/auth/discord/callback`;
@@ -132,12 +132,12 @@ async function fetchDiscordUserInfo (accessToken) {
 }
 
 // Define routes
-module.exports = polka()
+export default polka()
 
 	// OAuth entry point, generate a state and redirect to Discord
 	.get('/', (request, response) => {
 		const state = JSON.stringify({
-			// The page we came from (send here if user cancels verification)
+			// The page we came from send here if user cancels verification
 			prev: request.query.prev || '/',
 			// The page we want to go to (send here if verification succeeds)
 			next: request.query.next || '/',

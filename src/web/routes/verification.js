@@ -1,11 +1,11 @@
 // Routes related to the verification interface for linking Reddit accounts to
 // Discord accounts.
 
-const polka = require('polka');
-const log = require('another-logger');
-const util = require('../util');
+import polka from 'polka';
+import log from 'another-logger';
+import util from '../util';
 
-module.exports = (db, client) => polka()
+export default (db, client) => polka()
 
 	// This route actually creates the relationship in the database
 	.post('/:guildID', async (request, response) => {

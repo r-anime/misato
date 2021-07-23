@@ -1,7 +1,7 @@
-const {Command} = require('yuuko');
-const log = require('another-logger');
-const {isValidRule} = require('../../../common/filters');
-const {escape} = require('../../util/formatting');
+import {Command} from 'yuuko';
+import log from 'another-logger';
+import {isValidRule} from '../../../common/filters';
+import {escape} from '../../util/formatting';
 
 function makeRuleForText (text) {
 	const rule = {
@@ -19,7 +19,7 @@ function makeRuleForText (text) {
 	return rule;
 }
 
-module.exports = new Command('filteradd', async (msg, args, {db}) => {
+const command = new Command('filteradd', async (msg, args, {db}) => {
 	if (!args.length) {
 		msg.channel.createMessage('Don\'t know what filter you want to add.').catch(() => {});
 		return;
@@ -78,8 +78,8 @@ module.exports = new Command('filteradd', async (msg, args, {db}) => {
 		'manageMessages',
 	],
 });
-
-module.exports.help = {
+command.help = {
 	args: '<filter text>',
 	desc: 'Adds a new filter rule which matches the given text.',
 };
+export default command

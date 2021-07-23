@@ -1,6 +1,6 @@
 // Picks from the options provided
 
-const {Command} = require('yuuko');
+import {Command} from 'yuuko';
 
 function getRandomInt (min, max) {
 	min = Math.ceil(min);
@@ -8,7 +8,7 @@ function getRandomInt (min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-module.exports = new Command('pick', (msg, args, context) => {
+const command = new Command('pick', (msg, args, context) => {
 	if (!args.length) {
 		return context.sendHelp(msg, context);
 	}
@@ -18,8 +18,8 @@ module.exports = new Command('pick', (msg, args, context) => {
 
 	msg.channel.createMessage(`I pick **${choices[getRandomInt(0, choices.length - 1)]}**`).catch(() => {});
 });
-
-module.exports.help = {
+command.help = {
 	args: '<choice>, <choice>, <more choices...>',
 	desc: 'Picks randomly from the given options. Options are separated with commas.',
 };
+export default command;

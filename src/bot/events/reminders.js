@@ -1,10 +1,10 @@
 // Checks for pending reminders every so often and sends out reminder messages
 // while cleaning them from the DB.
 
-const log = require('another-logger');
-const {EventListener} = require('yuuko');
+import log from 'another-logger';
+import {EventListener} from 'yuuko';
 
-const {blockquote} = require('../util/formatting');
+import {blockquote} from '../util/formatting';
 
 /**
  * Formats a reminder into a string for sending as a message.
@@ -38,7 +38,7 @@ async function sendReminder (client, reminder) {
 	}
 }
 
-module.exports = new EventListener('ready', ({client, db}) => {
+export default new EventListener('ready', ({client, db}) => {
 	const collection = db.collection('reminders');
 
 	// This function calls itself every 30 seconds as long as the bot is running.

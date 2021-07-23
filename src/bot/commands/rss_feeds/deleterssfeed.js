@@ -1,8 +1,9 @@
-const {Command} = require('yuuko');
-const log = require('another-logger')({label: 'command:deleterssfeed'});
-const {escape} = require('../../util/formatting');
+import {Command} from 'yuuko';
+import createLogger from 'another-logger';
+const log = createLogger({label: 'command:deleterssfeed'});
+import {escape} from '../../util/formatting';
 
-module.exports = new Command('deleterssfeed', async (message, args, context) => {
+const command = new Command('deleterssfeed', async (message, args, context) => {
 	if (!args.length || args.length < 1) {
 		return context.sendHelp(message, context);
 	}
@@ -27,8 +28,8 @@ module.exports = new Command('deleterssfeed', async (message, args, context) => 
 		'manageMessages',
 	],
 });
-
-module.exports.help = {
+command.help = {
 	args: '<feed name>',
 	desc: 'Deletes RSS feed with given name.',
 };
+export default command;

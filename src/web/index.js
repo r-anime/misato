@@ -1,17 +1,19 @@
-const polka = require('polka');
+import polka from 'polka';
 
-const log = require('another-logger')({label: 'web'});
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
+import createLogger from 'another-logger';
+const log = createLogger({label: 'web'});
+import session from 'express-session';
+import connectMongo from 'connect-mongo';
+const MongoStore = connectMongo(session);
 
-const config = require('../../config');
-const responseHelpers = require('./middleware/responseHelpers');
-const logging = require('./middleware/logging');
-const auth = require('./routes/auth');
-const api = require('./routes/api');
-const sirv = require('sirv');
+import config from '../../config';
+import responseHelpers from './middleware/responseHelpers';
+import logging from './middleware/logging';
+import auth from './routes/auth';
+import api from './routes/api';
+import sirv from 'sirv';
 
-module.exports = (mongoClient, db, discordClient) => {
+export default (mongoClient, db, discordClient) => {
 	// Set up our app
 	const app = polka();
 

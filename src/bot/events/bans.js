@@ -1,9 +1,9 @@
 // Checks for expired bans every so often and reverts them.
 
-const log = require('another-logger');
-const {EventListener} = require('yuuko');
+import log from 'another-logger';
+import {EventListener} from 'yuuko';
 
-module.exports = new EventListener('ready', ({client, db}) => {
+export default new EventListener('ready', ({client, db}) => {
 	const collection = db.collection('bans');
 
 	// This function calls itself every 60 seconds as long as the bot is running.

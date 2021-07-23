@@ -1,9 +1,9 @@
 // Shows the avatar of the user provided
 
-const {Command} = require('yuuko');
-const {parseUser} = require('../../util/discord');
+import {Command} from 'yuuko';
+import {parseUser} from '../../util/discord';
 
-module.exports = new Command('avatar', async (msg, args) => {
+const command = new Command('avatar', async (msg, args) => {
 	const MAX_AVATAR_IMAGE_SIZE = 512;
 
 	if (args.length === 0) {
@@ -17,8 +17,8 @@ module.exports = new Command('avatar', async (msg, args) => {
 	}
 	msg.channel.createMessage(member.dynamicAvatarURL('', MAX_AVATAR_IMAGE_SIZE)).catch(() => {});
 });
-
-module.exports.help = {
+command.help = {
 	args: '[user]',
 	desc: 'Shows your avatar, or the avatar of the given user.',
 };
+export default command;

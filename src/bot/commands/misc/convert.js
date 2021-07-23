@@ -1,9 +1,9 @@
 // Converts from one currency to another based on this API: http://exchangeratesapi.io/
 
-const {Command} = require('yuuko');
-const config = require('../../../../config');
-const fetch = require('node-fetch');
-const convert = require('convert-units');
+import {Command} from 'yuuko';
+import config from '../../../../config';
+import fetch from 'node-fetch';
+import convert from 'convert-units';
 
 /**
  * Attempts to convert between common units.
@@ -50,7 +50,7 @@ const unitAliases = {
 	'inches': 'in',
 };
 
-module.exports = new Command('convert', async (msg, args, context) => {
+const command = new Command('convert', async (msg, args, context) => {
 	const match = args.join(' ').match(argRegex);
 
 	if (!match) {
@@ -84,10 +84,10 @@ module.exports = new Command('convert', async (msg, args, context) => {
 
 	msg.channel.createMessage(message).catch(() => {});
 });
-
-module.exports.help = {
+command.help = {
 	args: '[amount] <source currency or unit> <destination currency or unit>',
 	desc: `Converts units and currency. Uses <http://exchangeratesapi.io/> for live currency exchange rates. If no amount is specified, assumes 1.
 For a list of valid currency codes, visit: <https://www.xe.com/en/iso4217.php>
 For a list of valid units, visit: <https://www.npmjs.com/package/convert-units#supported-units>`,
 };
+export default command;

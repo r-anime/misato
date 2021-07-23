@@ -1,9 +1,10 @@
-const {EventListener} = require('yuuko');
-const log = require('another-logger')({label: 'event:verification'});
+import {EventListener} from 'yuuko';
+import createLogger from 'another-logger';
+const log = createLogger({label: 'event:verification'});
 
 // Check if members are already verified when being added to a guild
 // TODO more verification hardcoding
-module.exports = new EventListener('guildMemberAdd', async (guild, member, {db}) => {
+export default new EventListener('guildMemberAdd', async (guild, member, {db}) => {
 	let roleID;
 	try {
 		const verificationConfig = await db.collection('verificationConfiguration').findOne({

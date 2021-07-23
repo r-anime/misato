@@ -1,7 +1,7 @@
-const {Command} = require('yuuko');
-const config = require('../../../config');
-const {parseUser, formatDate} = require('../util/discord');
-const {escape} = require('../util/formatting');
+import {Command} from 'yuuko';
+import config from '../../../config';
+import {parseUser, formatDate} from '../util/discord';
+import {escape} from '../util/formatting';
 
 // function for generating the reddit info
 async function redditLine (userID, guildID, db) {
@@ -69,7 +69,7 @@ async function notesLine (userID, guildID, db) {
 	}`;
 }
 
-module.exports = new Command('whois', async (message, args, context) => {
+const command = new Command('whois', async (message, args, context) => {
 	if (!args.length) {
 		return context.sendHelp(message, context);
 	}
@@ -108,8 +108,8 @@ module.exports = new Command('whois', async (message, args, context) => {
 		'banMembers',
 	],
 });
-
-module.exports.help = {
+command.help = {
 	args: '<discord or reddit user>',
 	desc: 'Prints user information based on userID or name provided. ',
 };
+export default command;

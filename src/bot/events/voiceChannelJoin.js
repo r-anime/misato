@@ -1,5 +1,5 @@
-const {EventListener} = require('yuuko');
-module.exports = new EventListener('voiceChannelJoin', async (member, channel, context) => {
+import {EventListener} from 'yuuko';
+export default new EventListener('voiceChannelJoin', async (member, channel, context) => {
 	const voiceRoleId = '336954476315541515'; // TODO: put these in a file for role/channel ids
 	const radioRoleId = '710506067943227416';
 	const radioChannelId = '290594195687735298'; // radio voice channel

@@ -1,6 +1,6 @@
-const log = require('another-logger');
-const {EventListener} = require('yuuko');
-const Parser = require('rss-parser');
+import log from 'another-logger';
+import {EventListener} from 'yuuko';
+import Parser from 'rss-parser';
 const rssParser = new Parser();
 
 /**
@@ -39,7 +39,7 @@ function buildRssEmbed (post, url) {
 	return embed;
 }
 
-module.exports = new EventListener('ready', ({client, db}) => {
+export default new EventListener('ready', ({client, db}) => {
 	const collection = db.collection('rssFeeds');
 
 	// Calls itself repeatedly 60 seconds after retrieving RSS feeds (or failing to do so)

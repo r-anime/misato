@@ -2,12 +2,13 @@
 // bot process and web server, and coordinates communication between these three
 // parts of the system via `child_process` IPC.
 
-const log = require('another-logger')({label: 'core'});
-const {MongoClient} = require('mongodb');
+import createLogger from 'another-logger';
+const log = createLogger({label: 'core'});
+import {MongoClient} from 'mongodb';
 
-const config = require('../config');
-const createDiscordClient = require('./bot');
-const createWebServer = require('./web');
+import config from '../config';
+import createDiscordClient from './bot';
+import createWebServer from './web';
 
 (async () => {
 	// Set up MongoDB

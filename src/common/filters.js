@@ -111,7 +111,7 @@ function isValidRule (rule) {
 	}
 }
 
-module.exports = {
+export default {
 	isValidRule,
 	messageMatchesRule,
 	textFields,

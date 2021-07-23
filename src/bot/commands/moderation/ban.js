@@ -1,7 +1,8 @@
-const log = require('another-logger')({label: 'command:ban'});
-const {Command} = require('yuuko');
-const {parseUser, parseTime, formatDateTime, awaitReaction} = require('../../util/discord');
-const {escape, blockquote} = require('../../util/formatting');
+import createLogger from 'another-logger';
+const log = createLogger({label: 'command:ban'});
+import {Command} from 'yuuko';
+import {parseUser, parseTime, formatDateTime, awaitReaction} from '../../util/discord';
+import {escape, blockquote} from '../../util/formatting';
 
 const confirmationEmoji = '🔨';
 
@@ -16,7 +17,7 @@ function banMessage (guild, reason, expirationDate) {
 	return `You've been banned from __${escape(guild.name)}__ ${expirationDate ? `until ${formatDateTime(expirationDate)}` : 'permanently'}.\n${reason ? blockquote(escape(reason)) : ''}`;
 }
 
-module.exports = new Command('ban', async (message, args, context) => {
+const command = new Command('ban', async (message, args, context) => {
 	if (!args.length) {
 		return context.sendHelp(message, context);
 	}
@@ -98,8 +99,8 @@ module.exports = new Command('ban', async (message, args, context) => {
 		'banMembers',
 	],
 });
-
-module.exports.help = {
+command.help = {
 	args: '<user> <duration> [message]',
 	desc: 'Ban the indicated user for the indicated duration with the indicated message. If Duration is blank, ban will be perminent.',
 };
+export default command;

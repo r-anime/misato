@@ -1,10 +1,10 @@
 // logs the regular users of the server
 
-const {Command} = require('yuuko');
+import {Command} from 'yuuko';
 
 // TODO: first off this doesn't print everything if there's too many elements, also everything else in this sucks
 // also good chance this would freeze the bot for a long ass time in production
-module.exports = new Command('regulars', async (msg, args, context) => {
+const command = new Command('regulars', async (msg, args, context) => {
 	const channel = context.client.getChannel(args[0]);
 	const messages = await channel.getMessages(500000, undefined, args[1]);
 	const usernames = messages.map(message => message.author.username);
@@ -43,8 +43,8 @@ module.exports = new Command('regulars', async (msg, args, context) => {
 	});
 	console.log(newArr);
 });
-
-module.exports.help = {
+command.help = {
 	args: '',
 	desc: 'Logs the regular users of the server.',
 };
+export default command;
