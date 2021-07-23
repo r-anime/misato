@@ -56,16 +56,16 @@ export default new EventListener('ready', ({client, db}) => {
 			// check every post, if it was posted after the latest check for this feed, post it in a channel
 			// Also keep track of the latest date of the items we process so we don't try to process them again
 			let latestDate = storedFeed.lastCheck;
-			const feedChannel = storedFeed.channelId;
+			const feedChannelID = storedFeed.channelId;
 			await Promise.all(rssFeed.items.map(async post => {
 				const itemDate = new Date(post.isoDate);
 				// If this item is from after the last check, process it
 				if (itemDate > storedFeed.lastCheck) {
 					const embed = buildRssEmbed(post, storedFeed.url);
 					try {
-						const message = await feedChannel.createMessage({content: post.link, embed});
+						const message = await client.createMessage(feedChannelID, {content: post.link, embed});
 						// If this is an announcement channel, publish the message
-						if (feedChannel instanceof NewsChannel) {
+						if (feedChannelID instanceof NewsChannel) {
 							await message.crosspost();
 						}
 					} catch (error) {
