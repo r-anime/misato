@@ -18,6 +18,8 @@ module.exports = {
 		'func-style': ['error', 'declaration', {allowArrowFunctions: true}],
 		'no-use-before-define': ['error', {functions: false}],
 		'prefer-promise-reject-errors': ['error', {allowEmptyReject: true}],
+		// References to the config file will be undefined in CI
+		'import/no-unresolved': ['error', {ignore: ['(\\.?\\.\\/)+config$']}],
 		'@typescript-eslint/no-empty-function': ['warn', {allow: ['arrowFunctions']}],
 		'@typescript-eslint/no-unused-vars': ['error', {
 			varsIgnorePattern: '^_',
