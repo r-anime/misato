@@ -2,7 +2,7 @@ import log from 'another-logger';
 import polka from 'polka';
 import fetch from 'node-fetch';
 import {ObjectID} from 'mongodb';
-import util from '../util';
+import * as util from '../util';
 
 export default (db, client) => polka()
 	// TODO: this needs to be done better, more generically somehow

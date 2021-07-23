@@ -3,7 +3,7 @@
 
 import polka from 'polka';
 import log from 'another-logger';
-import util from '../util';
+import * as util from '../util';
 
 export default (db, client) => polka()
 

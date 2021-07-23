@@ -1,6 +1,6 @@
 import log from 'another-logger';
 import polka from 'polka';
-import util from '../util';
+import * as util from '../util';
 import config from '../../../config';
 import Eris from 'eris';
 
