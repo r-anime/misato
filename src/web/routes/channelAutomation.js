@@ -173,6 +173,7 @@ export default (db, client) => polka()
 					await guild.createChannel(t.createdChannelName, 0, {
 						parentID: t.createdChannelParentID || undefined,
 						permissionOverwrites: [
+							// TODO: remove Number conversions after eris#1197 makes it into a release
 							{
 								id: guild.id,
 								type: 0,

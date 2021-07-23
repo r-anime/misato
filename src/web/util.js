@@ -24,5 +24,5 @@ export async function thisUserManagesGuild (request, bot, db, guildID) {
 	const member = guild.members.get(userID) || await guild.getRESTMember(userID);
 	if (!member) return false;
 
-	return member.permission.has('banMembers'); // TODO: renamed to member.permissions in eris@0.14.0
+	return member.permissions.has('banMembers');
 }

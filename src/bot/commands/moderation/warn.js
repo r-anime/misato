@@ -45,13 +45,14 @@ const command = new Command('warn', async (message, args, context) => {
 	}
 
 	// Send the notification
+	let messageSent;
 	try {
 		const dmChannel = await member.user.getDMChannel();
 		await dmChannel.createMessage(warnMessage(message.channel.guild, reason));
+		messageSent = true;
 	} catch (error) {
 		log.debug(error);
-		message.channel.createMessage('Failed to issue the warning because of privacy settings. Not recording in database; use a note instead.').catch(() => {});
-		return;
+		messageSent = false;
 	}
 
 	// Create the warning record in the database
@@ -72,7 +73,13 @@ const command = new Command('warn', async (message, args, context) => {
 		return;
 	}
 
-	message.channel.createMessage(`Warned <@${member.id}>.`).catch(() => {});
+	let text;
+	if (messageSent) {
+		text = `Warned <@${member.id}>.`;
+	} else {
+		text = `Recorded a warning for <@${member.id}>, but failed to notify them because of privacy settings. Make sure they're aware.`;
+	}
+	message.channel.createMessage(text).catch(() => {});
 }, {
 	permissions: [
 		'manageMessages',
