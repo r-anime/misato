@@ -12,7 +12,7 @@
  */
 // Async for futureproofing
 // eslint-disable-next-line require-await
-async function messageMatchesRule (message, rule) {
+export async function messageMatchesRule (message, rule) {
 	switch (rule.type) {
 		// Matches a logical combination of other rules
 		case 'multiple': {
@@ -52,7 +52,7 @@ async function messageMatchesRule (message, rule) {
 }
 
 /** An array of all valid field names for text-based match rules. */
-const textFields = [
+export const textFields = [
 	'content',
 	'filename',
 ];
@@ -64,7 +64,7 @@ const textFields = [
  * @param {any} rule
  * @returns {boolean}
  */
-function isValidRule (rule) {
+export function isValidRule (rule) {
 	// Rules must be objects
 	if (typeof rule !== 'object' || Array.isArray(rule)) return false;
 
@@ -110,9 +110,3 @@ function isValidRule (rule) {
 		default: return false;
 	}
 }
-
-export default {
-	isValidRule,
-	messageMatchesRule,
-	textFields,
-};
