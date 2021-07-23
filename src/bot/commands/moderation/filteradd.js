@@ -82,4 +82,4 @@ command.help = {
 	args: '<filter text>',
 	desc: 'Adds a new filter rule which matches the given text.',
 };
-export default command
+export default command;

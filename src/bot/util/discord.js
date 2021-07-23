@@ -187,18 +187,18 @@ export function parseTime (str) {
  * @param {Date} date
  * @returns {string}
  */
-export const formatDateTime = date => `${date.toLocaleString('en-GB', {timeZone: 'UTC'})} UTC`
+export const formatDateTime = date => `${date.toLocaleString('en-GB', {timeZone: 'UTC'})} UTC`;
 
 /**
  * Wraps `toLocaleDateString` with consistent formatting.
  * @param {Date} date
  * @returns {string}
  */
-export const formatDate = date => `${date.toLocaleDateString('en-GB', {timeZone: 'UTC'})} UTC`
+export const formatDate = date => `${date.toLocaleDateString('en-GB', {timeZone: 'UTC'})} UTC`;
 
 /**
  * Wraps `toLocaleTimeString` with consistent formatting.
  * @param {Date} date
  * @returns {string}
  */
-export const formatTime = date => `${date.toLocaleTimeString('en-GB', {timeZone: 'UTC'})} UTC`
+export const formatTime = date => `${date.toLocaleTimeString('en-GB', {timeZone: 'UTC'})} UTC`;
