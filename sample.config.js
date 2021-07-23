@@ -38,7 +38,7 @@ module.exports = {
 		host: 'http://localhost:4567',
 		port: 4567,
 		// Where the frontend files are built to and stored from
-		frontendBuildDir: path.resolve(__dirname, 'web/frontend/dist'),
+		frontendBuildDir: path.resolve(__dirname, 'frontend/dist'),
 		sessionSecret: 'lkasjdf;',
 		// Options for hosting an HTTPS server (leave unset for HTTP only in development)
 		// https: {
