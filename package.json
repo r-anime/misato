@@ -43,6 +43,7 @@
     "babel-loader": "^8.1.0",
     "css-loader": "^3.6.0",
     "eslint": "^7.31.0",
+    "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-vue": "^6.2.2",
     "html-webpack-plugin": "^5.3.1",
     "migrate": "^1.6.2",

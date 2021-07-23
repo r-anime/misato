@@ -1,6 +1,7 @@
 module.exports = {
 	plugins: [
 		'@typescript-eslint',
+		'import',
 	],
 	parser: '@typescript-eslint/parser',
 	parserOptions: {
@@ -8,6 +9,7 @@ module.exports = {
 	},
 	extends: [
 		'@geo1088/ts',
+		'plugin:import/recommended',
 	],
 	env: {
 		node: true,
@@ -16,6 +18,8 @@ module.exports = {
 		'func-style': ['error', 'declaration', {allowArrowFunctions: true}],
 		'no-use-before-define': ['error', {functions: false}],
 		'prefer-promise-reject-errors': ['error', {allowEmptyReject: true}],
+		// References to the config file will be undefined in CI
+		'import/no-unresolved': ['error', {ignore: ['(\\.?\\.\\/)+config$']}],
 		'@typescript-eslint/no-empty-function': ['warn', {allow: ['arrowFunctions']}],
 		'@typescript-eslint/no-unused-vars': ['error', {
 			varsIgnorePattern: '^_',
