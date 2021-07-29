@@ -4,6 +4,7 @@
 import log from 'another-logger';
 import {EventListener} from 'yuuko';
 
+import {formatDateRelative} from '../util/discord';
 import {blockquote} from '../util/formatting';
 
 /**
@@ -12,7 +13,7 @@ import {blockquote} from '../util/formatting';
  * @returns {string}
  */
 function formatReminder (reminder) {
-	return `${reminder.text ? `${blockquote(reminder.text)}\n` : ''}<@!${reminder.userID}>, here's your reminder from ${reminder.requested.toLocaleString()}.`;
+	return `${reminder.text ? `${blockquote(reminder.text)}\n` : ''}<@!${reminder.userID}>, here's your reminder from ${formatDateRelative(reminder.requested)}.`;
 }
 
 /**

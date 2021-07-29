@@ -2,6 +2,7 @@
 
 import {Command} from 'yuuko';
 import log from 'another-logger';
+import {formatDateRelative} from '../../util/discord';
 
 const command = new Command(['remindlist', 'reminderlist', 'listreminders'], async (message, args, {db}) => {
 	try {
@@ -13,7 +14,7 @@ const command = new Command(['remindlist', 'reminderlist', 'listreminders'], asy
 		}
 		message.channel.createMessage(`${reminders.length} reminders.\n${
 			// TODO: make this output more useful
-			reminders.map(reminder => `- For ${reminder.due.toLocaleString()}`).join('\n')
+			reminders.map(reminder => `- Due ${formatDateRelative(reminder.due)}`).join('\n')
 		}`);
 	} catch (error) {
 		log.error(error);
