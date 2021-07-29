@@ -3,6 +3,7 @@
 
 import {Command} from 'yuuko';
 import log from 'another-logger';
+import {formatDateRelative} from '../../util/discord';
 
 // TODO: There's gotta be a better way to do this
 const msPerUnit = {
@@ -79,7 +80,7 @@ const command = new Command('remind', async (message, args, context) => {
 	}
 
 	// Send confirmation, throw away any possible errors
-	message.channel.createMessage(`Reminder created for ${due.toLocaleString()}.`).catch(() => {});
+	message.channel.createMessage(`Will remind you ${formatDateRelative(due)}.`).catch(() => {});
 });
 command.help = {
 	desc: "Sets a reminder that you'll get pinged for in the future.",
