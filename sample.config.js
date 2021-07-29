@@ -7,9 +7,6 @@ export default {
 	TEMP_guildID: '',
 	TEMP_channelAutomationChannelID: '',
 
-	// Dev mode (disables sirv cache, runs webpack in development mode, etc.)
-	dev: process.env.NODE_ENV !== 'production',
-
 	// Mongo database information
 	mongodb: {
 		url: 'mongodb://localhost',

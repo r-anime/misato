@@ -8,17 +8,15 @@ Fork the repo, clone it to your computer, and check [the README's "Usage" sectio
 
 ## Code style
 
-The project has an ESLint configuration that works on both JS and Vue files.
+The project has an ESLint configuration that works on both JS and TS files.
 
 Lint your code with `yarn lint` (or `yarn lint --fix` to use ESLint's auto-fixing behavior) before submitting. You might consider configuring your editor to auto-fix ESLint issues when saving files.
 
 ## Architecture
 
-At a high level, the bot consists of a Discord client, a web server, and a dataabse. The database stores persistant information including bot configuration and moderation notes. The discord client receives events from Discord which it interprets as commands, references the database, and sends data to and from Discord. The website can interact with both the Database and the Discord client to display information and apply changes as well. A JSON API is used to interface the web frontend with the database and Discord. All these pieces are managed in the same process, and Discord commands and the web server share a database connection.
+At a high level, the bot consists of a Discord client, a web server, and a dataabse. The database stores persistant information including bot configuration and moderation notes. The discord client receives events from Discord which it interprets as commands, references the database, and sends data to and from Discord. The web server hosts a JSON API, which is used to interface the web frontend with the database and Discord. The API is consumed by a web frontend, which is [maintained separately](https://github.com/r-anime/misato-frontend).
 
-The backend is written in [Node.js](https://nodejs.org) against a [MongoDB](https://mongodb.com) database, and relies heavily on a few other projects whose documentation will be helpful to contributors:
+The bot is written against a [MongoDB](https://mongodb.com) database, and relies heavily on a few other projects whose documentation will be helpful to contributors:
 - [Yuuko](https://www.npmjs.com/package/yuuko), a Discord command framework based on the [Eris](https://www.npmjs.com/package/eris) API wrapper
 - [Polka](https://www.npmjs.com/package/polka), an HTTP/HTTPS server framework similar to [Express](https://www.npmjs.com/package/express) but faster and lighter
 - [node-fetch](https://www.npmjs.com/package/node-fetch), a [`fetch()`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) polyfill for Node used for all HTTP requests
-
-The frontend is written in [Vue](https://vuejs.org/) with the [Buefy](https://buefy.org/) component library, which wraps the [Bulma](https://bulma.io) CSS library.
