@@ -1,7 +1,7 @@
 import createLogger from 'another-logger';
 const log = createLogger({label: 'command:ban'});
 import {Command} from 'yuuko';
-import {parseUser, parseTime, formatDateTime, awaitReaction} from '../../util/discord';
+import {parseUser, parseTime, formatDateRelative, awaitReaction} from '../../util/discord';
 import {escape, blockquote} from '../../util/formatting';
 
 const confirmationEmoji = '🔨';
@@ -14,7 +14,7 @@ const confirmationEmoji = '🔨';
  * @returns {string}
  */
 function banMessage (guild, reason, expirationDate) {
-	return `You've been banned from __${escape(guild.name)}__ ${expirationDate ? `until ${formatDateTime(expirationDate)}` : 'permanently'}.\n${reason ? blockquote(escape(reason)) : ''}`;
+	return `You've been banned from __${escape(guild.name)}__ ${expirationDate ? `and will be unbanned ${formatDateRelative(expirationDate)}` : 'permanently'}.\n${reason ? blockquote(escape(reason)) : ''}`;
 }
 
 const command = new Command('ban', async (message, args, context) => {
@@ -93,7 +93,7 @@ const command = new Command('ban', async (message, args, context) => {
 		return;
 	}
 
-	message.channel.createMessage(`Banned <@${user.id}> ${duration ? `until ${formatDateTime(expirationDate)}` : 'permanently'}.${messageSent ? '' : ' Failed to send notification because of privacy settings.'}`).catch(() => {});
+	message.channel.createMessage(`Banned <@${user.id}> ${duration ? `to be unbanned ${formatDateRelative(expirationDate)}` : 'permanently'}.${messageSent ? '' : ' Failed to send notification because of privacy settings.'}`).catch(() => {});
 }, {
 	permissions: [
 		'banMembers',
