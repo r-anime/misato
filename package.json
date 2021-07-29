@@ -20,7 +20,6 @@
     "node-fetch": "^2.6.1",
     "polka": "^1.0.0-next.11",
     "rss-parser": "^3.12.0",
-    "sirv": "^1.0.5",
     "yuuko": "^2.2.1"
   },
   "devDependencies": {
