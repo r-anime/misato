@@ -180,8 +180,6 @@ export function parseTime (str) {
 	return [total, str.trim()];
 }
 
-// TODO: these require extra locales that don't come with node by default until 14, until that hits LTS these will produce US-looking dates
-
 /**
  * Formats a date and time using Discord's styled unix timestamp format.
  * @param {Date} date
