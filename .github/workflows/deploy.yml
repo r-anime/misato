@@ -34,10 +34,9 @@ jobs:
           git fetch --all
           git reset --hard origin/main
 
-          # update dependencies, migrate db, rebuild
-          yarn
+          # update dependencies, migrate db
+          yarn install --frozen-lockfile
           yarn migrate up
-          yarn build:prod
 
           # restart production service
           sudo systemctl restart discord-mod-bot.service
