@@ -46,7 +46,7 @@ export default {
 
 	// Third party APIs for command functionality
 	thirdParty: {
-		// https://exchangeratesapi.io
-		exchangeRates: '',
+		// https://freecurrencyapi.net
+		freeCurrencyAPI: '',
 	},
 };

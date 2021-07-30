@@ -5,6 +5,23 @@ import config from '../../../../config';
 import fetch from 'node-fetch';
 import convert from 'convert-units';
 
+// Cache the rates so we don't hit the API too often
+let rates = {};
+let lastRateFetch = 0;
+let fetchingRates = null;
+async function fetchLatestRates () {
+	fetchingRates = (async () => {
+		// NOTE: This API only seems to return EUR rates if you request certain
+		//       base currencies, no idea why.
+		const response = await fetch(`https://freecurrencyapi.net/api/v1/rates?base_currency=USD&apikey=${config.thirdParty.freeCurrencyAPI}`).then(r => r.json());
+		const data = response.data;
+		rates = data[Object.keys(data)[0]];
+		lastRateFetch = Date.now();
+		fetchingRates = null;
+	})();
+	await fetchingRates;
+}
+
 /**
  * Attempts to convert between common units.
  * @param {number} baseValue
@@ -26,14 +43,20 @@ function convertUnits (baseValue, baseType, targetType) {
  * @returns {Promise<string, Error>} Message to the user if successful, rejects generic error if unsuccessful
  */
 async function convertCurrency (baseValue, baseType, targetType) {
+	// If we're currently fetching new rates, wait for that to complete.
+	// Otherwise, if it's been more than 10 minutes since the last check, fetch
+	// new rates.
+	if (fetchingRates) {
+		await fetchingRates;
+	} else if (Date.now() > lastRateFetch + 10 * 60 * 1000) {
+		await fetchLatestRates();
+	}
+
 	baseType = baseType.toUpperCase();
 	targetType = targetType.toUpperCase();
-	const res = await fetch(`http://api.exchangeratesapi.io/latest?access_key=${config.thirdParty.exchangeRates}&base=${baseType}&symbols=${targetType}`);
-	if (res.status !== 200) {
-		throw new Error('non-OK status code');
-	}
-	const conversions = await res.json();
-	const result = conversions.rates[targetType] * baseValue;
+
+	// Convert between the two rates
+	const result = baseValue * rates[targetType] / rates[baseType];
 	return `${baseValue}${baseType} is roughly equal to ${result.toFixed(2)}${targetType}`;
 }
 
