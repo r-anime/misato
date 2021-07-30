@@ -87,7 +87,7 @@ const command = new Command('convert', async (msg, args, context) => {
 		if (targetType === key) targetType = value;
 	}
 
-	let baseValue = parseFloat(match.groups.num.replace(',', '.'));
+	let baseValue = parseFloat((match.groups.num || '1').replace(',', '.'));
 	if (isNaN(baseValue)) {
 		baseValue = 1;
 	}
