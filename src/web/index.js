@@ -9,25 +9,35 @@ const MongoStore = connectMongo(session);
 import config from '../../config';
 import responseHelpers from './middleware/responseHelpers';
 import logging from './middleware/logging';
+import accessControl from './middleware/accessControl';
 import auth from './routes/auth';
 import api from './routes/api';
 
 export default (mongoClient, db, discordClient) => {
-	// Set up our app
 	const app = polka();
 
-	// Set up our middlewares
-	app.use(session({
-		store: new MongoStore({
-			client: mongoClient,
-			dbName: config.mongodb.databaseName,
+	// Global middleware
+	app.use(
+		// Map session storage to MongoDB
+		session({
+			store: new MongoStore({
+				client: mongoClient,
+				dbName: config.mongodb.databaseName,
+			}),
+			secret: config.web.sessionSecret,
+			saveUninitialized: false,
+			resave: false,
 		}),
-		secret: config.web.sessionSecret,
-		saveUninitialized: false,
-		resave: false,
-	}));
-	app.use(logging);
-	app.use(responseHelpers);
+		// Add our response helpers
+		responseHelpers,
+		// Log requests
+		logging,
+	);
+
+	// In development, allow all cross-origin requests
+	if (process.env.NODE_ENV !== 'production') {
+		app.use(accessControl);
+	}
 
 	// Register sub-apps for API routes
 	app.use('/auth', auth);
