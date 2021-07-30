@@ -3,7 +3,12 @@
 		"allowJs": true,
 		"outDir": "build",
 		"skipLibCheck": true,
-		"esModuleInterop": true
+		"esModuleInterop": true,
+		// Minimum target is Node 12
+		// See https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping
+		"target": "ES2019",
+		"lib": ["ES2019"],
+		"module": "commonjs"
 	},
 	"include": [
 		"src"

@@ -6,7 +6,7 @@ For the frontend repository, which contains the web interface for configuration 
 
 ## Usage
 
-You'll want a recent [Node](https://nodejs.org/en/download/), [Yarn 1.x](https://classic.yarnpkg.com/en/docs/install), and a [MongoDB](https://www.mongodb.com/) 3.6+ instance (self-hosted or on [Atlas](https://www.mongodb.com/cloud/atlas)). Make sure your Discord bot has the server members intent - it's required for now ([#76](https://github.com/r-anime/misato/issues/76)).
+You'll want [Node](https://nodejs.org/en/download/) 12+, [Yarn 1.x](https://classic.yarnpkg.com/en/docs/install), and a [MongoDB](https://www.mongodb.com/) 3.6+ instance (self-hosted or on [Atlas](https://www.mongodb.com/cloud/atlas)). Make sure your Discord bot has the server members intent - it's required for now ([#76](https://github.com/r-anime/misato/issues/76)).
 
 ```bash
 # Install dependencies
