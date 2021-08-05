@@ -13,6 +13,6 @@ jobs:
       with:
         node-version: '12'
     - name: Install Dependencies
-      run: yarn
+      run: npm ci
     - name: Run lint task
-      run: yarn lint
+      run: npm run lint
