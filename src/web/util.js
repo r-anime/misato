@@ -14,8 +14,6 @@ export const asyncFilter = (arr, predicate) => Promise.all(arr.map(predicate)).t
  */
 export async function thisUserManagesGuild (request, bot, db, guildID) {
 	if (!request.session.discordUserInfo) return false;
-	// TODO: hardcoded
-	if (guildID !== config.TEMP_guildID) return false;
 
 	const guild = bot.guilds.get(guildID);
 	if (!guild) return false;
