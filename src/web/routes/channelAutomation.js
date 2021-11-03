@@ -81,11 +81,7 @@ export default (db, client) => polka()
 		const {guildID} = request.params;
 
 		// TODO: hardcoded
-		if (guildID !== config.TEMP_guildID) {
-			return;
-		}
-
-		if (!await util.thisUserManagesGuild(request, client, db, guildID)) {
+		if (guildID !== config.TEMP_guildID || !await util.thisUserManagesGuild(request, client, db, guildID)) {
 			response.writeHead(401);
 			response.end();
 			return;
@@ -107,11 +103,7 @@ export default (db, client) => polka()
 		const {guildID} = request.params;
 
 		// TODO: hardcoded
-		if (guildID !== config.TEMP_guildID) {
-			return;
-		}
-
-		if (!await util.thisUserManagesGuild(request, client, db, guildID)) {
+		if (guildID !== config.TEMP_guildID || !await util.thisUserManagesGuild(request, client, db, guildID)) {
 			response.writeHead(401);
 			response.end();
 			return;
