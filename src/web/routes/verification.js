@@ -23,11 +23,17 @@ export default (db, client) => polka()
 			return;
 		}
 
+		// Make sure the guild exists
+		const guildID = request.params.guildID;
+		if (!client.guilds.has(guildID)) {
+			response.writeHead(404);
+		}
+
 		try {
 			// Check if the accounts are already linked and return early if so
 			const existingLink = await db.collection('redditAccounts').findOne({
+				guildID,
 				userID: discord.id,
-				guildID: request.params.guildID,
 				redditName: reddit.name,
 			});
 			if (existingLink) {
@@ -37,8 +43,8 @@ export default (db, client) => polka()
 			}
 			// Record the new connection
 			await db.collection('redditAccounts').insertOne({
+				guildID,
 				userID: discord.id,
-				guildID: request.params.guildID,
 				redditName: reddit.name,
 			});
 		} catch (error) {
