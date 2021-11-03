@@ -1,5 +1,3 @@
-import config from '../../config';
-
 export const asyncFilter = (arr, predicate) => Promise.all(arr.map(predicate)).then(results => arr.filter((_v, index) => results[index]));
 
 // TODO: make generic. probably need to set up some generic per-guild group
@@ -14,8 +12,6 @@ export const asyncFilter = (arr, predicate) => Promise.all(arr.map(predicate)).t
  */
 export async function thisUserManagesGuild (request, bot, db, guildID) {
 	if (!request.session.discordUserInfo) return false;
-	// TODO: hardcoded
-	if (guildID !== config.TEMP_guildID) return false;
 
 	const guild = bot.guilds.get(guildID);
 	if (!guild) return false;
