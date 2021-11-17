@@ -10,7 +10,7 @@ that specific version is required.
 
 ## Reporting a Vulnerability
 
-Report vulnerabilities to <georgej1088+dmbsec@gmail.com>. Expect a response
+Report vulnerabilities to <security+ranime@eritbh.me>. Expect a response
 within three days. Please do not use Github issues to report security problems,
 and please attempt to report a vulnerability before disclosing it publicly. We
 don't have a hard policy for disclosure/response timeline, but will do our best
