@@ -27,12 +27,14 @@ export default new EventListener('messageCreate', async (message, {client, db}) 
 								title: 'Message filtered',
 								fields: [
 									{
-										name: 'Author',
-										value: `<@${message.author.id}>`,
-									},
-									{
 										name: 'Channel',
 										value: `<#${message.channel.id}>`,
+										inline: true,
+									},
+									{
+										name: 'Author',
+										value: `<@${message.author.id}>`,
+										inline: true,
 									},
 								],
 								description: blockquote(message.content),
