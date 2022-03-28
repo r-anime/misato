@@ -33,7 +33,7 @@ export default new EventListener('messageCreate', async (message, {client, db}) 
 									},
 									{
 										name: 'Author',
-										value: `<@${message.author.id}>`,
+										value: `<@${message.author.id}>\n\`${message.author.id}\``,
 										inline: true,
 									},
 								],
