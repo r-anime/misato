@@ -40,7 +40,7 @@ export default new EventListener('messageCreate', async (message, {client, db}) 
 								description: blockquote(message.content),
 								timestamp: new Date(message.createdAt),
 							},
-						});
+						}).catch(() => {});
 
 						// Don't process commands from the deleted message
 						return;
