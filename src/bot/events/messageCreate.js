@@ -28,7 +28,7 @@ export default new EventListener('messageCreate', async (message, {client, db}) 
 								fields: [
 									{
 										name: 'Channel',
-										value: `<#${message.channel.id}>`,
+										value: `<#${message.channel.id}>\n\`${message.channel.id}\``,
 										inline: true,
 									},
 									{
