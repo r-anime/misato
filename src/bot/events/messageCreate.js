@@ -1,7 +1,9 @@
 import createLogger from 'another-logger';
 const log = createLogger({label: 'messageCreate'});
 import {EventListener} from 'yuuko';
+import config from '../../../config';
 import {messageMatchesRule, isValidRule} from '../../common/filters';
+import {blockquote} from '../util/formatting';
 
 export default new EventListener('messageCreate', async (message, {client, db}) => {
 	if (message.author.bot) return;
@@ -15,7 +17,32 @@ export default new EventListener('messageCreate', async (message, {client, db}) 
 				const {rule} = configuration;
 				if (isValidRule(rule)) {
 					if (await messageMatchesRule(message, rule)) {
+						// Delete the message
 						message.delete().catch(() => {});
+
+						// Log the filtered message to the log channel
+						// TODO: split this out into a proper logging utility
+						client.createMessage(config.TEMP_loggingChannelID, {
+							embed: {
+								title: 'Message filtered',
+								fields: [
+									{
+										name: 'Channel',
+										value: `<#${message.channel.id}>\n\`${message.channel.id}\``,
+										inline: true,
+									},
+									{
+										name: 'Author',
+										value: `<@${message.author.id}>\n\`${message.author.id}\``,
+										inline: true,
+									},
+								],
+								description: blockquote(message.content),
+								timestamp: new Date(message.createdAt),
+							},
+						}).catch(() => {});
+
+						// Don't process commands from the deleted message
 						return;
 					}
 				} else {
