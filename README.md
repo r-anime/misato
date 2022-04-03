@@ -14,7 +14,7 @@ npm install
 # Create your config file from the sample and fill it in
 cp sample.config.js config.js && $EDITOR config.js
 # Migrate the database
-npx run migrate up
+npx migrate up
 ```
 
 ### Running the bot
