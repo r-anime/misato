@@ -35,6 +35,16 @@ function convertUnits (baseValue, baseType, targetType) {
 	return `${baseValue}${baseType} is equal to ${conversion.toFixed(2)}${targetType}`;
 }
 
+/** Map of unit aliases. */
+const unitAliases = {
+	'"': 'ft',
+	"'": 'in',
+	'foot': 'ft',
+	'feet': 'ft',
+	'inch': 'in',
+	'inches': 'in',
+};
+
 /**
  * Attempts to convert between currencies using an exchange rate API.
  * @param {number} baseValue
@@ -43,6 +53,12 @@ function convertUnits (baseValue, baseType, targetType) {
  * @returns {Promise<string, Error>} Message to the user if successful, rejects generic error if unsuccessful
  */
 async function convertCurrency (baseValue, baseType, targetType) {
+	const acceptedUnits = Object.values(unitAliases);
+	const isValidUnits = acceptedUnits.includes(baseType) && acceptedUnits.includes(targetType);
+	if (!isValidUnits) {
+		throw new Error('Incorrect Currency Unit');
+	}
+
 	// If we're currently fetching new rates, wait for that to complete.
 	// Otherwise, if it's been more than 10 minutes since the last check, fetch
 	// new rates.
@@ -62,16 +78,6 @@ async function convertCurrency (baseValue, baseType, targetType) {
 
 /** Regular expression matching input arguments for this command. */
 const argRegex = /^(?<num>\d+([.,]\d+)?)?\s*(?<baseType>[^\s\d]+)(\s*to)?\s*(?<targetType>\S+)$/;
-
-/** Map of unit aliases. */
-const unitAliases = {
-	'"': 'ft',
-	'\'': 'in',
-	'foot': 'ft',
-	'feet': 'ft',
-	'inch': 'in',
-	'inches': 'in',
-};
 
 const command = new Command('convert', async (msg, args, context) => {
 	const match = args.join(' ').match(argRegex);
