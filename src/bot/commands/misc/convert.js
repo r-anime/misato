@@ -55,6 +55,11 @@ async function convertCurrency (baseValue, baseType, targetType) {
 	baseType = baseType.toUpperCase();
 	targetType = targetType.toUpperCase();
 
+	// Verify baseType and targetType in rates
+	const isValidRates = rates[baseType] != null && rates[targetType] != null;
+	if (!isValidRates) {
+		throw new Error('Incorrect Currency');
+	}
 	// Convert between the two rates
 	const result = baseValue * rates[targetType] / rates[baseType];
 	return `${baseValue}${baseType} is roughly equal to ${result.toFixed(2)}${targetType}`;
@@ -66,7 +71,7 @@ const argRegex = /^(?<num>\d+([.,]\d+)?)?\s*(?<baseType>[^\s\d]+)(\s*to)?\s*(?<t
 /** Map of unit aliases. */
 const unitAliases = {
 	'"': 'ft',
-	'\'': 'in',
+	"'": 'in',
 	'foot': 'ft',
 	'feet': 'ft',
 	'inch': 'in',
