@@ -59,16 +59,9 @@ function getCountOfZeroesAfterDecimalPoint (value) {
  */
 function getFractionDigits (value) {
 	const numberOfZeroes = getCountOfZeroesAfterDecimalPoint(value);
-
-	let fractionDigits = 2;
-	if (numberOfZeroes > 0) {
-		fractionDigits = numberOfZeroes + 2;
-	}
-	// Since toFixed doesn't accept values greater than 20
-	if (fractionDigits > 20) {
-		fractionDigits = 20;
-	}
-	return fractionDigits;
+	// Return 2 if there are no zeroes, otherwise return the number of zeroes plus 2
+	// Max value returned is 20
+	return Math.max(2, Math.min(numberOfZeroes + 2, 20));
 }
 
 /**
