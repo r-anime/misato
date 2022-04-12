@@ -96,6 +96,8 @@ const command = new Command('whois', async (message, args, context) => {
 
 	message.channel.createMessage((await Promise.all([
 		`<${config.web.host}/guilds/${message.channel.guild.id}/members/${user.id}>`,
+		`__Username: **${user.username}#${user.discriminator}**__`,
+		`__Account Age: **${formatDate(new Date(user.createdAt))}**__`,
 		redditLine(user.id, message.channel.guild.id, db),
 		warningsLine(user.id, message.channel.guild.id, db),
 		kicksLine(user.id, message.channel.guild.id, db),
