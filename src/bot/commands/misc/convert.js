@@ -49,9 +49,7 @@ function getCountOfZeroesAfterDecimalPoint (value) {
 		fractionalPart *= 10;
 		numberOfZeroes++;
 	}
-	numberOfZeroes = Math.max(0, numberOfZeroes);
-
-	return numberOfZeroes;
+	return Math.max(0, numberOfZeroes);
 }
 
 /**
