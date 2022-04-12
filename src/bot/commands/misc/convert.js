@@ -27,12 +27,50 @@ async function fetchLatestRates () {
  * @param {number} baseValue
  * @param {string} baseType Base unit
  * @param {string} targetType Target unit
- * @returns {strung} Success message
+ * @returns {string} Success message
  * @throws {Error} Generic error if conversion fails
  */
 function convertUnits (baseValue, baseType, targetType) {
 	const conversion = convert(baseValue).from(baseType).to(targetType);
-	return `${baseValue}${baseType} is equal to ${conversion.toFixed(2)}${targetType}`;
+	const fractionDigits = getFractionDigits(conversion);
+	return `${baseValue.toString()}${baseType} is equal to ${conversion.toFixed(fractionDigits)}${targetType}`;
+}
+
+/**
+ * Gets the count of zeroes after the decimal point but before a non-zero number
+ * @param {number} value
+ * @returns {number} Number of zeroes
+ */
+function getCountOfZeroesAfterDecimalPoint (value) {
+	let fractionalPart = value % 1;
+	let numberOfZeroes = -1;
+
+	while (fractionalPart < 1 && fractionalPart > 0) {
+		fractionalPart *= 10;
+		numberOfZeroes++;
+	}
+	numberOfZeroes = Math.max(0, numberOfZeroes);
+
+	return numberOfZeroes;
+}
+
+/**
+ * Gets the number of fraction digits needed to display our result with toFixed
+ * @param {number} value
+ * @returns {number} Number of fraction digits
+ */
+function getFractionDigits (value) {
+	const numberOfZeroes = getCountOfZeroesAfterDecimalPoint(value);
+
+	let fractionDigits = 2;
+	if (numberOfZeroes > 0) {
+		fractionDigits = numberOfZeroes + 2;
+	}
+	// Since toFixed doesn't accept values greater than 20
+	if (fractionDigits > 20) {
+		fractionDigits = 20;
+	}
+	return fractionDigits;
 }
 
 /**
@@ -62,7 +100,8 @@ async function convertCurrency (baseValue, baseType, targetType) {
 	}
 	// Convert between the two rates
 	const result = baseValue * rates[targetType] / rates[baseType];
-	return `${baseValue}${baseType} is roughly equal to ${result.toFixed(2)}${targetType}`;
+	const fractionDigits = getFractionDigits(result);
+	return `${baseValue}${baseType} is roughly equal to ${result.toFixed(fractionDigits)}${targetType}`;
 }
 
 /** Regular expression matching input arguments for this command. */
