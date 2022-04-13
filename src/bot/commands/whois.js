@@ -86,7 +86,7 @@ async function isUserStillMember (guild, userID) {
 		log.error(`Error while getting member ${userID} from guild ${guild.id}`, error);
 		isMember = 'N/A';
 	}
-	return `__Still Member? **${isMember}**__`;
+	return `__Still Member?: **${isMember}**__`;
 }
 
 const command = new Command('whois', async (message, args, context) => {
