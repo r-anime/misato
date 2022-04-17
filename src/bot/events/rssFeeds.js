@@ -65,7 +65,7 @@ export default new EventListener('ready', ({client, db}) => {
 					try {
 						const message = await client.createMessage(feedChannelID, {content: post.link, embed});
 						// If this is an announcement channel, publish the message
-						if (feedChannelID instanceof NewsChannel) {
+						if (message.channel instanceof NewsChannel) {
 							await message.crosspost();
 						}
 					} catch (error) {
