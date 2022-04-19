@@ -69,6 +69,23 @@ async function notesLine (userID, guildID, db) {
 	}`;
 }
 
+/**
+ * Returns a string stating whether a user is still a member or not
+ * @async
+ * @param {Eris.Guild} guild
+ * @param {number} userID
+ * @returns {Promise<string>}
+ */
+async function isUserStillMember (guild, userID) {
+	let isMember = true;
+	try {
+		guild.members.get(userID) || await guild.getRESTMember(userID);
+	} catch (error) {
+		isMember = false;
+	}
+	return `__Still Member?: **${isMember ? 'Yes' : 'No'}**__`;
+}
+
 const command = new Command('whois', async (message, args, context) => {
 	if (!args.length) {
 		return context.sendHelp(message, context);
@@ -98,6 +115,7 @@ const command = new Command('whois', async (message, args, context) => {
 		`<${config.web.host}/guilds/${message.channel.guild.id}/members/${user.id}>`,
 		`__Username: **${user.username}#${user.discriminator}**__`,
 		`__Account Age: **${formatDate(new Date(user.createdAt))}**__`,
+		isUserStillMember(message.channel.guild, user.id),
 		redditLine(user.id, message.channel.guild.id, db),
 		warningsLine(user.id, message.channel.guild.id, db),
 		kicksLine(user.id, message.channel.guild.id, db),
