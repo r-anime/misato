@@ -70,7 +70,7 @@ async function notesLine (userID, guildID, db) {
 }
 
 /**
- *Returns a string stating whether a user is still a member or not
+ * Returns a string stating whether a user is still a member or not
  * @async
  * @param {Eris.Guild} guild
  * @param {number} userID
