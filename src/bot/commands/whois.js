@@ -1,5 +1,3 @@
-import createLogger from 'another-logger';
-const log = createLogger({label: 'command:whois'});
 import {Command} from 'yuuko';
 import config from '../../../config';
 import {parseUser, formatDate} from '../util/discord';
@@ -79,14 +77,13 @@ async function notesLine (userID, guildID, db) {
  * @returns {Promise<string>}
  */
 async function isUserStillMember (guild, userID) {
-	let isMember;
+	let isMember = true;
 	try {
-		isMember = guild.members.get(userID) && await guild.getRESTMember(userID) ? 'Yes' : 'No';
+		guild.members.get(userID) || await guild.getRESTMember(userID);
 	} catch (error) {
-		log.error(`Error while getting member ${userID} from guild ${guild.id}`, error);
-		isMember = 'N/A';
+		isMember = false;
 	}
-	return `__Still Member?: **${isMember}**__`;
+	return `__Still Member?: **${isMember ? 'Yes' : 'No'}**__`;
 }
 
 const command = new Command('whois', async (message, args, context) => {
