@@ -71,6 +71,7 @@ async function notesLine (userID, guildID, db) {
 
 /**
  * Returns a string stating whether a user is still a member or not
+ * Includes join date if user is currently in the server
  * @async
  * @param {Eris.Guild} guild
  * @param {number} userID
@@ -78,12 +79,16 @@ async function notesLine (userID, guildID, db) {
  */
 async function isUserStillMember (guild, userID) {
 	let isMember = true;
+	let userDetails;
 	try {
-		guild.members.get(userID) || await guild.getRESTMember(userID);
+		userDetails = guild.members.get(userID);
+		if (!userDetails) {
+			userDetails = await guild.getRESTMember(userID);
+		}
 	} catch (error) {
 		isMember = false;
 	}
-	return `__Still Member?: **${isMember ? 'Yes' : 'No'}**__`;
+	return `__Still Member?: **${isMember ? `Yes, since ${formatDate(new Date(userDetails.joinedAt))}` : 'No'}**__`;
 }
 
 const command = new Command('whois', async (message, args, context) => {
@@ -113,7 +118,7 @@ const command = new Command('whois', async (message, args, context) => {
 
 	message.channel.createMessage((await Promise.all([
 		`<${config.web.host}/guilds/${message.channel.guild.id}/members/${user.id}>`,
-		`__Username: **${user.username}#${user.discriminator}**__`,
+		`__User: **<@${user.id}> (${user.username}#${user.discriminator})**__`,
 		`__Account Age: **${formatDate(new Date(user.createdAt))}**__`,
 		isUserStillMember(message.channel.guild, user.id),
 		redditLine(user.id, message.channel.guild.id, db),
