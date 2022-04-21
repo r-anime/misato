@@ -116,7 +116,7 @@ const command = new Command('whois', async (message, args, context) => {
 		return;
 	}
 
-	message.channel.createMessage((await Promise.all([
+	message.channel.createMessage({content: (await Promise.all([
 		`<${config.web.host}/guilds/${message.channel.guild.id}/members/${user.id}>`,
 		`__User: **<@${user.id}> (${user.username}#${user.discriminator})**__`,
 		`__Account Age: **${formatDate(new Date(user.createdAt))}**__`,
@@ -126,7 +126,8 @@ const command = new Command('whois', async (message, args, context) => {
 		kicksLine(user.id, message.channel.guild.id, db),
 		bansLine(user.id, message.channel.guild.id, db),
 		notesLine(user.id, message.channel.guild.id, db),
-	])).join('\n\n')).catch(() => {});
+	])).join('\n\n'),
+	allowedMentions: {users: false}}).catch(() => {});
 }, {
 	permissions: [
 		'kickMembers',
