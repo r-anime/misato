@@ -1,3 +1,5 @@
+import createLogger from 'another-logger';
+const log = createLogger({label: 'cmd:whois'});
 import {Command} from 'yuuko';
 import config from '../../../config';
 import {parseUser, formatDate} from '../util/discord';
@@ -5,68 +7,103 @@ import {escape} from '../util/formatting';
 
 // function for generating the reddit info
 async function redditLine (userID, guildID, db) {
-	const results = await db.collection('redditAccounts').find({userID, guildID}).toArray();
-	return `__Reddit accounts: **${results.length}**__${
-		results.map(r => `\n- <https://www.reddit.com/u/${encodeURIComponent(r.redditName)}>`).join('')
-	}`;
+	let message = '__Reddit accounts: N/A__';
+
+	try {
+		const results = await db.collection('redditAccounts').find({userID, guildID}).toArray();
+		message = `__Reddit accounts: **${results.length}**__${
+			results.map(r => `\n- <https://www.reddit.com/u/${encodeURIComponent(r.redditName)}>`).join('')
+		}`;
+	} catch (error) {
+		log.error('Couldn\'t Talk to Database', error);
+	}
+	return message;
 }
 
 async function warningsLine (userID, guildID, db) {
-	const numResults = await db.collection('warnings').countDocuments({userID, guildID});
-	const results = await db.collection('warnings').find({userID, guildID}, {
-		limit: 3,
-		sort: {date: -1},
-	}).toArray();
+	let message = '__Warnings: N/A__';
 
-	return `__Warnings: **${numResults}**__${
-		results.map(kick => `\n- ${escape(formatDate(kick.date))}${kick.note ? `: ${escape(kick.note)}` : ''}`).join('')
-	}${
-		numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
-	}`;
+	try {
+		const numResults = await db.collection('warnings').countDocuments({userID, guildID});
+		const results = await db.collection('warnings').find({userID, guildID}, {
+			limit: 3,
+			sort: {date: -1},
+		}).toArray();
+
+		message = `__Warnings: **${numResults}**__${
+			results.map(kick => `\n- ${escape(formatDate(kick.date))}${kick.note ? `: ${escape(kick.note)}` : ''}`).join('')
+		}${
+			numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
+		}`;
+	} catch (error) {
+		log.error('Couldn\'t Talk to Database', error);
+	}
+	return message;
 }
 
 // function for generating the list of kicks
 async function kicksLine (userID, guildID, db) {
-	// display the total count of kicks, but to save space only show the first 3 fully
-	const numResults = await db.collection('kicks').countDocuments({userID, guildID});
-	const results = await db.collection('kicks').find({userID, guildID}, {
-		limit: 3,
-		sort: {date: -1},
-	}).toArray();
+	let message = '__Kicks: N/A__';
 
-	return `__Kicks: **${numResults}**__${
-		results.map(kick => `\n- ${escape(formatDate(kick.date))}${kick.note ? `: ${escape(kick.note)}` : ''}`).join('')
-	}${
-		numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
-	}`;
+	try {
+		// display the total count of kicks, but to save space only show the first 3 fully
+		const numResults = await db.collection('kicks').countDocuments({userID, guildID});
+		const results = await db.collection('kicks').find({userID, guildID}, {
+			limit: 3,
+			sort: {date: -1},
+		}).toArray();
+
+		message = `__Kicks: **${numResults}**__${
+			results.map(kick => `\n- ${escape(formatDate(kick.date))}${kick.note ? `: ${escape(kick.note)}` : ''}`).join('')
+		}${
+			numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
+		}`;
+	} catch (error) {
+		log.error('Couldn\'t Talk to Database', error);
+	}
+	return message;
 }
 
 async function bansLine (userID, guildID, db) {
-	const numResults = await db.collection('bans').countDocuments({userID, guildID});
-	const results = await db.collection('bans').find({userID, guildID}, {
-		limit: 3,
-		sort: {date: -1},
-	}).toArray();
+	let message = '__Bans: N/A__';
 
-	return `__Bans: **${numResults}**__${
-		results.map(ban => `\n- ${escape(formatDate(ban.date))}${ban.note ? `: ${escape(ban.note)}` : ''}`).join('')
-	}${
-		numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
-	}`;
+	try {
+		const numResults = await db.collection('bans').countDocuments({userID, guildID});
+		const results = await db.collection('bans').find({userID, guildID}, {
+			limit: 3,
+			sort: {date: -1},
+		}).toArray();
+
+		message = `__Bans: **${numResults}**__${
+			results.map(ban => `\n- ${escape(formatDate(ban.date))}${ban.note ? `: ${escape(ban.note)}` : ''}`).join('')
+		}${
+			numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
+		}`;
+	} catch (error) {
+		log.error('Couldn\'t Talk to Database', error);
+	}
+
+	return message;
 }
 
 async function notesLine (userID, guildID, db) {
-	const numResults = await db.collection('notes').countDocuments({userID, guildID});
-	const results = await db.collection('notes').find({userID, guildID}, {
-		limit: 3,
-		sort: {date: -1},
-	}).toArray();
+	let message = '__Notes: N/A__';
+	try {
+		const numResults = await db.collection('notes').countDocuments({userID, guildID});
+		const results = await db.collection('notes').find({userID, guildID}, {
+			limit: 3,
+			sort: {date: -1},
+		}).toArray();
 
-	return `__Notes: **${numResults}**__${
-		results.map(note => `\n- ${escape(formatDate(note.date))}${note.note ? `: ${escape(note.note)}` : ''}`).join('')
-	}${
-		numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
-	}`;
+		message = `__Notes: **${numResults}**__${
+			results.map(note => `\n- ${escape(formatDate(note.date))}${note.note ? `: ${escape(note.note)}` : ''}`).join('')
+		}${
+			numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
+		}`;
+	} catch (error) {
+		log.error('Couldn\'t Talk to Database', error);
+	}
+	return message;
 }
 
 /**
@@ -115,8 +152,7 @@ const command = new Command('whois', async (message, args, context) => {
 		}`).catch(() => {});
 		return;
 	}
-
-	message.channel.createMessage({content: (await Promise.all([
+	const content = (await Promise.all([
 		`<${config.web.host}/guilds/${message.channel.guild.id}/members/${user.id}>`,
 		`__User: **<@${user.id}> (${user.username}#${user.discriminator})**__`,
 		`__Account Age: **${formatDate(new Date(user.createdAt))}**__`,
@@ -126,8 +162,14 @@ const command = new Command('whois', async (message, args, context) => {
 		kicksLine(user.id, message.channel.guild.id, db),
 		bansLine(user.id, message.channel.guild.id, db),
 		notesLine(user.id, message.channel.guild.id, db),
-	])).join('\n\n'),
-	allowedMentions: {users: false}}).catch(() => {});
+	])).join('\n\n');
+
+	message.channel.createMessage({
+		content,
+		allowedMentions: {
+			users: false,
+		},
+	}).catch(() => {});
 }, {
 	permissions: [
 		'kickMembers',
