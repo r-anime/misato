@@ -13,7 +13,7 @@ async function redditLine (userID, guildID, db) {
 			results.map(r => `\n- <https://www.reddit.com/u/${encodeURIComponent(r.redditName)}>`).join('')
 		}`;
 	} catch (error) {
-		log.error('Couldn\'t Talk to Database', error);
+		log.error('Couldn\'t fetch reddit accounts for whois message', error);
 	}
 	return '__Reddit accounts: N/A__';
 }
@@ -32,7 +32,7 @@ async function warningsLine (userID, guildID, db) {
 			numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
 		}`;
 	} catch (error) {
-		log.error('Couldn\'t Talk to Database', error);
+		log.error('Couldn\'t fetch warnings for whois message', error);
 	}
 	return '__Warnings: N/A__';
 }
@@ -53,7 +53,7 @@ async function kicksLine (userID, guildID, db) {
 			numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
 		}`;
 	} catch (error) {
-		log.error('Couldn\'t Talk to Database', error);
+		log.error('Couldn\'t fetch kicks for whois message', error);
 	}
 	return '__Kicks: N/A__';
 }
@@ -72,7 +72,7 @@ async function bansLine (userID, guildID, db) {
 			numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
 		}`;
 	} catch (error) {
-		log.error('Couldn\'t Talk to Database', error);
+		log.error('Couldn\'t fetch bans for whois message', error);
 	}
 
 	return '__Bans: N/A__';
@@ -92,7 +92,7 @@ async function notesLine (userID, guildID, db) {
 			numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
 		}`;
 	} catch (error) {
-		log.error('Couldn\'t Talk to Database', error);
+		log.error('Couldn\'t fetch notes for whois message', error);
 	}
 	return '__Notes: N/A__';
 }
