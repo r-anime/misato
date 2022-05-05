@@ -7,22 +7,18 @@ import {escape} from '../util/formatting';
 
 // function for generating the reddit info
 async function redditLine (userID, guildID, db) {
-	let message = '__Reddit accounts: N/A__';
-
 	try {
 		const results = await db.collection('redditAccounts').find({userID, guildID}).toArray();
-		message = `__Reddit accounts: **${results.length}**__${
+		return `__Reddit accounts: **${results.length}**__${
 			results.map(r => `\n- <https://www.reddit.com/u/${encodeURIComponent(r.redditName)}>`).join('')
 		}`;
 	} catch (error) {
 		log.error('Couldn\'t Talk to Database', error);
 	}
-	return message;
+	return '__Reddit accounts: N/A__';
 }
 
 async function warningsLine (userID, guildID, db) {
-	let message = '__Warnings: N/A__';
-
 	try {
 		const numResults = await db.collection('warnings').countDocuments({userID, guildID});
 		const results = await db.collection('warnings').find({userID, guildID}, {
@@ -30,7 +26,7 @@ async function warningsLine (userID, guildID, db) {
 			sort: {date: -1},
 		}).toArray();
 
-		message = `__Warnings: **${numResults}**__${
+		return `__Warnings: **${numResults}**__${
 			results.map(kick => `\n- ${escape(formatDate(kick.date))}${kick.note ? `: ${escape(kick.note)}` : ''}`).join('')
 		}${
 			numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
@@ -38,13 +34,11 @@ async function warningsLine (userID, guildID, db) {
 	} catch (error) {
 		log.error('Couldn\'t Talk to Database', error);
 	}
-	return message;
+	return '__Warnings: N/A__';
 }
 
 // function for generating the list of kicks
 async function kicksLine (userID, guildID, db) {
-	let message = '__Kicks: N/A__';
-
 	try {
 		// display the total count of kicks, but to save space only show the first 3 fully
 		const numResults = await db.collection('kicks').countDocuments({userID, guildID});
@@ -53,7 +47,7 @@ async function kicksLine (userID, guildID, db) {
 			sort: {date: -1},
 		}).toArray();
 
-		message = `__Kicks: **${numResults}**__${
+		return `__Kicks: **${numResults}**__${
 			results.map(kick => `\n- ${escape(formatDate(kick.date))}${kick.note ? `: ${escape(kick.note)}` : ''}`).join('')
 		}${
 			numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
@@ -61,12 +55,10 @@ async function kicksLine (userID, guildID, db) {
 	} catch (error) {
 		log.error('Couldn\'t Talk to Database', error);
 	}
-	return message;
+	return '__Kicks: N/A__';
 }
 
 async function bansLine (userID, guildID, db) {
-	let message = '__Bans: N/A__';
-
 	try {
 		const numResults = await db.collection('bans').countDocuments({userID, guildID});
 		const results = await db.collection('bans').find({userID, guildID}, {
@@ -74,7 +66,7 @@ async function bansLine (userID, guildID, db) {
 			sort: {date: -1},
 		}).toArray();
 
-		message = `__Bans: **${numResults}**__${
+		return `__Bans: **${numResults}**__${
 			results.map(ban => `\n- ${escape(formatDate(ban.date))}${ban.note ? `: ${escape(ban.note)}` : ''}`).join('')
 		}${
 			numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
@@ -83,11 +75,10 @@ async function bansLine (userID, guildID, db) {
 		log.error('Couldn\'t Talk to Database', error);
 	}
 
-	return message;
+	return '__Bans: N/A__';
 }
 
 async function notesLine (userID, guildID, db) {
-	let message = '__Notes: N/A__';
 	try {
 		const numResults = await db.collection('notes').countDocuments({userID, guildID});
 		const results = await db.collection('notes').find({userID, guildID}, {
@@ -95,7 +86,7 @@ async function notesLine (userID, guildID, db) {
 			sort: {date: -1},
 		}).toArray();
 
-		message = `__Notes: **${numResults}**__${
+		return `__Notes: **${numResults}**__${
 			results.map(note => `\n- ${escape(formatDate(note.date))}${note.note ? `: ${escape(note.note)}` : ''}`).join('')
 		}${
 			numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
@@ -103,7 +94,7 @@ async function notesLine (userID, guildID, db) {
 	} catch (error) {
 		log.error('Couldn\'t Talk to Database', error);
 	}
-	return message;
+	return '__Notes: N/A__';
 }
 
 /**
