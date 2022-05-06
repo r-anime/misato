@@ -4,7 +4,6 @@
 import path from 'path';
 
 import {Client} from 'yuuko';
-import {Constants} from 'eris';
 import createLogger from 'another-logger';
 const log = createLogger({label: 'discord'});
 
@@ -15,7 +14,6 @@ export default (mongoClient, db) => {
 	const bot = new Client({
 		token: config.discord.token,
 		prefix: config.discord.prefix,
-		intents: Constants.Intents.all,
 		disableDefaultMessageListener: true,
 		restMode: true,
 		// HACK: required for user lookup by tag, better options available
