@@ -1,3 +1,5 @@
+import createLogger from 'another-logger';
+const log = createLogger({label: 'cmd:whois'});
 import {Command} from 'yuuko';
 import config from '../../../config';
 import {parseUser, formatDate} from '../util/discord';
@@ -5,68 +7,116 @@ import {escape} from '../util/formatting';
 
 // function for generating the reddit info
 async function redditLine (userID, guildID, db) {
-	const results = await db.collection('redditAccounts').find({userID, guildID}).toArray();
-	return `__Reddit accounts: **${results.length}**__${
-		results.map(r => `\n- <https://www.reddit.com/u/${encodeURIComponent(r.redditName)}>`).join('')
-	}`;
+	try {
+		const results = await db.collection('redditAccounts').find({userID, guildID}).toArray();
+		return `__Reddit accounts: **${results.length}**__${
+			results.map(r => `\n- <https://www.reddit.com/u/${encodeURIComponent(r.redditName)}>`).join('')
+		}`;
+	} catch (error) {
+		log.error('Couldn\'t fetch reddit accounts for whois message', error);
+	}
+	return '__Reddit accounts: N/A__';
 }
 
 async function warningsLine (userID, guildID, db) {
-	const numResults = await db.collection('warnings').countDocuments({userID, guildID});
-	const results = await db.collection('warnings').find({userID, guildID}, {
-		limit: 3,
-		sort: {date: -1},
-	}).toArray();
+	try {
+		const numResults = await db.collection('warnings').countDocuments({userID, guildID});
+		const results = await db.collection('warnings').find({userID, guildID}, {
+			limit: 3,
+			sort: {date: -1},
+		}).toArray();
 
-	return `__Warnings: **${numResults}**__${
-		results.map(kick => `\n- ${escape(formatDate(kick.date))}${kick.note ? `: ${escape(kick.note)}` : ''}`).join('')
-	}${
-		numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
-	}`;
+		return `__Warnings: **${numResults}**__${
+			results.map(kick => `\n- ${escape(formatDate(kick.date))}${kick.note ? `: ${escape(kick.note)}` : ''}`).join('')
+		}${
+			numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
+		}`;
+	} catch (error) {
+		log.error('Couldn\'t fetch warnings for whois message', error);
+	}
+	return '__Warnings: N/A__';
 }
 
 // function for generating the list of kicks
 async function kicksLine (userID, guildID, db) {
-	// display the total count of kicks, but to save space only show the first 3 fully
-	const numResults = await db.collection('kicks').countDocuments({userID, guildID});
-	const results = await db.collection('kicks').find({userID, guildID}, {
-		limit: 3,
-		sort: {date: -1},
-	}).toArray();
+	try {
+		// display the total count of kicks, but to save space only show the first 3 fully
+		const numResults = await db.collection('kicks').countDocuments({userID, guildID});
+		const results = await db.collection('kicks').find({userID, guildID}, {
+			limit: 3,
+			sort: {date: -1},
+		}).toArray();
 
-	return `__Kicks: **${numResults}**__${
-		results.map(kick => `\n- ${escape(formatDate(kick.date))}${kick.note ? `: ${escape(kick.note)}` : ''}`).join('')
-	}${
-		numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
-	}`;
+		return `__Kicks: **${numResults}**__${
+			results.map(kick => `\n- ${escape(formatDate(kick.date))}${kick.note ? `: ${escape(kick.note)}` : ''}`).join('')
+		}${
+			numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
+		}`;
+	} catch (error) {
+		log.error('Couldn\'t fetch kicks for whois message', error);
+	}
+	return '__Kicks: N/A__';
 }
 
 async function bansLine (userID, guildID, db) {
-	const numResults = await db.collection('bans').countDocuments({userID, guildID});
-	const results = await db.collection('bans').find({userID, guildID}, {
-		limit: 3,
-		sort: {date: -1},
-	}).toArray();
+	try {
+		const numResults = await db.collection('bans').countDocuments({userID, guildID});
+		const results = await db.collection('bans').find({userID, guildID}, {
+			limit: 3,
+			sort: {date: -1},
+		}).toArray();
 
-	return `__Bans: **${numResults}**__${
-		results.map(ban => `\n- ${escape(formatDate(ban.date))}${ban.note ? `: ${escape(ban.note)}` : ''}`).join('')
-	}${
-		numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
-	}`;
+		return `__Bans: **${numResults}**__${
+			results.map(ban => `\n- ${escape(formatDate(ban.date))}${ban.note ? `: ${escape(ban.note)}` : ''}`).join('')
+		}${
+			numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
+		}`;
+	} catch (error) {
+		log.error('Couldn\'t fetch bans for whois message', error);
+	}
+
+	return '__Bans: N/A__';
 }
 
 async function notesLine (userID, guildID, db) {
-	const numResults = await db.collection('notes').countDocuments({userID, guildID});
-	const results = await db.collection('notes').find({userID, guildID}, {
-		limit: 3,
-		sort: {date: -1},
-	}).toArray();
+	try {
+		const numResults = await db.collection('notes').countDocuments({userID, guildID});
+		const results = await db.collection('notes').find({userID, guildID}, {
+			limit: 3,
+			sort: {date: -1},
+		}).toArray();
 
-	return `__Notes: **${numResults}**__${
-		results.map(note => `\n- ${escape(formatDate(note.date))}${note.note ? `: ${escape(note.note)}` : ''}`).join('')
-	}${
-		numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
-	}`;
+		return `__Notes: **${numResults}**__${
+			results.map(note => `\n- ${escape(formatDate(note.date))}${note.note ? `: ${escape(note.note)}` : ''}`).join('')
+		}${
+			numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
+		}`;
+	} catch (error) {
+		log.error('Couldn\'t fetch notes for whois message', error);
+	}
+	return '__Notes: N/A__';
+}
+
+/**
+ * Returns a string stating whether a user is still a member or not
+ * Includes join date if user is currently in the server
+ * @async
+ * @param {Eris.Guild} guild
+ * @param {number} userID
+ * @returns {Promise<string>}
+ */
+async function isUserStillMember (guild, userID) {
+	let isMember = true;
+	let userDetails;
+	try {
+		userDetails = guild.members.get(userID);
+		if (!userDetails) {
+			userDetails = await guild.getRESTMember(userID);
+		}
+	} catch (error) {
+		isMember = false;
+	}
+	return `__Still Member?: **${isMember ? `Yes, since ${formatDate(new Date(userDetails.joinedAt))}` : 'No'}**__`;
 }
 
 const command = new Command('whois', async (message, args, context) => {
@@ -93,15 +143,24 @@ const command = new Command('whois', async (message, args, context) => {
 		}`).catch(() => {});
 		return;
 	}
-
-	message.channel.createMessage((await Promise.all([
+	const content = (await Promise.all([
 		`<${config.web.host}/guilds/${message.channel.guild.id}/members/${user.id}>`,
+		`__User: **<@${user.id}> (${user.username}#${user.discriminator})**__`,
+		`__Account Age: **${formatDate(new Date(user.createdAt))}**__`,
+		isUserStillMember(message.channel.guild, user.id),
 		redditLine(user.id, message.channel.guild.id, db),
 		warningsLine(user.id, message.channel.guild.id, db),
 		kicksLine(user.id, message.channel.guild.id, db),
 		bansLine(user.id, message.channel.guild.id, db),
 		notesLine(user.id, message.channel.guild.id, db),
-	])).join('\n\n')).catch(() => {});
+	])).join('\n\n');
+
+	message.channel.createMessage({
+		content,
+		allowedMentions: {
+			users: false,
+		},
+	}).catch(() => {});
 }, {
 	permissions: [
 		'kickMembers',

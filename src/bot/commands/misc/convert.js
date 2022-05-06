@@ -27,12 +27,41 @@ async function fetchLatestRates () {
  * @param {number} baseValue
  * @param {string} baseType Base unit
  * @param {string} targetType Target unit
- * @returns {strung} Success message
+ * @returns {string} Success message
  * @throws {Error} Generic error if conversion fails
  */
 function convertUnits (baseValue, baseType, targetType) {
 	const conversion = convert(baseValue).from(baseType).to(targetType);
-	return `${baseValue}${baseType} is equal to ${conversion.toFixed(2)}${targetType}`;
+	const fractionDigits = getFractionDigits(conversion);
+	return `${baseValue.toString()}${baseType} is equal to ${conversion.toFixed(fractionDigits)}${targetType}`;
+}
+
+/**
+ * Gets the count of zeroes after the decimal point but before a non-zero number
+ * @param {number} value
+ * @returns {number} Number of zeroes
+ */
+function getCountOfZeroesAfterDecimalPoint (value) {
+	let fractionalPart = value % 1;
+	let numberOfZeroes = -1;
+
+	while (fractionalPart < 1 && fractionalPart > 0) {
+		fractionalPart *= 10;
+		numberOfZeroes++;
+	}
+	return Math.max(0, numberOfZeroes);
+}
+
+/**
+ * Gets the number of fraction digits needed to display our result with toFixed
+ * @param {number} value
+ * @returns {number} Number of fraction digits
+ */
+function getFractionDigits (value) {
+	const numberOfZeroes = getCountOfZeroesAfterDecimalPoint(value);
+	// Return 2 if there are no zeroes, otherwise return the number of zeroes plus 2
+	// Max value returned is 20
+	return Math.max(2, Math.min(numberOfZeroes + 2, 20));
 }
 
 /**
@@ -55,9 +84,15 @@ async function convertCurrency (baseValue, baseType, targetType) {
 	baseType = baseType.toUpperCase();
 	targetType = targetType.toUpperCase();
 
+	// Verify baseType and targetType in rates
+	const isValidRates = rates[baseType] != null && rates[targetType] != null;
+	if (!isValidRates) {
+		throw new Error('Incorrect Currency');
+	}
 	// Convert between the two rates
 	const result = baseValue * rates[targetType] / rates[baseType];
-	return `${baseValue}${baseType} is roughly equal to ${result.toFixed(2)}${targetType}`;
+	const fractionDigits = getFractionDigits(result);
+	return `${baseValue}${baseType} is roughly equal to ${result.toFixed(fractionDigits)}${targetType}`;
 }
 
 /** Regular expression matching input arguments for this command. */
@@ -66,7 +101,7 @@ const argRegex = /^(?<num>\d+([.,]\d+)?)?\s*(?<baseType>[^\s\d]+)(\s*to)?\s*(?<t
 /** Map of unit aliases. */
 const unitAliases = {
 	'"': 'ft',
-	'\'': 'in',
+	"'": 'in',
 	'foot': 'ft',
 	'feet': 'ft',
 	'inch': 'in',
