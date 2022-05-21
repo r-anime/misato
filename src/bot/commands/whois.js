@@ -27,7 +27,7 @@ async function warningsLine (userID, guildID, db) {
 		}).toArray();
 
 		return `__Warnings: **${numResults}**__${
-			results.map(kick => `\n- ${escape(formatDate(kick.date))}${kick.note ? `: ${escape(kick.note)}` : ''}`).join('')
+			results.map(warning => `\n- ${escape(formatDate(warning.date))}${warning.note ? `: ${escape(warning.note)}` : ''} - <@${warning.modID}>`).join('')
 		}${
 			numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
 		}`;
@@ -48,7 +48,7 @@ async function kicksLine (userID, guildID, db) {
 		}).toArray();
 
 		return `__Kicks: **${numResults}**__${
-			results.map(kick => `\n- ${escape(formatDate(kick.date))}${kick.note ? `: ${escape(kick.note)}` : ''}`).join('')
+			results.map(kick => `\n- ${escape(formatDate(kick.date))}${kick.note ? `: ${escape(kick.note)}` : ''} - <@${kick.modID}>`).join('')
 		}${
 			numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
 		}`;
@@ -67,7 +67,7 @@ async function bansLine (userID, guildID, db) {
 		}).toArray();
 
 		return `__Bans: **${numResults}**__${
-			results.map(ban => `\n- ${escape(formatDate(ban.date))}${ban.note ? `: ${escape(ban.note)}` : ''}`).join('')
+			results.map(ban => `\n- ${escape(formatDate(ban.date))}${ban.note ? `: ${escape(ban.note)}` : ''} - <@${ban.modID}>`).join('')
 		}${
 			numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
 		}`;
@@ -87,7 +87,7 @@ async function notesLine (userID, guildID, db) {
 		}).toArray();
 
 		return `__Notes: **${numResults}**__${
-			results.map(note => `\n- ${escape(formatDate(note.date))}${note.note ? `: ${escape(note.note)}` : ''}`).join('')
+			results.map(note => `\n- ${escape(formatDate(note.date))}${note.note ? `: ${escape(note.note)}` : ''} - <@${note.modID}>`).join('')
 		}${
 			numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
 		}`;
@@ -144,7 +144,7 @@ const command = new Command('whois', async (message, args, context) => {
 		return;
 	}
 	const content = (await Promise.all([
-		`<${config.web.host}/guilds/${message.channel.guild.id}/members/${user.id}>`,
+		`__Website: **<${config.web.host}/guilds/${message.channel.guild.id}/members/${user.id}>**__`,
 		`__User: **<@${user.id}> (${user.username}#${user.discriminator})**__`,
 		`__Account Age: **${formatDate(new Date(user.createdAt))}**__`,
 		isUserStillMember(message.channel.guild, user.id),
