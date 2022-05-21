@@ -144,7 +144,7 @@ const command = new Command('whois', async (message, args, context) => {
 		return;
 	}
 	const content = (await Promise.all([
-		`__Website: **<${config.web.host}/guilds/${message.channel.guild.id}/members/${user.id}>**__`,
+		`__Website: \n**<${config.web.host}/guilds/${message.channel.guild.id}/members/${user.id}>**__`,
 		`__User: **<@${user.id}> (${user.username}#${user.discriminator})**__`,
 		`__Account Age: **${formatDate(new Date(user.createdAt))}**__`,
 		isUserStillMember(message.channel.guild, user.id),
