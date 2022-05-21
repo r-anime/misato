@@ -101,6 +101,6 @@ const command = new Command('ban', async (message, args, context) => {
 });
 command.help = {
 	args: '<user> <duration> [message]',
-	desc: 'Ban the indicated user for the indicated duration with the indicated message. If Duration is blank, ban will be perminent.',
+	desc: 'Ban the indicated user for the indicated duration with the indicated message. If Duration is blank, ban will be permanent.',
 };
 export default command;
