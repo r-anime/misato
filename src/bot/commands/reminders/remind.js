@@ -42,7 +42,7 @@ function parseDurationSpecifier (str) {
 	return parseInt(match[1], 10) * msPerUnit[match[2]];
 }
 
-const command = new Command('remind', async (message, args, context) => {
+const command = new Command(['remind', 'remindme'], async (message, args, context) => {
 	if (!args.length) {
 		return context.sendHelp(message, context);
 	}
