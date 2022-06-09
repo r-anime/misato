@@ -15,7 +15,7 @@ export default new EventListener('guildMemberRemove', async (guild, member, {cli
 	}
 
 
-	await client.createMessage(config.TEMP_loggingChannelID, {
+	await client.createMessage(config.TEMP_leavingChannelID, {
 		content: `User **<@${member.id}> (${member.username}#${member.discriminator})** has left the server`,
 		allowedMentions: {
 			users: false,
