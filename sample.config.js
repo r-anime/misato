@@ -7,6 +7,8 @@ export default {
 	TEMP_guildID: '',
 	TEMP_channelAutomationChannelID: '',
 	TEMP_loggingChannelID: '',
+	TEMP_leavingChannelID: '',
+	TEMP_joiningChannelID: '',
 
 	// Mongo database information
 	mongodb: {
