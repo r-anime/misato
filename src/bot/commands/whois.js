@@ -143,7 +143,7 @@ const command = new Command('whois', async (message, args, context) => {
 		}`).catch(() => {});
 		return;
 	}
-	const content = (await Promise.all([
+	let content = (await Promise.all([
 		`__Website: \n**<${config.web.host}/guilds/${message.channel.guild.id}/members/${user.id}>**__`,
 		`__User: **<@${user.id}> (${user.username}#${user.discriminator})**__`,
 		`__Account Age: **${formatDate(new Date(user.createdAt))}**__`,
@@ -154,6 +154,11 @@ const command = new Command('whois', async (message, args, context) => {
 		bansLine(user.id, message.channel.guild.id, db),
 		notesLine(user.id, message.channel.guild.id, db),
 	])).join('\n\n');
+
+	if (content.length > 2000) {
+		const endIndicator = '\n\n\u2026'; // ellipsis as one character
+		content = content.slice(0, 2000 - endIndicator.length) + endIndicator;
+	}
 
 	message.channel.createMessage({
 		content,
