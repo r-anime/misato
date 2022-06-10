@@ -99,7 +99,10 @@ export default (db, client) => polka()
 
 		try {
 			const guild = client.guilds.get(guildID) || await client.getRESTGuild(guildID);
-			const member = guild.members.get(memberID) || await guild.getRESTMember(memberID);
+			const member = guild.members.get(memberID) || await guild.getRESTMember(memberID).catch(async () => ({
+				user: client.users.get(memberID) || await client.getRESTUser(memberID),
+			}));
+
 			response.end(JSON.stringify(reduceMember(member)));
 		} catch (error) {
 			log.debug(error);
