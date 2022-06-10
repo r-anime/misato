@@ -67,7 +67,7 @@ async function bansLine (userID, guildID, db) {
 		}).toArray();
 
 		return `__Bans: **${numResults}**__${
-			results.map(ban => `\n- ${escape(formatDate(ban.date))}${ban.note && ban.expirationDate ? `: **\`${Math.ceil(Math.abs(ban.date - ban.expirationDate) / (1000 * 60 * 60 * 24))}d\` |** ${escape(ban.note)}` : ''} - <@${ban.modID}>`).join('')
+			results.map(ban => `\n- ${escape(formatDate(ban.date))}${ban.note && ban.expirationDate ? `: **\`${Math.ceil((ban.expirationDate - ban.date) / (1000 * 60 * 60 * 24))}d\` |** ${escape(ban.note)}` : ''} - <@${ban.modID}>`).join('')
 		}${
 			numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
 		}`;
