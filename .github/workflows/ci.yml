@@ -1,4 +1,4 @@
-name: Lint
+name: CI
 on:
 - push
 - pull_request
@@ -14,5 +14,7 @@ jobs:
         node-version: '12'
     - name: Install Dependencies
       run: npm ci
-    - name: Run lint task
+    - name: Lint
       run: npm run lint
+    - name: Build
+      run: npm run build

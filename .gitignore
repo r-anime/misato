@@ -9,3 +9,6 @@ config.*
 
 # Built frontend bundles
 web/frontend/dist
+
+# Typescript builds
+build
