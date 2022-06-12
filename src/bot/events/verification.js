@@ -10,7 +10,7 @@ export default new EventListener('guildMemberAdd', async (guild, member, {db, cl
 	if (member.bot) return;
 	if (guild.id !== config.TEMP_guildID) return;
 
-	await client.createMessage(config.TEMP_joiningChannelID, {
+	client.createMessage(config.TEMP_joiningChannelID, {
 		content: `User **<@${member.id}> (${member.username}#${member.discriminator})** has joined 
 		\nAccount Created:  ${formatDate(new Date(member.createdAt))} (${formatDateRelative(new Date(member.createdAt))})`,
 		allowedMentions: {
