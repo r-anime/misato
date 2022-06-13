@@ -145,7 +145,7 @@ const command = new Command('whois', async (message, args, context) => {
 	}
 	let content = (await Promise.all([
 		`__Website: \n**<${config.web.host}/guilds/${message.channel.guild.id}/members/${user.id}>**__`,
-		`__User: **<@${user.id}> (${user.username}#${user.discriminator})**__`,
+		`__User: **<@!${user.id}> (${user.username}#${user.discriminator})**__`,
 		`__Account Age: **${formatDate(new Date(user.createdAt))}**__`,
 		isUserStillMember(message.channel.guild, user.id),
 		redditLine(user.id, message.channel.guild.id, db),
@@ -162,9 +162,6 @@ const command = new Command('whois', async (message, args, context) => {
 
 	message.channel.createMessage({
 		content,
-		allowedMentions: {
-			users: false,
-		},
 	}).catch(() => {});
 }, {
 	permissions: [

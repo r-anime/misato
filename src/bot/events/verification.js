@@ -12,9 +12,6 @@ export default new EventListener('guildMemberAdd', async (guild, member, {db, cl
 
 	client.createMessage(config.TEMP_joiningChannelID, {
 		content: `User **<@!${member.id}> (${member.username}#${member.discriminator})** has joined \nAccount Created:  ${formatDate(new Date(member.createdAt))} (${formatDateRelative(new Date(member.createdAt))})`,
-		allowedMentions: {
-			users: false,
-		},
 	}).catch(() => {});
 
 	let roleID;
