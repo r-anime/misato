@@ -163,7 +163,9 @@ const command = new Command('whois', async (message, args, context) => {
 	message.channel.createMessage({
 		content,
 		allowedMentions: {
-			users: false,
+			users: [
+				user.id,
+			],
 		},
 	}).catch(() => {});
 }, {
