@@ -34,6 +34,9 @@ jobs:
           git fetch --all
           git reset --hard origin/main
 
+          # use the version of node in .nvmrc and update npm
+          nvm install --latest-npm
+
           # update dependencies, migrate db
           npm ci
           npx migrate up
