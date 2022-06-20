@@ -24,7 +24,7 @@ childProcess.exec('git remote get-url origin', (err, stdout) => {
 	gitRepoURI = stdout.trim().replace(/\.git$/, '');
 });
 
-const command = new Command('ping', async msg => {
+const command = new Command('ping', async (msg, args, {prefix, client}) => {
 	let messageContent = 'Pong!';
 	if (commitHash != null) {
 		messageContent += `\nCommit: ${commitHash}`;
@@ -32,6 +32,9 @@ const command = new Command('ping', async msg => {
 	if (gitRepoURI != null) {
 		messageContent += `\nRepo: <${gitRepoURI}>`;
 	}
+	// prefix is shown for clarity, but not if a mention was used as the prefix,
+	// because that doesn't show up nicely (logic stolen from yuuko's `help`)
+	messageContent += `\nUse \`${prefix.match(client.mentionPrefixRegExp) ? '' : prefix}help\` for a list of commands.`;
 
 	const then = Date.now();
 	const newMsg = await msg.channel.createMessage(messageContent);
