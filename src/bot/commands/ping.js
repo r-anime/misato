@@ -35,7 +35,7 @@ const command = new Command('ping', async msg => {
 
 	const then = Date.now();
 	const newMsg = await msg.channel.createMessage(messageContent);
-	newMsg.edit(newMsg.content.replace('Pong!', `Pong! (${Date.now() - then}ms)`));
+	newMsg.edit(newMsg.content.replace('Pong!', `Pong! (${Date.now() - then}ms REST round-trip)`));
 });
 command.help = {
 	desc: 'Pings the bot and shows how long it takes to send a response. This will also display the current commit hash as well as the repo URL',
