@@ -67,7 +67,7 @@ async function bansLine (userID, guildID, db) {
 		}).toArray();
 
 		return `__Bans: **${numResults}**__${
-			results.map(ban => `\n- ${escape(formatDate(ban.date))}${ban.note ? `: ${escape(ban.note)}` : ''} - <@${ban.modID}>`).join('')
+			results.map(ban => `\n- ${escape(formatDate(ban.date))}:${ban.expirationDate ? ` \`${Math.ceil((ban.expirationDate - ban.date) / (1000 * 60 * 60 * 24))}d\`` : ' `Permanent`'}${ban.note ? ` ${escape(ban.note)}` : ''} - <@${ban.modID}>`).join('')
 		}${
 			numResults > results.length ? '\nSee more on the website. (soon:tm:)' : ''
 		}`;
@@ -143,9 +143,9 @@ const command = new Command('whois', async (message, args, context) => {
 		}`).catch(() => {});
 		return;
 	}
-	const content = (await Promise.all([
+	let content = (await Promise.all([
 		`__Website: \n**<${config.web.host}/guilds/${message.channel.guild.id}/members/${user.id}>**__`,
-		`__User: **<@${user.id}> (${user.username}#${user.discriminator})**__`,
+		`__User: **<@!${user.id}> (${user.username}#${user.discriminator})**__`,
 		`__Account Age: **${formatDate(new Date(user.createdAt))}**__`,
 		isUserStillMember(message.channel.guild, user.id),
 		redditLine(user.id, message.channel.guild.id, db),
@@ -155,10 +155,17 @@ const command = new Command('whois', async (message, args, context) => {
 		notesLine(user.id, message.channel.guild.id, db),
 	])).join('\n\n');
 
+	if (content.length > 2000) {
+		const endIndicator = '\n\n\u2026'; // ellipsis as one character
+		content = content.slice(0, 2000 - endIndicator.length) + endIndicator;
+	}
+
 	message.channel.createMessage({
 		content,
 		allowedMentions: {
-			users: false,
+			users: [
+				user.id,
+			],
 		},
 	}).catch(() => {});
 }, {

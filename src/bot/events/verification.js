@@ -1,10 +1,19 @@
 import {EventListener} from 'yuuko';
 import createLogger from 'another-logger';
 const log = createLogger({label: 'event:verification'});
+import config from '../../../config';
+import {formatDate, formatDateRelative} from '../util/discord';
 
 // Check if members are already verified when being added to a guild
 // TODO more verification hardcoding
-export default new EventListener('guildMemberAdd', async (guild, member, {db}) => {
+export default new EventListener('guildMemberAdd', async (guild, member, {db, client}) => {
+	if (member.bot) return;
+	if (guild.id !== config.TEMP_guildID) return;
+
+	client.createMessage(config.TEMP_joiningChannelID, {
+		content: `User **<@!${member.id}> (${member.username}#${member.discriminator})** has joined \nAccount Created:  ${formatDate(new Date(member.createdAt))} (${formatDateRelative(new Date(member.createdAt))})`,
+	}).catch(() => {});
+
 	let roleID;
 	try {
 		const verificationConfig = await db.collection('verificationConfiguration').findOne({

@@ -1,12 +1,14 @@
-import path from 'path';
+const path = require('path');
 
 // Sample configuration file. Rename this to `config.js` and fill in your values.
 
-export default {
+module.exports = {
 	// temporary stuff, this will be handled in the db eventually
 	TEMP_guildID: '',
 	TEMP_channelAutomationChannelID: '',
 	TEMP_loggingChannelID: '',
+	TEMP_leavingChannelID: '',
+	TEMP_joiningChannelID: '',
 
 	// Mongo database information
 	mongodb: {

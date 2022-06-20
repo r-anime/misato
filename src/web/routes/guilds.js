@@ -4,6 +4,29 @@ import fetch from 'node-fetch';
 import {ObjectID} from 'mongodb';
 import * as util from '../util';
 
+function reduceGuild (guild) {
+	return {
+		id: guild.id,
+		name: guild.name,
+		icon: guild.icon,
+	};
+}
+
+function reduceUser (user) {
+	return {
+		id: user.id,
+		username: user.username,
+		discriminator: user.discriminator,
+	};
+}
+
+function reduceMember (member) {
+	return {
+		id: member.id,
+		user: reduceUser(member.user),
+	};
+}
+
 export default (db, client) => polka()
 	// TODO: this needs to be done better, more generically somehow
 	.get('/managed', async (request, response) => {
@@ -35,7 +58,7 @@ export default (db, client) => polka()
 		// TODO: do we need to check if the bot is in the guild too?
 		guilds = await util.asyncFilter(guilds, guild => util.thisUserManagesGuild(request, client, db, guild.id));
 
-		response.end(JSON.stringify(guilds));
+		response.end(JSON.stringify(guilds.map(guild => reduceGuild(guild))));
 	})
 
 	.get('/:guildID', async (request, response) => {
@@ -49,7 +72,8 @@ export default (db, client) => polka()
 
 		try {
 			// TODO: check if any properties seen by the bot shouldn't be sent to end users
-			response.end(JSON.stringify(client.guilds.get(guildID) || await client.getRESTGuild(guildID)));
+			const guild = client.guilds.get(guildID) || await client.getRESTGuild(guildID);
+			response.end(JSON.stringify(reduceGuild(guild)));
 		} catch (error) {
 			// TODO: handle errors other than not found
 			log.debug(error);
@@ -75,8 +99,11 @@ export default (db, client) => polka()
 
 		try {
 			const guild = client.guilds.get(guildID) || await client.getRESTGuild(guildID);
-			const member = guild.members.get(memberID) || await guild.getRESTMember(memberID);
-			response.end(JSON.stringify(member));
+			const member = guild.members.get(memberID) || await guild.getRESTMember(memberID).catch(async () => ({
+				user: client.users.get(memberID) || await client.getRESTUser(memberID),
+			}));
+
+			response.end(JSON.stringify(reduceMember(member)));
 		} catch (error) {
 			log.debug(error);
 			response.writeHead(404);
