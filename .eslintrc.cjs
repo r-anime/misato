@@ -36,5 +36,12 @@ module.exports = {
 				'@typescript-eslint/explicit-module-boundary-types': ['off'],
 			},
 		},
+		{
+			// disable other certain rules for TS files
+			files: ['*.ts'],
+			rules: {
+				'valid-jsdoc': ['off'],
+			},
+		},
 	],
 };
