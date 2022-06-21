@@ -10,6 +10,7 @@ module.exports = {
 	extends: [
 		'@geo1088/ts',
 		'plugin:import/recommended',
+		'plugin:import/typescript',
 	],
 	env: {
 		node: true,
