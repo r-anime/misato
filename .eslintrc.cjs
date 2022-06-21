@@ -10,6 +10,7 @@ module.exports = {
 	extends: [
 		'@geo1088/ts',
 		'plugin:import/recommended',
+		'plugin:import/typescript',
 	],
 	env: {
 		node: true,
@@ -34,6 +35,13 @@ module.exports = {
 			rules: {
 				// Javascript file exports are allowed to not be typed
 				'@typescript-eslint/explicit-module-boundary-types': ['off'],
+			},
+		},
+		{
+			// disable other certain rules for TS files
+			files: ['*.ts'],
+			rules: {
+				'valid-jsdoc': ['off'],
 			},
 		},
 	],
