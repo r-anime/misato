@@ -1,17 +1,32 @@
+import {Guild, Member, Message, User} from 'eris';
+
 /**
  * Waits for a specific user to add a specific emoji to a specific message.
- * @param {Eris.Message} message The message to wait for a reaction on
- * @param {string} emote An emote name or ID (unicode string for native emojis)
- * @param {string} userID The user to wait for a reaction from
- * @param {object} [options]
- * @param {number} [options.timeout=30000] How long to wait before aborting
- * @returns {Promise} Resolves if the specified reaction is added. Rejects if
- * the timeout is exceeded.
+ * @returns A promise which resolves if the specified reaction is added, or
+ * rejects if the timeout is exceeded.
  */
-export function awaitReaction (message, emote, userID, {timeout = 30000} = {}) {
+export function awaitReaction (
+	/** The message to wait for a reaction on */
+	message: Message,
+	/** An emote name or ID (unicode string for native emojis) */
+	emote: string,
+	/** The user to wait for a reaction from */
+	userID: string,
+	/** Additional options */
+	{
+		timeout = 30000,
+	}: {
+		/** How long to wait before aborting */
+		timeout?: number;
+	} = {},
+) {
 	// TODO: use a single listener for this rather than adding and removing, this will not scale well
+
+	// TODO: don't hack into messages/channels for the client like this, it will break things
+	// @ts-expect-error stupid undocumented internal property bullshit
 	const client = message.channel.guild ? message.channel.guild._client : message.channel._client;
-	return new Promise((resolve, reject) => {
+
+	return new Promise<void>((resolve, reject) => {
 		function reactionListener (reactedMessage, reactedEmote, reactingMember) {
 			// reaction has to be on the message we sent, by the user who sent the command, with the same emoji
 			if (reactedMessage.id !== message.id) return;
@@ -32,16 +47,20 @@ export function awaitReaction (message, emote, userID, {timeout = 30000} = {}) {
  * Tries to get a user from the beginning of a string. Will try identifying
  * from a direct mention or user ID, and optionally a user#discrim tag (if
  * `guild` is provided) or the word "me" (if `me` is provided).
- * optionally the word "me".
- * @param {string} str
- * @param {Eris.Guild} [guild] If passed, enables matching user#discrim tags
- * from the given guild (otherwise limited to taking mentions and raw IDs)
- * @param {Eris.User} [me] If passed, the word "me" will be interpreted as
- * referencing the specified user
- * @returns {Array} An array where the first item is either a Member or
- * undefined, and the second item is the rest of the string
+ * @returns A tuple (array) where the first item is either a user object or
+ * `undefined`, and the second item is the rest of the string.
  */
-export async function parseUser (str, guild, me) {
+export async function parseUser (
+	/** The string to parse */
+	str: string,
+	/** If passed, enables matching user#discrim tags */
+	guild?: Guild,
+	/**
+	 * If passed, the word "me" in the input string will be interpreted as
+	 * referencing the specified user
+	 */
+	me?: User,
+): Promise<[User | undefined, string]> {
 	let match;
 
 	// The "me" keyword, if we're provided with a context for it
@@ -59,6 +78,8 @@ export async function parseUser (str, guild, me) {
 	// Actual user mentions and raw IDs
 	match = str.match(/^(?:<@!?)?(\d+)>?(?:\s+|$)/);
 	if (match) {
+		// TODO: don't hack into messages/channels for the client like this, it will break things
+		// @ts-expect-error stupid undocumented internal property bullshit
 		const member = guild._client.users.get(match[1]) || await guild._client.getRESTUser(match[1]).catch(() => undefined);
 		if (member) return [member, str.substr(match[0].length)];
 	}
@@ -71,14 +92,20 @@ export async function parseUser (str, guild, me) {
  * Tries to get a guild member from the beginning of a string. Will try
  * identifying from a direct mention, user ID, tag (user#discrim), or
  * optionally the word "me" (if `me` is provided).
- * @param {string} str
- * @param {Eris.Guild} guild
- * @param {Eris.Member} [me] If passed, the word "me" will be interpreted
- * as referencing the specified member
- * @returns {Array} An array where the first item is either a Member or
- * undefined, and the second item is the rest of the string
+ * @returns A tuple (array) where the first item is either a member object or
+ * `undefined`, and the second item is the rest of the string
  */
-export async function parseGuildMember (str, guild, me) {
+export async function parseGuildMember (
+	/** The string to parse */
+	str,
+	/** The guild in which to look for members */
+	guild,
+	/**
+	 * If passed, the word "me" in the input string will be interpreted as
+	 * referencing the specified member
+	 */
+	me,
+): Promise<[Member | undefined, string]> {
 	let match;
 
 	// The "me" keyword, if we're provided with a context for it
@@ -109,12 +136,11 @@ export async function parseGuildMember (str, guild, me) {
  * Tries to parse a string representing a relative amount of time. Accepts
  * stuff in the form "4h", "3 days", "1 hour 2 minutes". May be expanded to
  * support more formats in the future.
- * @param {string} str The string to parse the info from
- * @returns {Array} An array of two values. The first is the number of
+ * @returns A tuple (array) of two values. The first is the number of
  * milliseconds represented by the input. The second is a string containing
  * any leftover text from the end of the string.
  */
-export function parseTime (str) {
+export function parseTime (str: string): [number, string] {
 	let total = 0;
 	// attempt to process the entire string
 	while (str) {
@@ -180,30 +206,14 @@ export function parseTime (str) {
 	return [total, str.trim()];
 }
 
-/**
- * Formats a date and time using Discord's styled unix timestamp format.
- * @param {Date} date
- * @returns {string}
- */
-export const formatDateTime = date => `<t:${Math.round(date.getTime() / 1000)}:f>`;
+/** Formats a date and time using Discord's styled unix timestamp format. */
+export const formatDateTime = (date: Date) => `<t:${Math.round(date.getTime() / 1000)}:f>`;
 
-/**
- * Formats a date using Discord's styled unix timestamp format.
- * @param {Date} date
- * @returns {string}
- */
-export const formatDate = date => `<t:${Math.round(date.getTime() / 1000)}:d>`;
+/** Formats a date using Discord's styled unix timestamp format. */
+export const formatDate = (date: Date) => `<t:${Math.round(date.getTime() / 1000)}:d>`;
 
-/**
- * Formats a time using Discord's styled unix timestamp format.
- * @param {Date} date
- * @returns {string}
- */
-export const formatTime = date => `<t:${Math.round(date.getTime() / 1000)}:t>`;
+/** Formats a time using Discord's styled unix timestamp format. */
+export const formatTime = (date: Date) => `<t:${Math.round(date.getTime() / 1000)}:t>`;
 
-/**
- * Formats a date/time using Discord's relative unix timestamp format.
- * @param {Date} date
- * @returns {string}
- */
-export const formatDateRelative = date => `<t:${Math.round(date.getTime() / 1000)}:R>`;
+/** Formats a date/time using Discord's relative unix timestamp format. */
+export const formatDateRelative = (date: Date) => `<t:${Math.round(date.getTime() / 1000)}:R>`;
