@@ -15,7 +15,7 @@ export default (mongoClient, db) => {
 		token: config.discord.token,
 		prefix: config.discord.prefix,
 		disableDefaultMessageListener: true,
-		applicationCommandGuildID: NODE_ENV === 'production' ? undefined : config.TEMP_guildID,
+		applicationCommandGuildID: process.env.NODE_ENV === 'production' ? undefined : config.TEMP_guildID,
 		restMode: true,
 		// HACK: required for user lookup by tag, better options available
 		// see https://github.com/discord/discord-api-docs/issues/2111 for alternatives

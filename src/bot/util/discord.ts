@@ -1,4 +1,4 @@
-import {randomBytes} from 'crypto'
+import {randomBytes} from 'crypto';
 import {
 	AnyInteraction,
 	CommandInteraction,
@@ -66,11 +66,11 @@ const customIDs = new Set();
  * @returns A promise which resolves to a "modal submit" interaction object when
  * the user submits the modal, or rejects if the timeout is exceeded.
  */
- export async function promptModal<T extends PossiblyUncachedTextable> (
+export async function promptModal<T extends PossiblyUncachedTextable> (
 	/** The client */
 	client: Client,
 	/** The interaction being responded to */
-	interaction: CommandInteraction<T>,
+	sourceInteraction: CommandInteraction<T>,
 	/** Options for the content of the modal */
 	options: Omit<InteractionModalContent, 'custom_id'>,
 	/** Additional options */
@@ -88,17 +88,22 @@ const customIDs = new Set();
 	} while (customIDs.has(customID));
 
 	// Display the modal to the user
-	await interaction.createModal({
+	await sourceInteraction.createModal({
 		custom_id: customID,
 		...options,
 	});
 
 	// TODO: use a single listener for this rather than adding and removing, this will not scale well
 	return new Promise((resolve, reject) => {
-		// Store the ID of the timeout timer
-		let timeoutID;
-
 		// Listen to incoming interactions
+		client.on('interactionCreate', interactionListener);
+
+		// Set a timer to reject the promise if we don't get anything
+		const timeoutID = setTimeout(() => {
+			client.removeListener('interactionCreate', interactionListener);
+			reject();
+		}, timeout);
+
 		function interactionListener (interaction: AnyInteraction) {
 			// Check if this is the interaction we've been waiting for
 			if (interaction.type !== Constants.InteractionTypes.MODAL_SUBMIT) {
@@ -117,14 +122,6 @@ const customIDs = new Set();
 			//       original interaction we created the modal on.
 			resolve(interaction as unknown as ModalSubmitInteraction<T>);
 		}
-
-		client.on('interactionCreate', interactionListener)
-
-		// Set a timer to reject the promise if we don't get anything
-		timeoutID = setTimeout(() => {
-			client.removeListener('interactionCreate', interactionListener);
-			reject();
-		}, timeout);
 	});
 }
 

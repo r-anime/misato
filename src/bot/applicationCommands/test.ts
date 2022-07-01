@@ -1,10 +1,7 @@
-import {SlashCommand} from "yuuko"
-import {Constants} from "eris"
-import {promptModal} from "../util/discord";
-import {blockquote, escape} from "../util/formatting";
-
-import createLogger from 'another-logger';
-const log = createLogger({label: 'cmd:modal-test'});
+import {SlashCommand} from 'yuuko';
+import {Constants} from 'eris';
+import {promptModal} from '../util/discord';
+import {blockquote, escape} from '../util/formatting';
 
 export default new SlashCommand('modal-test', {
 	description: 'Pulls up a modal',
