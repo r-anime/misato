@@ -1,4 +1,17 @@
-import {Guild, Member, Message, User} from 'eris';
+import {randomBytes} from 'crypto'
+import {
+	AnyInteraction,
+	CommandInteraction,
+	Constants,
+	Guild,
+	InteractionModalContent,
+	Member,
+	Message,
+	ModalSubmitInteraction,
+	PossiblyUncachedTextable,
+	User,
+} from 'eris';
+import {Client} from 'yuuko';
 
 /**
  * Waits for a specific user to add a specific emoji to a specific message.
@@ -38,6 +51,78 @@ export function awaitReaction (
 		client.on('messageReactionAdd', reactionListener);
 		setTimeout(() => {
 			client.removeListener('messageReactionAdd', reactionListener);
+			reject();
+		}, timeout);
+	});
+}
+
+// Set of `custom_id`s already in use by modals. Prevents the same ID from being
+// used for multiple modals at once.
+const customIDs = new Set();
+
+/**
+ * Creates a modal in response to the given interaction, then waits for the user
+ * to submit it.
+ * @returns A promise which resolves to a "modal submit" interaction object when
+ * the user submits the modal, or rejects if the timeout is exceeded.
+ */
+ export async function promptModal<T extends PossiblyUncachedTextable> (
+	/** The client */
+	client: Client,
+	/** The interaction being responded to */
+	interaction: CommandInteraction<T>,
+	/** Options for the content of the modal */
+	options: Omit<InteractionModalContent, 'custom_id'>,
+	/** Additional options */
+	{
+		timeout = 10 * 60 * 1000, // 10 minutes
+	}: {
+		/** How long to wait for the modal to be submitted before aborting */
+		timeout?: number;
+	} = {},
+): Promise<ModalSubmitInteraction<T>> {
+	// Generate a new random ID for this modal
+	let customID;
+	do {
+		customID = randomBytes(16).toString('hex');
+	} while (customIDs.has(customID));
+
+	// Display the modal to the user
+	await interaction.createModal({
+		custom_id: customID,
+		...options,
+	});
+
+	// TODO: use a single listener for this rather than adding and removing, this will not scale well
+	return new Promise((resolve, reject) => {
+		// Store the ID of the timeout timer
+		let timeoutID;
+
+		// Listen to incoming interactions
+		function interactionListener (interaction: AnyInteraction) {
+			// Check if this is the interaction we've been waiting for
+			if (interaction.type !== Constants.InteractionTypes.MODAL_SUBMIT) {
+				return;
+			}
+			if (interaction.data.custom_id !== customID) {
+				return;
+			}
+
+			// Stop listening for more interactions; cancel the timeout
+			client.off('interactionCreate', interactionListener);
+			clearTimeout(timeoutID);
+
+			// NOTE: This type assertion is safe. Only one modal has this
+			//       custom_id, so it must come from the same channel as the
+			//       original interaction we created the modal on.
+			resolve(interaction as unknown as ModalSubmitInteraction<T>);
+		}
+
+		client.on('interactionCreate', interactionListener)
+
+		// Set a timer to reject the promise if we don't get anything
+		timeoutID = setTimeout(() => {
+			client.removeListener('interactionCreate', interactionListener);
 			reject();
 		}, timeout);
 	});
