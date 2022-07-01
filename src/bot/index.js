@@ -15,6 +15,7 @@ export default (mongoClient, db) => {
 		token: config.discord.token,
 		prefix: config.discord.prefix,
 		disableDefaultMessageListener: true,
+		applicationCommandGuildID: NODE_ENV === 'production' ? undefined : config.TEMP_guildID,
 		restMode: true,
 		// HACK: required for user lookup by tag, better options available
 		// see https://github.com/discord/discord-api-docs/issues/2111 for alternatives
@@ -40,6 +41,7 @@ export default (mongoClient, db) => {
 	// Register commands and event listeners
 	bot.addDir(path.join(__dirname, 'commands'));
 	bot.addDir(path.join(__dirname, 'events'));
+	bot.addDir(path.join(__dirname, 'applicationCommands'));
 
 	// Make a helper for displaying help information from commands
 	const helpCommand = bot.commandForName('help');
