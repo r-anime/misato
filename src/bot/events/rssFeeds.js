@@ -41,7 +41,6 @@ function buildRssMessageContent (post, feedURL) {
 	}
 
 	if (feedURL.match(/^https?:\/\/nitter/)) {
-		log.debug('it worked');
 		delete contentObject.embed;
 		contentObject.content = post.link.replace(/nitter.*?\//, 'twitter.com/').replace(/[?#].*$/, '');
 	}
