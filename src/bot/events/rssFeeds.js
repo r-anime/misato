@@ -40,9 +40,13 @@ function buildRssMessageContent (post, feedURL) {
 		// TODO: fetch author's avatar and display it in author.icon_url
 	}
 
-	if (feedURL.match()) {
-		return contentObject;
+	if (feedURL.match(/^https?:\/\/nitter/)) {
+		log.debug('it worked');
+		delete contentObject.embed;
+		contentObject.content = post.link.replace(/nitter.*?\//, 'twitter.com/').replace(/[?#].*$/, '');
 	}
+
+	return contentObject;
 }
 
 export default new EventListener('ready', ({client, db}) => {
