@@ -5,12 +5,12 @@ import Parser from 'rss-parser';
 const rssParser = new Parser();
 
 /**
- * Builds an embed object to use when posting a feed.
+ * Builds a message content object to use when posting a feed item.
  * @param {object} post The parsed feed entry to generate an embed for.
- * @param {string} url The URL of the source of the content.
+ * @param {string} feedURL The URL of the source of the content.
  * @returns {object}
  */
-function buildRssEmbed (post, url) {
+function buildRssMessageContent (post, feedURL) {
 	let tempTitle = post.title;
 	// titles in embeds have a 256 char limit
 	if (post.title.length > 253) {
@@ -18,26 +18,34 @@ function buildRssEmbed (post, url) {
 	}
 
 	// build embed
-	const embed = {
-		author: {
-			name: post.author,
-		},
-		title: tempTitle,
-		url: post.link,
-		timestamp: post.isoDate,
-		footer: {
-			text: url,
+	const contentObject = {
+		content: post.link,
+		embed: {
+			author: {
+				name: post.author,
+			},
+			title: tempTitle,
+			url: post.link,
+			timestamp: post.isoDate,
+			footer: {
+				text: feedURL,
+			},
 		},
 	};
 
 	// Unique processing for different services
-	if (url.match(/^https?:\/\/(\w+\.)?reddit\.com/)) {
-		embed.color = 0xFF4500;
-		embed.footer.icon_url = 'https://i.imgur.com/F66Nd8H.png';
+	if (feedURL.match(/^https?:\/\/(\w+\.)?reddit\.com/)) {
+		contentObject.embed.color = 0xFF4500;
+		contentObject.embed.footer.icon_url = 'https://i.imgur.com/F66Nd8H.png';
 		// TODO: fetch author's avatar and display it in author.icon_url
 	}
 
-	return embed;
+	if (feedURL.match(/^https?:\/\/nitter/)) {
+		delete contentObject.embed;
+		contentObject.content = post.link.replace(/nitter.*?\//, 'twitter.com/').replace(/[?#].*$/, '');
+	}
+
+	return contentObject;
 }
 
 export default new EventListener('ready', ({client, db}) => {
@@ -61,9 +69,9 @@ export default new EventListener('ready', ({client, db}) => {
 				const itemDate = new Date(post.isoDate);
 				// If this item is from after the last check, process it
 				if (itemDate > storedFeed.lastCheck) {
-					const embed = buildRssEmbed(post, storedFeed.url);
+					const contentObject = buildRssMessageContent(post, storedFeed.url);
 					try {
-						const message = await client.createMessage(feedChannelID, {content: post.link, embed});
+						const message = await client.createMessage(feedChannelID, contentObject);
 						// If this is an announcement channel, publish the message
 						if (message.channel instanceof NewsChannel) {
 							await message.crosspost();
