@@ -217,3 +217,6 @@ export const formatTime = (date: Date) => `<t:${Math.round(date.getTime() / 1000
 
 /** Formats a date/time using Discord's relative unix timestamp format. */
 export const formatDateRelative = (date: Date) => `<t:${Math.round(date.getTime() / 1000)}:R>`;
+
+/** Size of avatars shown from the avatar and defaultavatar command */
+export const AVATAR_IMAGE_SIZE = 512;

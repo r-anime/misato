@@ -1,13 +1,11 @@
 // Shows the default avatar of the user provided
 
 import {Command} from 'yuuko';
-import {parseUser} from '../../util/discord';
+import {AVATAR_IMAGE_SIZE, parseUser} from '../../util/discord';
 
 const command = new Command('defaultavatar', async (msg, args) => {
-	const MAX_AVATAR_IMAGE_SIZE = 512;
-
 	if (args.length === 0) {
-		msg.channel.createMessage(msg.author.dynamicAvatarURL('', MAX_AVATAR_IMAGE_SIZE)).catch(() => {});
+		msg.channel.createMessage(msg.author.dynamicAvatarURL('', AVATAR_IMAGE_SIZE)).catch(() => {});
 		return;
 	}
 	const [user] = await parseUser(args.join(' '), msg.channel.guild, msg.author);
@@ -16,7 +14,7 @@ const command = new Command('defaultavatar', async (msg, args) => {
 		return;
 	}
 
-	msg.channel.createMessage(user.dynamicAvatarURL('', MAX_AVATAR_IMAGE_SIZE)).catch(() => {});
+	msg.channel.createMessage(user.dynamicAvatarURL('', AVATAR_IMAGE_SIZE)).catch(() => {});
 });
 command.help = {
 	args: '[user]',
