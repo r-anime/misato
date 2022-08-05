@@ -10,7 +10,7 @@ const command = new Command('defaultavatar', async (msg, args) => {
 		msg.channel.createMessage(msg.author.dynamicAvatarURL('', MAX_AVATAR_IMAGE_SIZE)).catch(() => {});
 		return;
 	}
-	const [user] = await parseUser(args[0], msg.channel.guild, msg.author);
+	const [user] = await parseUser(args.join(' '), msg.channel.guild, msg.author);
 	if (!user) {
 		msg.channel.createMessage('Member not found, check if what you\'re using is correct or try using an ID.').catch(() => {});
 		return;
