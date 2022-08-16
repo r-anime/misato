@@ -106,6 +106,10 @@ const unitAliases = {
 	'feet': 'ft',
 	'inch': 'in',
 	'inches': 'in',
+	'f': 'F',
+	'c': 'C',
+	'k': 'K',
+	'r': 'R',
 };
 
 const command = new Command('convert', async (msg, args, context) => {
