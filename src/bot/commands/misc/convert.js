@@ -23,7 +23,7 @@ async function fetchLatestRates () {
 			console.error('Error while fetching latest currency rates:', error);
 			throw error;
 		}
-		console.debug('Rates:', rates)
+		console.debug('Rates:', rates);
 		lastRateFetch = Date.now();
 		fetchingRates = null;
 	})();
