@@ -1,16 +1,18 @@
 import log from 'another-logger';
 import {EventListener} from 'yuuko';
-import {NewsChannel} from 'eris';
+import {MessageContent, NewsChannel} from 'eris';
 import Parser from 'rss-parser';
-const rssParser = new Parser();
+const rssParser = new Parser<unknown, {author?: string}>();
+
+// rss-parser has somewhat wack types, so we just manually extract the item type
+type FeedItem = Awaited<ReturnType<(typeof rssParser)['parseURL']>>['items'][number];
 
 /**
  * Builds a message content object to use when posting a feed item.
- * @param {object} post The parsed feed entry to generate an embed for.
- * @param {string} feedURL The URL of the source of the content.
- * @returns {object}
+ * @param post The parsed feed entry to generate an embed for.
+ * @param feedURL The URL of the source of the content.
  */
-function buildRssMessageContent (post, feedURL) {
+function buildRssMessageContent (post: FeedItem, feedURL: string) {
 	let tempTitle = post.title;
 	// titles in embeds have a 256 char limit
 	if (post.title.length > 253) {
@@ -18,7 +20,7 @@ function buildRssMessageContent (post, feedURL) {
 	}
 
 	// build embed
-	const contentObject = {
+	const contentObject: MessageContent = {
 		content: post.link,
 		embed: {
 			author: {
