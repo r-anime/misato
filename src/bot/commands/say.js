@@ -42,7 +42,7 @@ const command = new Command('say', async (msg, args, context) => {
 	}
 }, {permissions: ['manageMessages']});
 command.help = {
-	args: '<channel> <message>',
+	args: '<channel or thread ID> <message>',
 	desc: 'Says the contents passed after the specified channel, or in the same channel if no channel is passed.',
 };
 export default command;
