@@ -10,7 +10,7 @@ const command = new Command('embededit', async (msg, args, context) => {
 
 	const channelId = args[0];
 	const messageId = args[1];
-	const newMessageContent = args.slice(2, args.length).join(' ');
+	const newMessageContent = args.slice(2).join(' ');
 	const oldMessage = await context.client.getMessage(channelId, messageId).catch(() => {});
 
 	// log the old content just in case
