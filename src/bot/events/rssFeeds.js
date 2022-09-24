@@ -65,10 +65,13 @@ export default new EventListener('ready', ({client, db}) => {
 			// Also keep track of the latest date of the items we process so we don't try to process them again
 			let latestDate = storedFeed.lastCheck;
 			const feedChannelID = storedFeed.channelId;
+			log.info(`Feed ${storedFeed.url}: Latest check is`, latestDate);
 			await Promise.all(rssFeed.items.map(async post => {
 				const itemDate = new Date(post.isoDate);
+				log.info(`Feed ${storedFeed.url}: item ${post.guid}:`, itemDate, post);
 				// If this item is from after the last check, process it
 				if (itemDate > storedFeed.lastCheck) {
+					log.info(`Feed ${storedFeed.url}: item ${post.guid}: sending message`);
 					const contentObject = buildRssMessageContent(post, storedFeed.url);
 					try {
 						const message = await client.createMessage(feedChannelID, contentObject);
@@ -84,6 +87,7 @@ export default new EventListener('ready', ({client, db}) => {
 				}
 				// Check if this is the latest post we've seen yet
 				if (itemDate > latestDate) {
+					log.info(`Feed ${storedFeed.url}: item ${post.guid}: greater than current latestDate`, latestDate);
 					latestDate = itemDate;
 				}
 			}));
@@ -95,6 +99,7 @@ export default new EventListener('ready', ({client, db}) => {
 					lastCheck: latestDate,
 				},
 			};
+			log.info(`Feed ${storedFeed.url}: updating lastCheck to`, latestDate);
 			await collection.updateOne(query, update, {upsert: false}).catch(error => log.error('Failed to update document in feed event:', error));
 		}));
 	}
