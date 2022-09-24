@@ -16,7 +16,7 @@ const command = new Command('embedsay', async (msg, args, context) => {
 	}
 
 	if (channel) {
-		const messageContent = args.slice(1, args.length).join(' ');
+		const messageContent = args.slice(1).join(' ');
 		// The character limit for embed descriptions is 4096 so I set 4000 to leave room for the IDs though 96 might be overkill
 		if (messageContent.length > 4000) {
 			msg.channel.createMessage('Message is too big!').catch(() => {});
@@ -29,9 +29,9 @@ const command = new Command('embedsay', async (msg, args, context) => {
 			},
 		}).catch(() => {});
 	} else {
-		const messageContent = args.slice(0, args.length).join(' ');
+		const messageContent = args.join(' ');
 		// same as above
-		if (messageContent.length > 3950) {
+		if (messageContent.length > 4000) {
 			msg.channel.createMessage('Message is too big!').catch(() => {});
 			return;
 		}

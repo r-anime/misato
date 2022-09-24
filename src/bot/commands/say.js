@@ -16,7 +16,7 @@ const command = new Command('say', async (msg, args, context) => {
 	}
 
 	if (channel) {
-		const messageContent = args.slice(1, args.length).join(' ');
+		const messageContent = args.slice(1).join(' ');
 		// because .edit requires an extra argument, I'm giving us some breathing room here to not cause a deadlock
 		// where a high char count message would not be editable (the user would not be able to send the command message)
 		// even if keeping the same char count.
@@ -29,7 +29,7 @@ const command = new Command('say', async (msg, args, context) => {
 
 		context.client.createMessage(channel.id, messageContent).catch(() => {});
 	} else {
-		const messageContent = args.slice(0, args.length).join(' ');
+		const messageContent = args.join(' ');
 		// same as above
 		if (messageContent.length > 1950) {
 			msg.channel.createMessage('Message is too big!').catch(() => {});

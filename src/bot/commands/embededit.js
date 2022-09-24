@@ -15,11 +15,18 @@ const command = new Command('embededit', async (msg, args, context) => {
 
 	// log the old content just in case
 	if (oldMessage) {
-		context.client.createMessage(botLogChannelId, {
-			embed: {
-				description: oldMessage.content,
-			},
-		}).catch(() => {});
+		let oldContent;
+		// If the message is an embed show an embed message
+		if (oldMessage.embeds.length > 0) {
+			oldContent = {
+				embed: {
+					description: oldMessage.embeds[0].description,
+				},
+			};
+		} else {
+			oldContent = oldMessage.content;
+		}
+		context.client.createMessage(botLogChannelId, oldContent).catch(() => {});
 	}
 	// same reason as in .embedsay
 	if (newMessageContent.length > 4000) {
@@ -32,6 +39,7 @@ const command = new Command('embededit', async (msg, args, context) => {
 		embed: {
 			description: newMessageContent,
 		},
+		content: '',
 	}).catch(() => {});
 }, {permissions: ['manageMessages']});
 command.help = {

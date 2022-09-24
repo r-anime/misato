@@ -14,7 +14,20 @@ const command = new Command('edit', async (msg, args, context) => {
 	const oldMessage = await context.client.getMessage(channelId, messageId).catch(() => {});
 
 	// log the old content just in case
-	if (oldMessage) context.client.createMessage(botLogChannelId, oldMessage.content).catch(() => {});
+	if (oldMessage) {
+		let oldContent;
+		// If the message is an embed show an embed message
+		if (oldMessage.embeds.length > 0) {
+			oldContent = {
+				embed: {
+					description: oldMessage.embeds[0].description,
+				},
+			};
+		} else {
+			oldContent = oldMessage.content;
+		}
+		context.client.createMessage(botLogChannelId, oldContent).catch(() => {});
+	}
 	// same reason as in .say
 	if (newMessageContent.length > 1950) {
 		msg.channel.createMessage('Message is too big!').catch(() => {});
@@ -22,7 +35,10 @@ const command = new Command('edit', async (msg, args, context) => {
 	}
 
 	// edit the message
-	context.client.editMessage(channelId, messageId, newMessageContent).catch(() => {});
+	context.client.editMessage(channelId, messageId, {
+		embeds: [],
+		content: newMessageContent,
+	}).catch(() => {});
 }, {permissions: ['manageMessages']});
 command.help = {
 	args: '<channel or thread ID> <message ID> <message text...>',
