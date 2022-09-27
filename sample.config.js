@@ -40,11 +40,6 @@ module.exports = {
 		// Where the frontend files are built to and stored from
 		frontendBuildDir: path.resolve(__dirname, 'frontend/dist'),
 		sessionSecret: 'lkasjdf;',
-		// Options for hosting an HTTPS server (leave unset for HTTP only in development)
-		// https: {
-		// 	keyPath: '',
-		// 	certPath: '',
-		// },
 	},
 
 	// Third party APIs for command functionality

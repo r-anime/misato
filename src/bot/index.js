@@ -20,6 +20,7 @@ export default (mongoClient, db) => {
 		// see https://github.com/discord/discord-api-docs/issues/2111 for alternatives
 		// #76
 		getAllUsers: true,
+		intents: ['all'],
 		// TODO: Remove when Eris is updated and this becomes default behavior
 		rest: {
 			decodeReasons: false,
