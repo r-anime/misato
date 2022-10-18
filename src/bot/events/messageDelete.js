@@ -1,9 +1,9 @@
 import Eris from 'eris';
 import {EventListener} from 'yuuko';
 import config from '../../../config';
-import {blockquote} from '../util/formatting';
 
 //  Should consider adding whether it was deleted by a mod or the user by cross referencing audit logs
+
 
 export default new EventListener('messageDelete', (message, {client}) => {
 	setTimeout(() => {
@@ -19,15 +19,19 @@ export default new EventListener('messageDelete', (message, {client}) => {
 		// Ignore if message author has manage message ie. is a mod
 		if (message.channel.permissionsOf(message.author.id).has('manageMessages')) return;
 
-		const urlRegex = /[(http(s)?)://(www.)?a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/;
-		const content = message.content.trim().replace(urlRegex, '');
+		let content = '';
 
-		// Ignore if message has no text content ie. message with just an attachment or just a link or both
-		if (content.length === 0) return;
+		if (message.content.length !== 0 && message.attachments.length !== 0) {
+			content = 'Text and Attachment Deleted';
+		} else if (message.content.length === 0 && message.attachments.length !== 0) {
+			content = 'Attachment Deleted';
+		} else {
+			content = 'Text Deleted';
+		}
 
 		client.createMessage(config.TEMP_loggingChannelID, {
 			embed: {
-				title: 'Message Deleted',
+				title: 'Deletion Log',
 				fields: [
 					{
 						name: 'Channel',
@@ -40,9 +44,9 @@ export default new EventListener('messageDelete', (message, {client}) => {
 						inline: true,
 					},
 				],
-				description: blockquote(content),
+				description: content,
 				timestamp: new Date(message.createdAt),
 			},
-		}).catch(() => {});
+		}).catch(error => console.log(error));
 	}, 2000);
 });
