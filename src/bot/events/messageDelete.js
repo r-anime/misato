@@ -22,9 +22,9 @@ export default new EventListener('messageDelete', (message, {client}) => {
 		let content = '';
 
 		if (message.content.length !== 0 && message.attachments.length !== 0) {
-			content = 'Text and Attachment Deleted';
+			content = 'Text and Attachments Deleted';
 		} else if (message.content.length === 0 && message.attachments.length !== 0) {
-			content = 'Attachment Deleted';
+			content = 'Attachments Deleted';
 		} else {
 			content = 'Text Deleted';
 		}
