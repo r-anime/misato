@@ -25,7 +25,6 @@ export default new EventListener('messageDelete', (message, {client}) => {
 			if (message.channel.permissionsOf(message.author.id).has('manageMessages')) return;
 		} catch (error) {
 			// The line in the try block sometimes crashes when you use the 'Delete Previous Messages' option when manually banning someone. Need to find out why
-			log.error(error);
 		}
 
 		let content = '';
