@@ -38,7 +38,7 @@ export default new EventListener('messageDelete', (message, {client}) => {
 			content = 'Text Deleted';
 		}
 
-		client.createMessage(config.TEMP_loggingChannelID, {
+		client.createMessage(config.TEMP_deletionLoggingChannelID, {
 			embed: {
 				title: 'Deletion Log',
 				fields: [
