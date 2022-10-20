@@ -1,7 +1,8 @@
 import Eris from 'eris';
 import {EventListener} from 'yuuko';
 import config from '../../../config';
-
+import createLogger from 'another-logger';
+const log = createLogger({label: 'messageDelete'});
 //  Should consider adding whether it was deleted by a mod or the user by cross referencing audit logs
 
 
@@ -10,14 +11,22 @@ export default new EventListener('messageDelete', (message, {client}) => {
 		// Check if message was deleted in a DM or other guilds and do not log if so
 		if (!message.guildID || message.guildID !== config.TEMP_guildID) return;
 
+		if (!message) return;
+
 		// Check if the message is a partial message and if so do not log
 		if (!(message instanceof Eris.Message)) return;
 
 		// Check if the message was from a bot
 		if (message.author.bot) return;
 
+
 		// Ignore if message author has manage message ie. is a mod
-		if (message.channel.permissionsOf(message.author.id).has('manageMessages')) return;
+		try {
+			if (message.channel.permissionsOf(message.author.id).has('manageMessages')) return;
+		} catch (error) {
+			// The line in the try block sometimes crashes when you use the 'Delete Previous Messages' option when manually banning someone. Need to find out why
+			log.error(error);
+		}
 
 		let content = '';
 
@@ -47,6 +56,6 @@ export default new EventListener('messageDelete', (message, {client}) => {
 				description: content,
 				timestamp: new Date(message.createdAt),
 			},
-		}).catch(error => console.log(error));
+		}).catch(error => log.error(error));
 	}, 2000);
 });
