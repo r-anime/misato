@@ -8,10 +8,10 @@ const log = createLogger({label: 'messageDelete'});
 
 export default new EventListener('messageDelete', (message, {client}) => {
 	setTimeout(() => {
+		if (!message) return;
+
 		// Check if message was deleted in a DM or other guilds and do not log if so
 		if (!message.guildID || message.guildID !== config.TEMP_guildID) return;
-
-		if (!message) return;
 
 		// Check if the message is a partial message and if so do not log
 		if (!(message instanceof Eris.Message)) return;
