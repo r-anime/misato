@@ -6,13 +6,13 @@ module.exports.up = async () => {
 	await mongoClient.connect();
 	const db = mongoClient.db(config.mongodb.databaseName);
 
-	// Update validator to add guildID property
+	// Update validator to add guildId property
 	await db.command({
 		collMod: 'rssFeeds',
 		validator: {
 			$jsonSchema: {
 				bsonType: 'object',
-				required: ['name', 'url', 'guildID', 'channelId', 'lastCheck'],
+				required: ['name', 'url', 'guildId', 'channelId', 'lastCheck'],
 				properties: {
 					name: {
 						bsonType: 'string',
@@ -20,7 +20,7 @@ module.exports.up = async () => {
 					url: {
 						bsonType: 'string',
 					},
-					guildID: {
+					guildId: {
 						bsonType: 'string',
 					},
 					channelId: {
