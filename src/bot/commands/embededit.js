@@ -1,9 +1,9 @@
-// Edits the message and logs the old content in #bot-log
+// Edits the message into an embed and logs the old content in #bot-log
 import {Command} from 'yuuko';
 import config from '../../../config';
 const botLogChannelId = config.TEMP_loggingChannelID;
 
-const command = new Command('edit', async (msg, args, context) => {
+const command = new Command('embededit', async (msg, args, context) => {
 	if (args.length < 2) {
 		return context.sendHelp(msg, context);
 	}
@@ -28,20 +28,22 @@ const command = new Command('edit', async (msg, args, context) => {
 		}
 		context.client.createMessage(botLogChannelId, oldContent).catch(() => {});
 	}
-	// same reason as in .say
-	if (newMessageContent.length > 1950) {
+	// same reason as in .embedsay
+	if (newMessageContent.length > 4000) {
 		msg.channel.createMessage('Message is too big!').catch(() => {});
 		return;
 	}
 
 	// edit the message
 	context.client.editMessage(channelId, messageId, {
-		embeds: [],
-		content: newMessageContent,
+		embed: {
+			description: newMessageContent,
+		},
+		content: '',
 	}).catch(() => {});
 }, {permissions: ['manageMessages']});
 command.help = {
 	args: '<channel or thread ID> <message ID> <message text...>',
-	desc: `Edits the given message to have the given content. Logs the previous content in <#${botLogChannelId}>.`,
+	desc: `Edits the given message to have the given content wrapped in an embed. Logs the previous content in <#${botLogChannelId}>.`,
 };
 export default command;

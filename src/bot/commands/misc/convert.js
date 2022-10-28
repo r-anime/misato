@@ -13,9 +13,17 @@ async function fetchLatestRates () {
 	fetchingRates = (async () => {
 		// NOTE: This API only seems to return EUR rates if you request certain
 		//       base currencies, no idea why.
-		const response = await fetch(`https://freecurrencyapi.net/api/v1/rates?base_currency=USD&apikey=${config.thirdParty.freeCurrencyAPI}`).then(r => r.json());
-		const data = response.data;
-		rates = data[Object.keys(data)[0]];
+		try {
+			const response = await fetch(`https://api.currencyapi.com/v3/latest?base_currency=USD&apikey=${config.thirdParty.freeCurrencyAPI}`).then(r => r.json());
+			rates = {};
+			for (const [currency, info] of Object.entries(response.data)) {
+				rates[currency] = info.value;
+			}
+		} catch (error) {
+			console.error('Error while fetching latest currency rates:', error);
+			throw error;
+		}
+		console.debug('Rates:', rates);
 		lastRateFetch = Date.now();
 		fetchingRates = null;
 	})();

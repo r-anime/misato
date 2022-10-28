@@ -9,6 +9,7 @@ module.exports = {
 	TEMP_loggingChannelID: '',
 	TEMP_leavingChannelID: '',
 	TEMP_joiningChannelID: '',
+	TEMP_deletionLoggingChannelID: '',
 
 	// Mongo database information
 	mongodb: {
