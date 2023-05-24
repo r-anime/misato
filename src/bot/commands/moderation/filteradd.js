@@ -34,7 +34,7 @@ const command = new Command('filteradd', async (msg, args, {db}) => {
 
 	// Modify the existing rule to add the new phrase
 	let rule = makeRuleForText(ruleText);
-	if (existingRule.type === 'multiple' && existingRule.op === 'or') {
+	if (existingRule !== null && existingRule.type === 'multiple' && existingRule.op === 'or') {
 		// If we already have a top-level "or" rule, we add the new rule as a child of that one
 		existingRule.children.push(rule);
 		rule = existingRule;
