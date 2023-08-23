@@ -15,7 +15,6 @@ import createWebServer from './web';
 
 (async () => {
 	// Set up MongoDB
-	console.log(MONGODB_CONNECTION_URI);
 	const mongoClient = new MongoClient(MONGODB_CONNECTION_URI, {useUnifiedTopology: true});
 	await mongoClient.connect();
 	log.success('Connected to MongoDB on', MONGODB_CONNECTION_URI);
