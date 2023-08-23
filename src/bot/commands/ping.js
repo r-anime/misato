@@ -5,24 +5,30 @@ import createLogger from 'another-logger';
 import {Command} from 'yuuko';
 import childProcess from 'child_process';
 
+const {GIT_COMMIT_HASH, GIT_REPO_URI} = process.env;
+
 const log = createLogger({label: 'cmd:ping'});
 
-let commitHash = null;
-childProcess.exec('git rev-parse --short HEAD', (err, stdout) => {
-	if (err) {
-		return;
-	}
-	commitHash = stdout.trim();
-});
+let commitHash = GIT_COMMIT_HASH;
+if (!commitHash) {
+	childProcess.exec('git rev-parse --short HEAD', (err, stdout) => {
+		if (err) {
+			return;
+		}
+		commitHash = stdout.trim();
+	});
+}
 
-let gitRepoURI = null;
-childProcess.exec('git remote get-url origin', (err, stdout) => {
-	if (err) {
-		log.warn('Failed to fetch git remote URI:', err);
-		return;
-	}
-	gitRepoURI = stdout.trim().replace(/\.git$/, '');
-});
+let gitRepoURI = GIT_REPO_URI;
+if (!gitRepoURI) {
+	childProcess.exec('git remote get-url origin', (err, stdout) => {
+		if (err) {
+			log.warn('Failed to fetch git remote URI:', err);
+			return;
+		}
+		gitRepoURI = stdout.trim().replace(/\.git$/, '');
+	});
+}
 
 const command = new Command('ping', async (msg, args, {prefix, client}) => {
 	let messageContent = 'Pong!';
