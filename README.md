@@ -1,4 +1,4 @@
-# misato [![deploy status](https://img.shields.io/github/deployments/r-anime/discord-mod-bot/production?label=deploy)](https://github.com/r-anime/discord-mod-bot/deployments/activity_log?environment=production)
+# misato
 
 It's not much, but it's ours.
 
