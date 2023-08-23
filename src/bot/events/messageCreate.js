@@ -1,9 +1,10 @@
 import createLogger from 'another-logger';
 const log = createLogger({label: 'messageCreate'});
 import {EventListener} from 'yuuko';
-import config from '../../../config';
 import {messageMatchesRule, isValidRule} from '../../common/filters';
 import {blockquote} from '../util/formatting';
+
+const {TEMP_LOGGING_CHANNEL_ID} = process.env;
 
 export default new EventListener('messageCreate', async (message, {client, db}) => {
 	if (message.author.bot) return;
@@ -22,7 +23,7 @@ export default new EventListener('messageCreate', async (message, {client, db}) 
 
 						// Log the filtered message to the log channel
 						// TODO: split this out into a proper logging utility
-						client.createMessage(config.TEMP_loggingChannelID, {
+						client.createMessage(TEMP_LOGGING_CHANNEL_ID, {
 							embed: {
 								title: 'Message filtered',
 								fields: [

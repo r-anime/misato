@@ -1,11 +1,12 @@
 import {EventListener} from 'yuuko';
-import config from '../../../config';
+
+const {TEMP_GUILD_ID, TEMP_LEAVING_CHANNEL_ID} = process.env;
 
 export default new EventListener('guildMemberRemove', async (guild, member, {client}) => {
 	if (member.bot) return;
-	if (guild.id !== config.TEMP_guildID) return;
+	if (guild.id !== TEMP_GUILD_ID) return;
 
-	await client.createMessage(config.TEMP_leavingChannelID, {
+	await client.createMessage(TEMP_LEAVING_CHANNEL_ID, {
 		content: `User **<@!${member.id}> (${member.username}#${member.discriminator})** has left the server`,
 	}).catch(() => {});
 });

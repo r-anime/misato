@@ -11,8 +11,8 @@ You'll want [Node](https://nodejs.org/en/download/) 12+ and a [MongoDB](https://
 ```bash
 # Install dependencies
 npm install
-# Create your config file from the sample and fill it in
-cp sample.config.js config.js && $EDITOR config.js
+# Create your environment file from the sample and fill it in
+cp .env.sample .env && $EDITOR .env
 # Migrate the database
 npx migrate up
 ```
@@ -25,6 +25,9 @@ npm install
 # Run the project
 npm run start
 ```
+
+## Usage with Docker
+
 
 ## Contributing
 

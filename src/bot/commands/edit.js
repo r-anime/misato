@@ -1,7 +1,6 @@
 // Edits the message and logs the old content in #bot-log
 import {Command} from 'yuuko';
-import config from '../../../config';
-const botLogChannelId = config.TEMP_loggingChannelID;
+const {TEMP_LOGGING_CHANNEL_ID} = process.env;
 
 const command = new Command('edit', async (msg, args, context) => {
 	if (args.length < 2) {
@@ -26,7 +25,7 @@ const command = new Command('edit', async (msg, args, context) => {
 		} else {
 			oldContent = oldMessage.content;
 		}
-		context.client.createMessage(botLogChannelId, oldContent).catch(() => {});
+		context.client.createMessage(TEMP_LOGGING_CHANNEL_ID, oldContent).catch(() => {});
 	}
 	// same reason as in .say
 	if (newMessageContent.length > 1950) {
@@ -42,6 +41,6 @@ const command = new Command('edit', async (msg, args, context) => {
 }, {permissions: ['manageMessages']});
 command.help = {
 	args: '<channel or thread ID> <message ID> <message text...>',
-	desc: `Edits the given message to have the given content. Logs the previous content in <#${botLogChannelId}>.`,
+	desc: `Edits the given message to have the given content. Logs the previous content in <#${TEMP_LOGGING_CHANNEL_ID}>.`,
 };
 export default command;

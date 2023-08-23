@@ -1,10 +1,11 @@
 import log from 'another-logger';
 import polka from 'polka';
 import * as util from '../util';
-import config from '../../../config';
 import Eris from 'eris';
 
-const tempChannelID = config.TEMP_channelAutomationChannelID;
+const {TEMP_GUILD_ID, TEMP_CHANNEL_AUTOMATION_CHANNEL_ID} = process.env;
+
+const tempChannelID = TEMP_CHANNEL_AUTOMATION_CHANNEL_ID;
 
 function getStuffFromGuild (listMessages) {
 	const allChannelContent = listMessages.reverse().map(message => message.content).join('\n');
@@ -81,14 +82,14 @@ export default (db, client) => polka()
 		const {guildID} = request.params;
 
 		// TODO: hardcoded
-		if (guildID !== config.TEMP_guildID || !await util.thisUserManagesGuild(request, client, db, guildID)) {
+		if (guildID !== TEMP_GUILD_ID || !await util.thisUserManagesGuild(request, client, db, guildID)) {
 			response.writeHead(401);
 			response.end();
 			return;
 		}
 
 		// Search through the messages in the channel and find all the existing categories and mappings
-		const guild = client.guilds.get(config.TEMP_guildID);
+		const guild = client.guilds.get(TEMP_GUILD_ID);
 		const listChannel = guild.channels.get(tempChannelID) || await client.getRESTChannel(tempChannelID);
 		const listMessages = await listChannel.getMessages();
 
@@ -103,7 +104,7 @@ export default (db, client) => polka()
 		const {guildID} = request.params;
 
 		// TODO: hardcoded
-		if (guildID !== config.TEMP_guildID || !await util.thisUserManagesGuild(request, client, db, guildID)) {
+		if (guildID !== TEMP_GUILD_ID || !await util.thisUserManagesGuild(request, client, db, guildID)) {
 			response.writeHead(401);
 			response.end();
 			return;
@@ -136,7 +137,7 @@ export default (db, client) => polka()
 		// TODO: Okay this is the weird custom logic part that eventually we'll want to completely redo
 
 		// Search through the messages in the channel and find all the existing categories and mappings
-		const guild = client.guilds.get(config.TEMP_guildID);
+		const guild = client.guilds.get(TEMP_GUILD_ID);
 		const listChannel = guild.channels.get(tempChannelID) || await client.getRESTChannel(tempChannelID);
 		const listMessages = await listChannel.getMessages();
 
@@ -295,7 +296,7 @@ export default (db, client) => polka()
 				emoji: trigger.emoji,
 				roleID: trigger.roleID,
 				channelID: tempChannelID,
-				guildID: config.TEMP_guildID,
+				guildID: TEMP_GUILD_ID,
 				messageID,
 			}).catch(log.warn);
 		}));
@@ -310,7 +311,7 @@ export default (db, client) => polka()
 		// 		const existing = await db.collection('reactionRoles').findOne({
 		// 			emoji,
 		// 			roleID,
-		// 			guildID: config.TEMP_guildID,
+		// 			guildID: TEMP_GUILD_ID,
 		// 			channelID: TEMP_channelID,
 		// 		});
 		// 	}

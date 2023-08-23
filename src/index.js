@@ -2,20 +2,24 @@
 // bot process and web server, and coordinates communication between these three
 // parts of the system via `child_process` IPC.
 
+import {config} from 'dotenv';
+config();
+
 import createLogger from 'another-logger';
 const log = createLogger({label: 'core'});
 import {MongoClient} from 'mongodb';
 
-import config from '../config';
+const {MONGODB_CONNECTION_URI, MONGODB_DATABASE} = process.env;
 import createDiscordClient from './bot';
 import createWebServer from './web';
 
 (async () => {
 	// Set up MongoDB
-	const mongoClient = new MongoClient(config.mongodb.url, {useUnifiedTopology: true});
+	console.log(MONGODB_CONNECTION_URI);
+	const mongoClient = new MongoClient(MONGODB_CONNECTION_URI, {useUnifiedTopology: true});
 	await mongoClient.connect();
-	log.success('Connected to MongoDB on', config.mongodb.url);
-	const db = mongoClient.db(config.mongodb.databaseName);
+	log.success('Connected to MongoDB on', MONGODB_CONNECTION_URI);
+	const db = mongoClient.db(MONGODB_DATABASE);
 
 	// Start the Discord bot
 	log.debug('Spawning discord bot process');

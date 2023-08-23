@@ -7,13 +7,13 @@ import {Client} from 'yuuko';
 import createLogger from 'another-logger';
 const log = createLogger({label: 'discord'});
 
-import config from '../../config';
+const {DISCORD_TOKEN, DISCORD_PREFIX} = process.env;
 
 export default (mongoClient, db) => {
 	// Create the bot
 	const bot = new Client({
-		token: config.discord.token,
-		prefix: config.discord.prefix,
+		token: DISCORD_TOKEN,
+		prefix: DISCORD_PREFIX,
 		disableDefaultMessageListener: true,
 		restMode: true,
 		// HACK: required for user lookup by tag, better options available

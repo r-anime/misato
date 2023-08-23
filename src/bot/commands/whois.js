@@ -1,9 +1,10 @@
 import createLogger from 'another-logger';
 const log = createLogger({label: 'cmd:whois'});
 import {Command} from 'yuuko';
-import config from '../../../config';
 import {parseUser, formatDate} from '../util/discord';
 import {escape} from '../util/formatting';
+
+const {HOST} = process.env;
 
 // function for generating the reddit info
 async function redditLine (userID, guildID, db) {
@@ -144,7 +145,7 @@ const command = new Command('whois', async (message, args, context) => {
 		return;
 	}
 	let content = (await Promise.all([
-		`__Website: \n**<${config.web.host}/guilds/${message.channel.guild.id}/members/${user.id}>**__`,
+		`__Website: \n**<${HOST}/guilds/${message.channel.guild.id}/members/${user.id}>**__`,
 		`__User: **<@!${user.id}> (${user.username}#${user.discriminator})**__`,
 		`__Account Age: **${formatDate(new Date(user.createdAt))}**__`,
 		isUserStillMember(message.channel.guild, user.id),

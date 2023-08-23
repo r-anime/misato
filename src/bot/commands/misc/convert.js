@@ -1,9 +1,10 @@
 // Converts from one currency to another based on this API: http://exchangeratesapi.io/
 
 import {Command} from 'yuuko';
-import config from '../../../../config';
 import fetch from 'node-fetch';
 import convert from 'convert-units';
+
+const {FREECURRENCYAPI_KEY} = process.env;
 
 // Cache the rates so we don't hit the API too often
 let rates = {};
@@ -14,7 +15,7 @@ async function fetchLatestRates () {
 		// NOTE: This API only seems to return EUR rates if you request certain
 		//       base currencies, no idea why.
 		try {
-			const response = await fetch(`https://api.currencyapi.com/v3/latest?base_currency=USD&apikey=${config.thirdParty.freeCurrencyAPI}`).then(r => r.json());
+			const response = await fetch(`https://api.currencyapi.com/v3/latest?base_currency=USD&apikey=${FREECURRENCYAPI_KEY}`).then(r => r.json());
 			rates = {};
 			for (const [currency, info] of Object.entries(response.data)) {
 				rates[currency] = info.value;
