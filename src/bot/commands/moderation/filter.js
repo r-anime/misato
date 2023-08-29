@@ -1,8 +1,8 @@
 import {Command} from 'yuuko';
-import config from '../../../../config';
+const {HOST} = process.env;
 
 function filterConfigURL (guildID) {
-	return `${config.web.host}/guilds/${guildID}/filter`;
+	return `${HOST}/guilds/${guildID}/filter`;
 }
 
 export default new Command(['filter', 'filters'], msg => {

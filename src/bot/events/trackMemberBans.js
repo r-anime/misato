@@ -1,10 +1,11 @@
 import {EventListener} from 'yuuko';
-import config from '../../../config';
 import {formatDateRelative} from '../util/discord';
+
+const {TEMP_GUILD_ID, TEMP_LOGGING_CHANNEL_ID} = process.env;
 
 export default new EventListener('guildBanAdd', (guild, member, {db, client}) => {
 	setTimeout(async () => {
-		if (guild.id !== config.TEMP_guildID) return;
+		if (guild.id !== TEMP_GUILD_ID) return;
 		if (member.bot) return;
 
 		let content = `User **<@!${member.id}> (${member.username}#${member.discriminator})** has been`;
@@ -26,7 +27,7 @@ export default new EventListener('guildBanAdd', (guild, member, {db, client}) =>
 			content = `${content} manually permabanned`;
 		}
 
-		client.createMessage(config.TEMP_loggingChannelID, {
+		client.createMessage(TEMP_LOGGING_CHANNEL_ID, {
 			content,
 		}).catch(() => {});
 	}, 5000);

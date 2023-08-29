@@ -6,7 +6,8 @@ import session from 'express-session';
 import connectMongo from 'connect-mongo';
 const MongoStore = connectMongo(session);
 
-import config from '../../config';
+const {MONGODB_DATABASE, SESSION_SECRET, PORT} = process.env;
+
 import responseHelpers from './middleware/responseHelpers';
 import logging from './middleware/logging';
 import accessControl from './middleware/accessControl';
@@ -22,9 +23,9 @@ export default (mongoClient, db, discordClient) => {
 		session({
 			store: new MongoStore({
 				client: mongoClient,
-				dbName: config.mongodb.databaseName,
+				dbName: MONGODB_DATABASE,
 			}),
-			secret: config.web.sessionSecret,
+			secret: SESSION_SECRET,
 			saveUninitialized: false,
 			resave: false,
 		}),
@@ -44,11 +45,11 @@ export default (mongoClient, db, discordClient) => {
 	app.use('/api', api(db, discordClient));
 
 	// Start the server
-	app.listen(config.web.port, error => {
+	app.listen(PORT, error => {
 		if (error) {
 			log.error(error);
 			process.exit(1);
 		}
-		log.success(`Server listening on port ${config.web.port}`);
+		log.success(`Server listening on port ${PORT}`);
 	});
 };

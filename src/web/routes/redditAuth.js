@@ -8,15 +8,20 @@ import polka from 'polka';
 import fetch from 'node-fetch';
 import log from 'another-logger';
 
-import config from '../../../config';
+const {
+	HOST,
+	REDDIT_CLIENT_ID,
+	REDDIT_CLIENT_SECRET,
+	REDDIT_REDIRECT_URI,
+} = process.env;
 
 /** The redirect URI for Reddit to send the user back to. */
-const redditRedirectURI = `${config.web.host}/auth/reddit/callback`;
+const redditRedirectURI = `${HOST}/auth/reddit/callback`;
 
 /** The base of the URI that starts the OAuth flow. State is attached later. */
 /* eslint-disable operator-linebreak */ // Long URIs suck
 const redditAuthURIBase = 'https://old.reddit.com/api/v1/authorize'
-	+ `?client_id=${config.reddit.clientID}`
+	+ `?client_id=${REDDIT_CLIENT_ID}`
 	+ '&response_type=code'
 	+ `&redirect_uri=${encodeURIComponent(redditRedirectURI)}`
 	+ '&scope=identity'
@@ -56,11 +61,11 @@ async function fetchRedditTokens (code) {
 		headers: {
 			'Content-Type': 'application/x-www-form-urlencoded',
 			// HTTP basic auth, username = reddit client ID, pass = client secret
-			'Authorization': `Basic ${Buffer.from(`${config.reddit.clientID}:${config.reddit.clientSecret}`).toString('base64')}`,
+			'Authorization': `Basic ${Buffer.from(`${REDDIT_CLIENT_ID}:${REDDIT_CLIENT_SECRET}`).toString('base64')}`,
 		},
 		body: formData({
 			grant_type: 'authorization_code',
-			redirect_uri: config.reddit.redirectURI,
+			redirect_uri: REDDIT_REDIRECT_URI,
 			code,
 		}),
 	});

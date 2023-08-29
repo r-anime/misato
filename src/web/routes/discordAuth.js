@@ -8,15 +8,20 @@ import polka from 'polka';
 import fetch from 'node-fetch';
 import log from 'another-logger';
 
-import config from '../../../config';
+const {
+	HOST,
+	DISCORD_CLIENT_ID,
+	DISCORD_CLIENT_SECRET,
+	DISCORD_REDIRECT_URI,
+} = process.env;
 
 /** The redirect URI for Discord to send the user back to. */
-const discordRedirectURI = `${config.web.host}/auth/discord/callback`;
+const discordRedirectURI = `${HOST}/auth/discord/callback`;
 
 /** The base of the URI that starts the OAuth flow. State is attached later. */
 /* eslint-disable operator-linebreak */ // Long URIs suck
 const discordAuthURIBase = 'https://discordapp.com/api/oauth2/authorize'
-	+ `?client_id=${config.discord.clientID}`
+	+ `?client_id=${DISCORD_CLIENT_ID}`
 	+ '&response_type=code'
 	+ `&redirect_uri=${encodeURIComponent(discordRedirectURI)}`
 	+ `&scope=${encodeURIComponent(['identify', 'guilds'].join(' '))}`
@@ -79,11 +84,11 @@ async function fetchDiscordTokens (code) {
 			'Content-Type': 'application/x-www-form-urlencoded',
 		},
 		body: formData({
-			client_id: config.discord.clientID,
-			client_secret: config.discord.clientSecret,
+			client_id: DISCORD_CLIENT_ID,
+			client_secret: DISCORD_CLIENT_SECRET,
 			grant_type: 'authorization_code',
 			code,
-			redirect_uri: config.discord.redirectURI,
+			redirect_uri: DISCORD_REDIRECT_URI,
 			scope: 'identify', // Discord-specific: scope is required here too and must match
 		}),
 	});

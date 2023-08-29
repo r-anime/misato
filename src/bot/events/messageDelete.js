@@ -1,8 +1,10 @@
 import Eris from 'eris';
 import {EventListener} from 'yuuko';
-import config from '../../../config';
 import createLogger from 'another-logger';
 const log = createLogger({label: 'messageDelete'});
+
+const {TEMP_GUILD_ID, TEMP_DELETION_LOGGING_CHANNEL_ID} = process.env;
+
 //  Should consider adding whether it was deleted by a mod or the user by cross referencing audit logs
 
 
@@ -11,7 +13,7 @@ export default new EventListener('messageDelete', (message, {client}) => {
 		if (!message) return;
 
 		// Check if message was deleted in a DM or other guilds and do not log if so
-		if (!message.guildID || message.guildID !== config.TEMP_guildID) return;
+		if (!message.guildID || message.guildID !== TEMP_GUILD_ID) return;
 
 		// Check if the message is a partial message and if so do not log
 		if (!(message instanceof Eris.Message)) return;
@@ -37,7 +39,7 @@ export default new EventListener('messageDelete', (message, {client}) => {
 			content = 'Text Deleted';
 		}
 
-		client.createMessage(config.TEMP_deletionLoggingChannelID, {
+		client.createMessage(TEMP_DELETION_LOGGING_CHANNEL_ID, {
 			embed: {
 				title: 'Deletion Log',
 				fields: [
