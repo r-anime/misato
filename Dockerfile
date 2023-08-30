@@ -1,5 +1,5 @@
 # https://nodejs.org/en/docs/guides/nodejs-docker-webapp
-FROM node:18-alpine
+FROM node:16-alpine
 WORKDIR /usr/src/app
 
 # copy package.json/package-lock.json and install dependencies
