@@ -41,4 +41,4 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             GIT_COMMIT_HASH=${{ github.sha }}
-            GIT_REPO_URL=${{ github.repostitoryUrl }}
+            GIT_REPO_URI=${{ github.repostitoryUrl }}
