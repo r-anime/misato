@@ -11,7 +11,12 @@ const command = new Command('deleterssfeed', async (message, args, context) => {
 	const {db} = context;
 	const collection = db.collection('rssFeeds');
 	const rssFeedName = args[0];
-	await collection.deleteOne({name: rssFeedName})
+	await collection.deleteOne({
+		guildId: message.guildID,
+		// in DMs, filtering by guild isn't enough; filter to the specific DM
+		channelId: message.guildID ? undefined : message.channel.id,
+		name: rssFeedName,
+	})
 		.then(result => {
 			if (result.deletedCount === 0) {
 				message.channel.createMessage('Could not find anything to delete. Did you spell the name of the feed correctly?').catch(() => {});
