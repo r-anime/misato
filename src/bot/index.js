@@ -52,6 +52,14 @@ export default (mongoClient, db) => {
 		},
 	});
 
+	// Another helper for sending messages because discord is wack and stopped
+	// giving us DM channel objects to send messages in
+	bot.extendContext({
+		sendMessage (msg, ...args) {
+			return bot.createMessage(msg.channel.id, ...args);
+		},
+	});
+
 	// Connect the bot to Discord
 	bot.connect();
 
