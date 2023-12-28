@@ -80,7 +80,7 @@ const command = new Command(['remind', 'remindme'], async (message, args, contex
 	}
 
 	// Send confirmation, throw away any possible errors
-	message.channel.createMessage(`Will remind you ${formatDateRelative(due)}.`).catch(() => {});
+	context.sendMessage(message, `Will remind you ${formatDateRelative(due)}.`).catch(() => {});
 });
 command.help = {
 	desc: "Sets a reminder that you'll get pinged for in the future.",

@@ -3,18 +3,18 @@
 import {Command} from 'yuuko';
 import {AVATAR_IMAGE_SIZE, parseUser} from '../../util/discord';
 
-const command = new Command('defaultavatar', async (msg, args) => {
+const command = new Command('defaultavatar', async (msg, args, {sendMessage}) => {
 	if (args.length === 0) {
-		msg.channel.createMessage(msg.author.dynamicAvatarURL('', AVATAR_IMAGE_SIZE)).catch(() => {});
+		sendMessage(msg, msg.author.dynamicAvatarURL('', AVATAR_IMAGE_SIZE)).catch(() => {});
 		return;
 	}
 	const [user] = await parseUser(args.join(' '), msg.channel.guild, msg.author);
 	if (!user) {
-		msg.channel.createMessage('Member not found, check if what you\'re using is correct or try using an ID.').catch(() => {});
+		sendMessage(msg, 'Member not found, check if what you\'re using is correct or try using an ID.').catch(() => {});
 		return;
 	}
 
-	msg.channel.createMessage(user.dynamicAvatarURL('', AVATAR_IMAGE_SIZE)).catch(() => {});
+	sendMessage(msg, user.dynamicAvatarURL('', AVATAR_IMAGE_SIZE)).catch(() => {});
 });
 command.help = {
 	args: '[user]',

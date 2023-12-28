@@ -30,7 +30,7 @@ if (!gitRepoURI) {
 	});
 }
 
-const command = new Command('ping', async (msg, args, {prefix, client}) => {
+const command = new Command('ping', async (msg, args, {prefix, client, sendMessage}) => {
 	let messageContent = 'Pong!';
 	if (commitHash != null) {
 		messageContent += `\nCommit: ${commitHash}`;
@@ -43,7 +43,7 @@ const command = new Command('ping', async (msg, args, {prefix, client}) => {
 	messageContent += `\nUse \`${prefix.match(client.mentionPrefixRegExp) ? '' : prefix}help\` for a list of commands.`;
 
 	const then = Date.now();
-	const newMsg = await msg.channel.createMessage(messageContent);
+	const newMsg = await sendMessage(msg, messageContent);
 	newMsg.edit(newMsg.content.replace('Pong!', `Pong! (${Date.now() - then}ms REST round-trip)`));
 });
 command.help = {

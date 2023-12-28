@@ -8,7 +8,7 @@ function getRandomInt (min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-const command = new Command('roll', (msg, args) => {
+const command = new Command('roll', (msg, args, {sendMessage}) => {
 	let min = 0;
 	let max = 6;
 
@@ -18,9 +18,9 @@ const command = new Command('roll', (msg, args) => {
 	}
 
 	if (isNaN(min) || isNaN(max)) {
-		msg.channel.createMessage('Please enter a valid number!').catch(() => {});
+		sendMessage(msg, 'Please enter a valid number!').catch(() => {});
 	} else {
-		msg.channel.createMessage(`You rolled a ${getRandomInt(min, max)}`).catch(() => {});
+		sendMessage(msg, `You rolled a ${getRandomInt(min, max)}`).catch(() => {});
 	}
 });
 command.help = {
