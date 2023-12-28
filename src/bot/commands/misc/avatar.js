@@ -7,18 +7,18 @@ function resizeAvatarURL (url, size) {
 	return `${url.split('?size=')[0]}?size=${size}`;
 }
 
-const command = new Command('avatar', async (msg, args) => {
+const command = new Command('avatar', async (msg, args, {sendMessage}) => {
 	if (args.length === 0) {
-		msg.channel.createMessage(resizeAvatarURL(msg.member.avatarURL, AVATAR_IMAGE_SIZE)).catch(() => {});
+		sendMessage(msg, resizeAvatarURL(msg.member.avatarURL, AVATAR_IMAGE_SIZE)).catch(() => {});
 		return;
 	}
 	const [member] = await parseGuildMember(args.join(' '), msg.channel.guild, msg.member);
 	if (!member) {
-		msg.channel.createMessage('Member not found, check if what you\'re using is correct or try using an ID.').catch(() => {});
+		sendMessage(msg, 'Member not found, check if what you\'re using is correct or try using an ID.').catch(() => {});
 		return;
 	}
 
-	msg.channel.createMessage(resizeAvatarURL(member.avatarURL, AVATAR_IMAGE_SIZE)).catch(() => {});
+	sendMessage(msg, resizeAvatarURL(member.avatarURL, AVATAR_IMAGE_SIZE)).catch(() => {});
 });
 command.help = {
 	args: '[user]',

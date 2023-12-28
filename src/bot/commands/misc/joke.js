@@ -4,16 +4,16 @@
 import {Command} from 'yuuko';
 import fetch from 'node-fetch';
 
-const command = new Command('joke', async msg => {
+const command = new Command('joke', async (msg, _, {sendMessage}) => {
 	try {
 		const res = await fetch('https://official-joke-api.appspot.com/random_joke');
 		if (res.status !== 200) {
 			throw new Error('Error getting joke.');
 		}
 		const joke = await res.json();
-		msg.channel.createMessage(`${joke.setup}\n${joke.punchline}`);
+		sendMessage(msg, `${joke.setup}\n${joke.punchline}`);
 	} catch (err) {
-		msg.channel.createMessage(err.message).catch(() => {});
+		sendMessage(msg, err.message).catch(() => {});
 	}
 });
 command.help = {

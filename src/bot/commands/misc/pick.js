@@ -16,7 +16,7 @@ const command = new Command('pick', (msg, args, context) => {
 	// We use a comma as a separator for each choice
 	const choices = args.join(' ').split(',').map(str => str.trim());
 
-	msg.channel.createMessage(`I pick **${choices[getRandomInt(0, choices.length - 1)]}**`).catch(() => {});
+	context.sendMessage(msg, `I pick **${choices[getRandomInt(0, choices.length - 1)]}**`).catch(() => {});
 });
 command.help = {
 	args: '<choice>, <choice>, <more choices...>',

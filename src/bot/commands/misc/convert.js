@@ -153,7 +153,7 @@ const command = new Command('convert', async (msg, args, context) => {
 		}
 	}
 
-	msg.channel.createMessage(message).catch(() => {});
+	context.sendMessage(msg, message).catch(() => {});
 });
 command.help = {
 	args: '[amount] <source currency or unit> <destination currency or unit>',
