@@ -220,3 +220,18 @@ export const formatDateRelative = (date: Date) => `<t:${Math.round(date.getTime(
 
 /** Size of avatars shown from the avatar and defaultavatar command */
 export const AVATAR_IMAGE_SIZE = 512;
+
+/**
+ * Truncates a string to the given number of characters, adding an ellipsis
+ * at the end if part of the string had to be cut off.
+ * @param n The maximum number of characters for the returned string
+ * @param str The string to be truncated
+ * @see https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object
+ */
+export function truncate (n: number, str: string) {
+	if (str.length <= n) {
+		return str;
+	}
+	// U+2026 is a single-character ellipsis
+	return `${str.slice(0, n - 1)}\u2026`;
+}

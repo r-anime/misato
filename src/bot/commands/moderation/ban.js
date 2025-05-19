@@ -1,7 +1,7 @@
 import createLogger from 'another-logger';
 const log = createLogger({label: 'command:ban'});
 import {Command} from 'yuuko';
-import {parseUser, parseTime, formatDateRelative, awaitReaction} from '../../util/discord';
+import {parseUser, parseTime, formatDateRelative, awaitReaction, truncate} from '../../util/discord';
 import {escape, blockquote} from '../../util/formatting';
 
 const confirmationEmoji = '🔨';
@@ -61,7 +61,7 @@ const command = new Command('ban', async (message, args, context) => {
 	try {
 		// TODO: check if member is already banned before banning again
 		// TODO: service to clear bans after they expire
-		await message.channel.guild.banMember(user.id, 0, reason);
+		await message.channel.guild.banMember(user.id, 0, truncate(512, reason));
 	} catch (error) {
 		log.error(`Error banning user ${user.id} from guild ${message.channel.guild.id}:`, error);
 
