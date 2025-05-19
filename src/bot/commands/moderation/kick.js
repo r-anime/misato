@@ -1,7 +1,7 @@
 import createLogger from 'another-logger';
 const log = createLogger({label: 'command:kick'});
 import {Command} from 'yuuko';
-import {parseGuildMember, awaitReaction} from '../../util/discord';
+import {parseGuildMember, awaitReaction, truncate} from '../../util/discord';
 import {escape, blockquote} from '../../util/formatting';
 
 const confirmationEmoji = '👢';
@@ -52,7 +52,7 @@ const command = new Command('kick', async (message, args, context) => {
 
 	// Kick the member
 	try {
-		await member.kick(reason);
+		await member.kick(truncate(reason, 512));
 	} catch (error) {
 		log.error(`Error kicking user ${member.id} from guild ${message.channel.guild.id}:`, error);
 

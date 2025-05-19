@@ -1,7 +1,7 @@
 import createLogger from 'another-logger';
 const log = createLogger({label: 'cmd:whois'});
 import {Command} from 'yuuko';
-import {parseUser, formatDate} from '../util/discord';
+import {parseUser, formatDate, truncate} from '../util/discord';
 import {escape} from '../util/formatting';
 
 const {HOST} = process.env;
@@ -156,10 +156,7 @@ const command = new Command('whois', async (message, args, context) => {
 		notesLine(user.id, message.channel.guild.id, db),
 	])).join('\n\n');
 
-	if (content.length > 2000) {
-		const endIndicator = '\n\n\u2026'; // ellipsis as one character
-		content = content.slice(0, 2000 - endIndicator.length) + endIndicator;
-	}
+	content = truncate(content, 2000, '\n\n\u2026'); // U+2026 is an ellipsis
 
 	message.channel.createMessage({
 		content,

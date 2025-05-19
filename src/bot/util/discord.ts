@@ -220,3 +220,18 @@ export const formatDateRelative = (date: Date) => `<t:${Math.round(date.getTime(
 
 /** Size of avatars shown from the avatar and defaultavatar command */
 export const AVATAR_IMAGE_SIZE = 512;
+
+/**
+ * Truncates a string to the given number of characters, adding an ellipsis (or
+ * other indicator) at the end if part of the string had to be cut off.
+ * @param str The string to be truncated
+ * @param n The maximum number of characters for the returned string
+ * @param cutoffIndicator A string added at the end of the result only if the
+ * input string needed to be cut down. Defaults to a single-character ellipsis.
+ */
+export function truncate (str: string, n: number, cutoffIndicator = '\u2026') {
+	if (str.length <= n) {
+		return str;
+	}
+	return `${str.slice(0, n - cutoffIndicator.length)}${cutoffIndicator}`;
+}
