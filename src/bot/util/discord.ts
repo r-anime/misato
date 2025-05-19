@@ -228,7 +228,6 @@ export const AVATAR_IMAGE_SIZE = 512;
  * @param n The maximum number of characters for the returned string
  * @param cutoffIndicator A string added at the end of the result only if the
  * input string needed to be cut down. Defaults to a single-character ellipsis.
- * @see https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object
  */
 export function truncate (str: string, n: number, cutoffIndicator = '\u2026') {
 	if (str.length <= n) {
