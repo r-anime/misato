@@ -2,6 +2,7 @@ import log from 'another-logger';
 import {EventListener} from 'yuuko';
 import {NewsChannel} from 'eris';
 import Parser from 'rss-parser';
+import {truncate} from '../util/discord';
 const rssParser = new Parser();
 
 /**
@@ -11,11 +12,8 @@ const rssParser = new Parser();
  * @returns {object}
  */
 function buildRssMessageContent (post, feedURL) {
-	let tempTitle = post.title;
 	// titles in embeds have a 256 char limit
-	if (post.title.length > 253) {
-		tempTitle = post.title.substring(0, 252).concat('...');
-	}
+	const tempTitle = truncate(post.title, 256);
 
 	// build embed
 	const contentObject = {

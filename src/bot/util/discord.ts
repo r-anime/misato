@@ -222,16 +222,17 @@ export const formatDateRelative = (date: Date) => `<t:${Math.round(date.getTime(
 export const AVATAR_IMAGE_SIZE = 512;
 
 /**
- * Truncates a string to the given number of characters, adding an ellipsis
- * at the end if part of the string had to be cut off.
- * @param n The maximum number of characters for the returned string
+ * Truncates a string to the given number of characters, adding an ellipsis (or
+ * other indicator) at the end if part of the string had to be cut off.
  * @param str The string to be truncated
+ * @param n The maximum number of characters for the returned string
+ * @param cutoffIndicator A string added at the end of the result only if the
+ * input string needed to be cut down. Defaults to a single-character ellipsis.
  * @see https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object
  */
-export function truncate (n: number, str: string) {
+export function truncate (str: string, n: number, cutoffIndicator = '\u2026') {
 	if (str.length <= n) {
 		return str;
 	}
-	// U+2026 is a single-character ellipsis
-	return `${str.slice(0, n - 1)}\u2026`;
+	return `${str.slice(0, n - cutoffIndicator.length)}${cutoffIndicator}`;
 }

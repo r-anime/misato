@@ -61,7 +61,7 @@ const command = new Command('ban', async (message, args, context) => {
 	try {
 		// TODO: check if member is already banned before banning again
 		// TODO: service to clear bans after they expire
-		await message.channel.guild.banMember(user.id, 0, truncate(512, reason));
+		await message.channel.guild.banMember(user.id, 0, truncate(reason, 512));
 	} catch (error) {
 		log.error(`Error banning user ${user.id} from guild ${message.channel.guild.id}:`, error);
 

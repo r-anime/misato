@@ -52,7 +52,7 @@ const command = new Command('kick', async (message, args, context) => {
 
 	// Kick the member
 	try {
-		await member.kick(truncate(512, reason));
+		await member.kick(truncate(reason, 512));
 	} catch (error) {
 		log.error(`Error kicking user ${member.id} from guild ${message.channel.guild.id}:`, error);
 
