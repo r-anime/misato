@@ -32,6 +32,11 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
+      - name: Get target Node version from .nvmrc
+        id: node-version
+        # https://stackoverflow.com/a/62059571
+        run: echo "version=$(cat .nvmrc | tr -cd '[:digit:].')" >> $GITHUB_OUTPUT
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
@@ -40,5 +45,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
+            NODE_VERSION=${{ steps.node-version.outputs.version }}
             GIT_COMMIT_HASH=${{ github.sha }}
             GIT_REPO_URI=${{ github.repostitoryUrl }}
