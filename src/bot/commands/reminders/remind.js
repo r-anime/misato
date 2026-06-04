@@ -10,6 +10,8 @@ const msPerUnit = {
 	m: 60 * 1000,
 	min: 60 * 1000,
 	mins: 60 * 1000,
+	minute: 60 * 1000,
+	minutes: 60 * 1000,
 	h: 60 * 60 * 1000,
 	hr: 60 * 60 * 1000,
 	hour: 60 * 60 * 1000,
@@ -31,15 +33,22 @@ const msPerUnit = {
 };
 /**
  * Returns the number of milliseconds represented by a human-readable duration
- * specifier string, or `null` if the string is not a duration specifier.
+ * specifier string, or `0` if the string is not a duration specifier.
+ * And also the string with the duration part stripped
  * @param {string} str
- * @returns {number | null}
+ * @returns {[number, str]}
  */
 function parseDurationSpecifier (str) {
-	if (!str) return null;
-	const match = str.match(/^(\d+)(m|mins?|minutes?|h|hr|hours?|d|days?|w|wks?|weeks?|mo|months?|y|years?)$/i);
-	if (!match) return null;
-	return parseInt(match[1], 10) * msPerUnit[match[2]];
+	if (!str) return [0, str];
+	let time = 0;
+	while (true) {
+		// match the longer units preferentially
+		const match = str.match(/^(\d+)\s*(minutes?|mins?|m|hours?|hr|h|days?|d|weeks?|wks?|w|months?|mo|years?|y)\s*/i);
+		if (!match) break;
+		time += parseInt(match[1], 10) * msPerUnit[match[2]];
+		str = str.slice(match[0].length); // strip duration match
+	}
+	return [time, str];
 }
 
 const command = new Command(['remind', 'remindme'], async (message, args, context) => {
@@ -49,21 +58,13 @@ const command = new Command(['remind', 'remindme'], async (message, args, contex
 	const {db} = context;
 
 	// Parse date from initial arguments
-	let msIntoFuture = 0;
-	let timeAddition;
-	while ((timeAddition = parseDurationSpecifier(args[0])) != null) {
-		msIntoFuture += timeAddition;
-		args.shift();
-	}
+	const [msIntoFuture, text] = parseDurationSpecifier(args.join(' '));
 	if (msIntoFuture === 0) {
 		message.channel.createMessage('Tell me how long to wait before reminding you! Format it like "1h 30m" - units from minutes to years are supported.').catch(() => {});
 		return;
 	}
 	const due = new Date(Date.now() + msIntoFuture);
 	log.debug('due:', due);
-
-	// Reminder's text is just the entire rest of the message
-	const text = args.join(' ');
 
 	// Add the reminder to the database
 	try {
