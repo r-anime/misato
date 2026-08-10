@@ -43,7 +43,7 @@ function parseDurationSpecifier (str) {
 	let time = 0;
 	while (true) {
 		// match the longer units preferentially
-		const match = str.match(/^(\d+)\s*(minutes?|mins?|m|hours?|hr|h|days?|d|weeks?|wks?|w|months?|mo|years?|y)\s*/i);
+		const match = str.match(/^(\d+)\s*(minutes?|mins?|hours?|hr|h|days?|d|weeks?|wks?|w|months?|mo|m|years?|y)\s*/i);
 		if (!match) break;
 		time += parseInt(match[1], 10) * msPerUnit[match[2]];
 		str = str.slice(match[0].length); // strip duration match
