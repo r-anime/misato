@@ -14,8 +14,9 @@ const command = new Command('createrssfeed', async (message, args, context) => {
 
 	// try to get the channel
 	// NOTE: Although it reminds the user to make sure the channel is visible, it would still be able to find a channel regardless of its visiblity (but not read its contents)
+	let channel;
 	try {
-		context.client.getChannel(channelId) || await context.client.getRESTChannel(channelId);
+		channel = context.client.getChannel(channelId) || await context.client.getRESTChannel(channelId);
 	} catch (error) {
 		message.channel.createMessage('Couldn\'t find the channel with the specified ID. Please make sure it is visible to me and the ID is correct.').catch(() => {});
 		log.error(`Failed to locate channel ${escape(channelId)}:`, error);
@@ -35,6 +36,7 @@ const command = new Command('createrssfeed', async (message, args, context) => {
 		name: rssFeedName,
 		url: rssFeedUrl,
 		channelId,
+		guildId: channel.guild.id || null,
 		lastCheck: new Date(),
 	};
 
